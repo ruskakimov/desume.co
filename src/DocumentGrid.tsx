@@ -9,6 +9,13 @@ const scale = 1;
 const documentWidth = a4Dimensions[0] * scale;
 const documentHeight = a4Dimensions[1] * scale;
 
+function giveToNext(array: number[], index: number, amount: number): number[] {
+  const copy = array.slice();
+  copy[index] -= amount;
+  copy[index + 1] += amount;
+  return copy;
+}
+
 export default function DocumentGrid({}) {
   // width of each column in pixels (just for the sake of the demo)
   const [cols, setCols] = useState([documentWidth / 2, documentWidth / 2]);
@@ -38,6 +45,15 @@ export default function DocumentGrid({}) {
     }
   }
 
+  const moveVerticalBorderToLeftBy = (amount: number) => {
+    setCols(giveToNext(cols, 0, amount));
+    console.log(giveToNext(cols, 0, amount));
+  };
+
+  const moveHorizontalBorderToLeftBy = (amount: number) => {
+    setRows(giveToNext(rows, 0, amount));
+  };
+
   return (
     <Container>
       <p>
@@ -45,6 +61,8 @@ export default function DocumentGrid({}) {
         {cols.map((width) => (
           <input value={width} />
         ))}
+        <button onClick={() => moveVerticalBorderToLeftBy(10)}>{"<-"}</button>
+        <button onClick={() => moveVerticalBorderToLeftBy(-10)}>{"->"}</button>
       </p>
 
       <p>
@@ -52,6 +70,10 @@ export default function DocumentGrid({}) {
         {rows.map((height) => (
           <input value={height} />
         ))}
+        <button onClick={() => moveHorizontalBorderToLeftBy(10)}>{"☝️"}</button>
+        <button onClick={() => moveHorizontalBorderToLeftBy(-10)}>
+          {"👇"}
+        </button>
       </p>
 
       <div
