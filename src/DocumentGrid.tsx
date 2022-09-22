@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import { useState } from "react";
+import styled from "styled-components";
 
 // A4 dimensions (width, height) in points.
 const a4Dimensions: [number, number] = [595.28, 842.89];
@@ -38,7 +39,21 @@ export default function DocumentGrid({}) {
   }
 
   return (
-    <>
+    <Container>
+      <p>
+        <b>Columns:</b>
+        {cols.map((width) => (
+          <input value={width} />
+        ))}
+      </p>
+
+      <p>
+        <b>Rows:</b>
+        {rows.map((height) => (
+          <input value={height} />
+        ))}
+      </p>
+
       <div
         style={{
           width: documentWidth,
@@ -79,7 +94,7 @@ export default function DocumentGrid({}) {
       >
         Save as PDF
       </button>
-    </>
+    </Container>
   );
 }
 
@@ -104,3 +119,7 @@ function ColorBlock({ color, onChanged }: ColorBlockProps) {
     </div>
   );
 }
+
+const Container = styled.div`
+  text-align: center;
+`;
