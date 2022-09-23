@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 // TODO: Move internal state to props
@@ -7,13 +8,49 @@ interface DivisionSlidersProps {
   onChange?: (changedDivisions: number[]) => void;
 }
 
+interface Coord {
+  x: number;
+  y: number;
+}
+
 /**
  * Controlled input for redistributing the total quantity between two or more divisions.
  */
 export default function DivisionSliders({}: DivisionSlidersProps) {
+  const [pointerDownCoord, setPointerDownCoord] = useState<Coord | null>(null);
+
+  const isDragging = pointerDownCoord !== null;
+  const finishDragging = () => setPointerDownCoord(null);
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    console.log("dragging!");
+
+    const onPointerMove = (e: PointerEvent) => {
+      console.log(e.clientX - pointerDownCoord.x);
+    };
+    const onPointerUp = (e: PointerEvent) => finishDragging();
+
+    console.log("attached listeners");
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
+    return () => {
+      console.log("removed listeners");
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+  }, [isDragging]);
+
   return (
     <Container>
-      <Handle />
+      <Handle
+        onPointerDown={(e) =>
+          setPointerDownCoord({ x: e.clientX, y: e.clientY })
+        }
+        draggable={false}
+      />
     </Container>
   );
 }
