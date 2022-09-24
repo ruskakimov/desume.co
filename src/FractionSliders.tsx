@@ -13,6 +13,10 @@ interface Coord {
   y: number;
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
 /**
  * Controlled input for redistributing the total quantity between two or more fractions.
  */
@@ -33,7 +37,7 @@ export default function FractionSliders({}: FractionSlidersProps) {
     const onPointerMove = (e: PointerEvent) => {
       const absDiff = e.clientX - pointerDownCoord.x;
       const fractionDiff = absDiff / width;
-      const newFirstFraction = Math.max(0, firstFraction + fractionDiff);
+      const newFirstFraction = clamp(firstFraction + fractionDiff, 0, 1);
       setFirstFraction(newFirstFraction);
     };
     const onPointerUp = (e: PointerEvent) => finishDragging();
