@@ -18,7 +18,9 @@ interface Coord {
  */
 export default function FractionSliders({}: FractionSlidersProps) {
   const [pointerDownCoord, setPointerDownCoord] = useState<Coord | null>(null);
-  const [firstWidth, setFirstWidth] = useState<number>(0);
+  const [firstFraction, setFirstFraction] = useState<number>(0);
+
+  const width = 400;
 
   const isDragging = pointerDownCoord !== null;
   const finishDragging = () => setPointerDownCoord(null);
@@ -29,9 +31,10 @@ export default function FractionSliders({}: FractionSlidersProps) {
     console.log("dragging!");
 
     const onPointerMove = (e: PointerEvent) => {
-      const dragDiff = e.clientX - pointerDownCoord.x;
-      const newFirstWidth = Math.max(0, firstWidth + dragDiff);
-      setFirstWidth(newFirstWidth);
+      const absDiff = e.clientX - pointerDownCoord.x;
+      const fractionDiff = absDiff / width;
+      const newFirstFraction = Math.max(0, firstFraction + fractionDiff);
+      setFirstFraction(newFirstFraction);
     };
     const onPointerUp = (e: PointerEvent) => finishDragging();
 
@@ -47,9 +50,9 @@ export default function FractionSliders({}: FractionSlidersProps) {
   }, [isDragging]);
 
   return (
-    <Container>
+    <Container style={{ width }}>
       <Handle
-        style={{ left: firstWidth }}
+        style={{ left: `${firstFraction * 100}%` }}
         onPointerDown={(e) =>
           setPointerDownCoord({ x: e.clientX, y: e.clientY })
         }
@@ -60,7 +63,6 @@ export default function FractionSliders({}: FractionSlidersProps) {
 }
 
 const Container = styled.div`
-  width: 400px;
   height: 100px;
   margin: 0 auto;
   outline: 1px solid black;
