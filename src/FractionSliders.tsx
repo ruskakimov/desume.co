@@ -78,6 +78,7 @@ const Handle = styled.div`
   height: 100%;
   background-color: blue;
   position: absolute;
+  transform: translateX(-50%);
 
   &:hover {
     cursor: ew-resize;
