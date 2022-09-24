@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 // TODO: Move internal state to props
 // TODO: Make props required
-interface DivisionSlidersProps {
-  divisions?: number[];
-  onChange?: (changedDivisions: number[]) => void;
+interface FractionSlidersProps {
+  fractions?: number[];
+  onChange?: (fractions: number[]) => void;
 }
 
 interface Coord {
@@ -14,9 +14,9 @@ interface Coord {
 }
 
 /**
- * Controlled input for redistributing the total quantity between two or more divisions.
+ * Controlled input for redistributing the total quantity between two or more fractions.
  */
-export default function DivisionSliders({}: DivisionSlidersProps) {
+export default function FractionSliders({}: FractionSlidersProps) {
   const [pointerDownCoord, setPointerDownCoord] = useState<Coord | null>(null);
   const [firstWidth, setFirstWidth] = useState<number>(0);
 

@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import { useState } from "react";
 import styled from "styled-components";
-import DivisionSliders from "./DivisionSliders";
+import FractionSliders from "./FractionSliders";
 
 // A4 dimensions (width, height) in points.
 const a4Dimensions: [number, number] = [595.28, 842.89];
@@ -77,7 +77,7 @@ export default function DocumentGrid({}) {
         </button>
       </p>
 
-      <DivisionSliders />
+      <FractionSliders />
 
       <div
         style={{
