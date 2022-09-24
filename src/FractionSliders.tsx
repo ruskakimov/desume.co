@@ -17,12 +17,21 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
+function giveToNext(array: number[], index: number, amount: number): number[] {
+  const copy = array.slice();
+  copy[index] -= amount;
+  copy[index + 1] += amount;
+  return copy;
+}
+
 /**
  * Controlled input for redistributing the total quantity between two or more fractions.
  */
 export default function FractionSliders({}: FractionSlidersProps) {
   const [pointerDownCoord, setPointerDownCoord] = useState<Coord | null>(null);
-  const [firstFraction, setFirstFraction] = useState<number>(0);
+
+  // TODO: Implement behaviour for 3 fractions (2 sliders)
+  const [fractions, setFractions] = useState<number[]>([0.5, 0.5]);
 
   const width = 400;
 
@@ -36,9 +45,8 @@ export default function FractionSliders({}: FractionSlidersProps) {
 
     const onPointerMove = (e: PointerEvent) => {
       const absDiff = e.clientX - pointerDownCoord.x;
-      const fractionDiff = absDiff / width;
-      const newFirstFraction = clamp(firstFraction + fractionDiff, 0, 1);
-      setFirstFraction(newFirstFraction);
+      const fractionDiff = clamp(absDiff / width, -fractions[0], fractions[1]);
+      setFractions(giveToNext(fractions, 0, -fractionDiff));
     };
     const onPointerUp = (e: PointerEvent) => finishDragging();
 
@@ -56,7 +64,7 @@ export default function FractionSliders({}: FractionSlidersProps) {
   return (
     <Container style={{ width }}>
       <Handle
-        style={{ left: `${firstFraction * 100}%` }}
+        style={{ left: `${fractions[0] * 100}%` }}
         onPointerDown={(e) =>
           setPointerDownCoord({ x: e.clientX, y: e.clientY })
         }
