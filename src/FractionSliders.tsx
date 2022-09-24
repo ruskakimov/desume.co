@@ -24,19 +24,23 @@ function giveToNext(array: number[], index: number, amount: number): number[] {
   return copy;
 }
 
+interface DragStart {
+  pointerDownCoord: Coord;
+  handleIndex: number;
+}
+
 /**
  * Controlled input for redistributing the total quantity between two or more fractions.
  */
 export default function FractionSliders({}: FractionSlidersProps) {
-  const [pointerDownCoord, setPointerDownCoord] = useState<Coord | null>(null);
+  const [dragStart, setDragStart] = useState<DragStart | null>(null);
 
-  // TODO: Implement behaviour for 3 fractions (2 sliders)
-  const [fractions, setFractions] = useState<number[]>([0.5, 0.5]);
+  const [fractions, setFractions] = useState<number[]>([0.2, 0.3, 0.5]);
 
   const width = 400;
 
-  const isDragging = pointerDownCoord !== null;
-  const finishDragging = () => setPointerDownCoord(null);
+  const isDragging = dragStart !== null;
+  const finishDragging = () => setDragStart(null);
 
   useEffect(() => {
     if (!isDragging) return;
@@ -44,9 +48,14 @@ export default function FractionSliders({}: FractionSlidersProps) {
     console.log("dragging!");
 
     const onPointerMove = (e: PointerEvent) => {
-      const absDiff = e.clientX - pointerDownCoord.x;
-      const fractionDiff = clamp(absDiff / width, -fractions[0], fractions[1]);
-      setFractions(giveToNext(fractions, 0, -fractionDiff));
+      const absDiff = e.clientX - dragStart.pointerDownCoord.x;
+      const fractionIdx = dragStart.handleIndex;
+      const fractionDiff = clamp(
+        absDiff / width,
+        -fractions[fractionIdx], // max give
+        fractions[fractionIdx + 1] // max take
+      );
+      setFractions(giveToNext(fractions, fractionIdx, -fractionDiff));
     };
     const onPointerUp = (e: PointerEvent) => finishDragging();
 
@@ -61,15 +70,29 @@ export default function FractionSliders({}: FractionSlidersProps) {
     };
   }, [isDragging]);
 
+  const handPositions = [];
+  let leftOffset = 0;
+
+  for (let fr of fractions.slice(0, -1)) {
+    leftOffset += fr;
+    handPositions.push(leftOffset);
+  }
+
   return (
     <Container style={{ width }}>
-      <Handle
-        style={{ left: `${fractions[0] * 100}%` }}
-        onPointerDown={(e) =>
-          setPointerDownCoord({ x: e.clientX, y: e.clientY })
-        }
-        draggable={false}
-      />
+      {handPositions.map((leftPerc, idx) => (
+        <Handle
+          key={idx}
+          style={{ left: `${leftPerc * 100}%` }}
+          onPointerDown={(e) =>
+            setDragStart({
+              pointerDownCoord: { x: e.clientX, y: e.clientY },
+              handleIndex: idx,
+            })
+          }
+          draggable={false} // prevent default dnd behaviour
+        />
+      ))}
     </Container>
   );
 }
