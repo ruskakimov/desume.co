@@ -79,21 +79,24 @@ export default function FractionSliders({}: FractionSlidersProps) {
   }
 
   return (
-    <Container style={{ width }}>
-      {handPositions.map((leftPerc, idx) => (
-        <Handle
-          key={idx}
-          style={{ left: `${leftPerc * 100}%` }}
-          onPointerDown={(e) =>
-            setDragStart({
-              pointerDownCoord: { x: e.clientX, y: e.clientY },
-              handleIndex: idx,
-            })
-          }
-          draggable={false} // prevent default dnd behaviour
-        />
-      ))}
-    </Container>
+    <>
+      <p>{fractions.map((fr) => fr.toFixed(2)).join(", ")}</p>
+      <Container style={{ width }}>
+        {handPositions.map((leftPerc, idx) => (
+          <Handle
+            key={idx}
+            style={{ left: `${leftPerc * 100}%` }}
+            onPointerDown={(e) =>
+              setDragStart({
+                pointerDownCoord: { x: e.clientX, y: e.clientY },
+                handleIndex: idx,
+              })
+            }
+            draggable={false} // prevent default dnd behaviour
+          />
+        ))}
+      </Container>
+    </>
   );
 }
 
