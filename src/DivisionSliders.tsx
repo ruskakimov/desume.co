@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 // TODO: Move internal state to props
@@ -18,6 +18,7 @@ interface Coord {
  */
 export default function DivisionSliders({}: DivisionSlidersProps) {
   const [pointerDownCoord, setPointerDownCoord] = useState<Coord | null>(null);
+  const [firstWidth, setFirstWidth] = useState<number>(0);
 
   const isDragging = pointerDownCoord !== null;
   const finishDragging = () => setPointerDownCoord(null);
@@ -28,7 +29,9 @@ export default function DivisionSliders({}: DivisionSlidersProps) {
     console.log("dragging!");
 
     const onPointerMove = (e: PointerEvent) => {
-      console.log(e.clientX - pointerDownCoord.x);
+      const dragDiff = e.clientX - pointerDownCoord.x;
+      const newFirstWidth = Math.max(0, firstWidth + dragDiff);
+      setFirstWidth(newFirstWidth);
     };
     const onPointerUp = (e: PointerEvent) => finishDragging();
 
@@ -46,6 +49,7 @@ export default function DivisionSliders({}: DivisionSlidersProps) {
   return (
     <Container>
       <Handle
+        style={{ left: firstWidth }}
         onPointerDown={(e) =>
           setPointerDownCoord({ x: e.clientX, y: e.clientY })
         }
@@ -60,12 +64,14 @@ const Container = styled.div`
   height: 100px;
   margin: 0 auto;
   outline: 1px solid black;
+  position: relative;
 `;
 
 const Handle = styled.div`
   width: 10px;
   height: 100%;
   background-color: blue;
+  position: absolute;
 
   &:hover {
     cursor: ew-resize;
