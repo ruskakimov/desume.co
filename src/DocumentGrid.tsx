@@ -46,37 +46,8 @@ export default function DocumentGrid({}) {
     }
   }
 
-  const moveVerticalBorderToLeftBy = (amount: number) => {
-    setCols(giveToNext(cols, 0, amount));
-    console.log(giveToNext(cols, 0, amount));
-  };
-
-  const moveHorizontalBorderToLeftBy = (amount: number) => {
-    setRows(giveToNext(rows, 0, amount));
-  };
-
   return (
     <Container>
-      <p>
-        <b>Columns:</b>
-        {cols.map((width) => (
-          <input value={width} />
-        ))}
-        <button onClick={() => moveVerticalBorderToLeftBy(10)}>{"<-"}</button>
-        <button onClick={() => moveVerticalBorderToLeftBy(-10)}>{"->"}</button>
-      </p>
-
-      <p>
-        <b>Rows:</b>
-        {rows.map((height) => (
-          <input value={height} />
-        ))}
-        <button onClick={() => moveHorizontalBorderToLeftBy(10)}>{"☝️"}</button>
-        <button onClick={() => moveHorizontalBorderToLeftBy(-10)}>
-          {"👇"}
-        </button>
-      </p>
-
       <FractionSliders
         width={documentWidth}
         fractions={cols}
