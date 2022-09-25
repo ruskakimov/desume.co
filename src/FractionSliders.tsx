@@ -9,27 +9,6 @@ interface FractionSlidersProps {
   onChange: (fractions: number[]) => void;
 }
 
-function shiftedToNext(
-  array: number[],
-  index: number,
-  amount: number
-): number[] {
-  // Prevent negative values in array.
-  const maxGive = array[index];
-  const maxTake = array[index + 1];
-  amount = clamp(amount, -maxTake, maxGive);
-
-  const copy = array.slice();
-  copy[index] -= amount;
-  copy[index + 1] += amount;
-  return copy;
-}
-
-interface DragStart {
-  pointerDownCoord: Coord;
-  handleIndex: number;
-}
-
 /**
  * Controlled input for redistributing the total quantity between two or more fractions.
  */
@@ -96,6 +75,27 @@ export default function FractionSliders({
       </Container>
     </>
   );
+}
+
+interface DragStart {
+  pointerDownCoord: Coord;
+  handleIndex: number;
+}
+
+function shiftedToNext(
+  array: number[],
+  index: number,
+  amount: number
+): number[] {
+  // Prevent negative values in array.
+  const maxGive = array[index];
+  const maxTake = array[index + 1];
+  amount = clamp(amount, -maxTake, maxGive);
+
+  const copy = array.slice();
+  copy[index] -= amount;
+  copy[index + 1] += amount;
+  return copy;
 }
 
 const Container = styled.div`
