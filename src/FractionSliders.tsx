@@ -1,20 +1,13 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Coord } from "./common/types";
+import { clamp } from "./common/utils";
 
 // TODO: Move internal state to props
 // TODO: Make props required
 interface FractionSlidersProps {
   fractions?: number[];
   onChange?: (fractions: number[]) => void;
-}
-
-interface Coord {
-  x: number;
-  y: number;
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value));
 }
 
 function giveToNext(array: number[], index: number, amount: number): number[] {
@@ -35,7 +28,7 @@ interface DragStart {
 export default function FractionSliders({}: FractionSlidersProps) {
   const [dragStart, setDragStart] = useState<DragStart | null>(null);
 
-  const [fractions, setFractions] = useState<number[]>([0.2, 0.3, 0.5]);
+  const [fractions, setFractions] = useState<number[]>([0.2, 0.3, 0.3, 0.2]);
 
   const width = 400;
 
