@@ -3,11 +3,9 @@ import styled from "styled-components";
 import { Coord } from "./common/types";
 import { clamp } from "./common/utils";
 
-// TODO: Move internal state to props
-// TODO: Make props required
 interface FractionSlidersProps {
-  fractions?: number[];
-  onChange?: (fractions: number[]) => void;
+  fractions: number[];
+  onChange: (fractions: number[]) => void;
 }
 
 function giveToNext(array: number[], index: number, amount: number): number[] {
@@ -25,10 +23,11 @@ interface DragStart {
 /**
  * Controlled input for redistributing the total quantity between two or more fractions.
  */
-export default function FractionSliders({}: FractionSlidersProps) {
+export default function FractionSliders({
+  fractions,
+  onChange,
+}: FractionSlidersProps) {
   const [dragStart, setDragStart] = useState<DragStart | null>(null);
-
-  const [fractions, setFractions] = useState<number[]>([0.2, 0.3, 0.3, 0.2]);
 
   const width = 400;
 
@@ -48,8 +47,9 @@ export default function FractionSliders({}: FractionSlidersProps) {
         -fractions[fractionIdx], // max give
         fractions[fractionIdx + 1] // max take
       );
-      setFractions(giveToNext(fractions, fractionIdx, -fractionDiff));
+      onChange(giveToNext(fractions, fractionIdx, -fractionDiff));
     };
+
     const onPointerUp = (e: PointerEvent) => finishDragging();
 
     console.log("attached listeners");

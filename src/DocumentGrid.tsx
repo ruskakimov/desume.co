@@ -28,6 +28,8 @@ export default function DocumentGrid({}) {
     "#ff0000",
   ]);
 
+  const [fractions, setFractions] = useState([0.5, 0.3, 0.2]);
+
   const cells = [];
 
   for (let r = 0; r < rows.length; r++) {
@@ -77,7 +79,10 @@ export default function DocumentGrid({}) {
         </button>
       </p>
 
-      <FractionSliders />
+      <FractionSliders
+        fractions={fractions}
+        onChange={(fractions) => setFractions(fractions)}
+      />
 
       <div
         style={{
