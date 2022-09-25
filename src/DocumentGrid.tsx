@@ -19,7 +19,7 @@ function giveToNext(array: number[], index: number, amount: number): number[] {
 
 export default function DocumentGrid({}) {
   // width of each column in pixels (just for the sake of the demo)
-  const [cols, setCols] = useState([documentWidth / 2, documentWidth / 2]);
+  const [cols, setCols] = useState([0.5, 0.5]);
   const [rows, setRows] = useState([documentHeight / 2, documentHeight / 2]);
   const [colors, setColors] = useState([
     "#ff0000",
@@ -27,8 +27,6 @@ export default function DocumentGrid({}) {
     "#000000",
     "#ff0000",
   ]);
-
-  const [fractions, setFractions] = useState([0.5, 0.3, 0.2]);
 
   const cells = [];
 
@@ -80,9 +78,9 @@ export default function DocumentGrid({}) {
       </p>
 
       <FractionSliders
-        width={400}
-        fractions={fractions}
-        onChange={(fractions) => setFractions(fractions)}
+        width={documentWidth}
+        fractions={cols}
+        onChange={(fractions) => setCols(fractions)}
       />
 
       <div
@@ -92,7 +90,7 @@ export default function DocumentGrid({}) {
           backgroundColor: "white",
           margin: "20px auto",
           display: "grid",
-          gridTemplateColumns: cols.map((w) => w + "px").join(" "),
+          gridTemplateColumns: cols.map((w) => w * 100 + "%").join(" "),
           gridTemplateRows: rows.map((w) => w + "px").join(" "),
         }}
       >
