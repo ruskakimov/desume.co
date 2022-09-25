@@ -18,14 +18,18 @@ function giveToNext(array: number[], index: number, amount: number): number[] {
 }
 
 export default function DocumentGrid({}) {
-  // width of each column in pixels (just for the sake of the demo)
-  const [cols, setCols] = useState([0.5, 0.5]);
-  const [rows, setRows] = useState([0.5, 0.5]);
+  const [cols, setCols] = useState([0.5, 0.3, 0.2]);
+  const [rows, setRows] = useState([0.3, 0.5, 0.2]);
   const [colors, setColors] = useState([
-    "#ff0000",
-    "#000000",
-    "#000000",
-    "#ff0000",
+    "#ef5350",
+    "#ec407a",
+    "#ab47bc",
+    "#7e57c2",
+    "#5c6bc0",
+    "#42a5f5",
+    "#29b6f6",
+    "#26c6da",
+    "#26a69a",
   ]);
 
   const cells = [];
