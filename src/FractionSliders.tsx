@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Coord } from "./common/types";
-import { clamp } from "./common/utils";
+import { clamp, cumulative } from "./common/utils";
 
 interface FractionSlidersProps {
   width: number;
@@ -43,31 +43,25 @@ export default function FractionSliders({
     };
   }, [isDragging]);
 
-  const handPositions = [];
-  let leftOffset = 0;
-
-  for (let fr of fractions.slice(0, -1)) {
-    leftOffset += fr;
-    handPositions.push(leftOffset);
-  }
-
   return (
     <>
       <p>{fractions.map((fr) => fr.toFixed(2)).join(", ")}</p>
       <Container style={{ width }}>
-        {handPositions.map((leftPerc, idx) => (
-          <Handle
-            key={idx}
-            style={{ left: `${leftPerc * 100}%` }}
-            onPointerDown={(e) =>
-              setDragStart({
-                pointerDownCoord: { x: e.clientX, y: e.clientY },
-                handleIndex: idx,
-              })
-            }
-            draggable={false} // prevent default dnd behaviour
-          />
-        ))}
+        {cumulative(fractions)
+          .slice(0, -1)
+          .map((leftPerc, idx) => (
+            <Handle
+              key={idx}
+              style={{ left: `${leftPerc * 100}%` }}
+              onPointerDown={(e) =>
+                setDragStart({
+                  pointerDownCoord: { x: e.clientX, y: e.clientY },
+                  handleIndex: idx,
+                })
+              }
+              draggable={false} // prevent default dnd behaviour
+            />
+          ))}
       </Container>
     </>
   );
