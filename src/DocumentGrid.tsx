@@ -20,7 +20,7 @@ function giveToNext(array: number[], index: number, amount: number): number[] {
 export default function DocumentGrid({}) {
   // width of each column in pixels (just for the sake of the demo)
   const [cols, setCols] = useState([0.5, 0.5]);
-  const [rows, setRows] = useState([documentHeight / 2, documentHeight / 2]);
+  const [rows, setRows] = useState([0.5, 0.5]);
   const [colors, setColors] = useState([
     "#ff0000",
     "#000000",
@@ -54,6 +54,12 @@ export default function DocumentGrid({}) {
         onChange={(fractions) => setCols(fractions)}
       />
 
+      <FractionSliders
+        width={documentWidth}
+        fractions={rows}
+        onChange={(fractions) => setRows(fractions)}
+      />
+
       <div
         style={{
           width: documentWidth,
@@ -61,8 +67,8 @@ export default function DocumentGrid({}) {
           backgroundColor: "white",
           margin: "20px auto",
           display: "grid",
-          gridTemplateColumns: cols.map((w) => w * 100 + "%").join(" "),
-          gridTemplateRows: rows.map((w) => w + "px").join(" "),
+          gridTemplateColumns: cols.map((fr) => fr * 100 + "%").join(" "),
+          gridTemplateRows: rows.map((fr) => fr * 100 + "%").join(" "),
         }}
       >
         {cells}
@@ -76,15 +82,16 @@ export default function DocumentGrid({}) {
           });
 
           const absCols = cols.map((fr) => fr * documentWidth);
+          const absRows = rows.map((fr) => fr * documentHeight);
 
-          for (let r = 0; r < rows.length; r++) {
+          for (let r = 0; r < absRows.length; r++) {
             for (let c = 0; c < absCols.length; c++) {
               const i = r * absCols.length + c;
               const color = colors[i];
               const width = absCols[c];
-              const height = rows[r];
+              const height = absRows[r];
               const x = absCols.slice(0, c).reduce((a, b) => a + b, 0);
-              const y = rows.slice(0, r).reduce((a, b) => a + b, 0);
+              const y = absRows.slice(0, r).reduce((a, b) => a + b, 0);
 
               doc.setFillColor(color);
               doc.rect(x, y, width, height, "F");
