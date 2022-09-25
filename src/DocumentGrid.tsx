@@ -80,6 +80,7 @@ export default function DocumentGrid({}) {
       </p>
 
       <FractionSliders
+        width={400}
         fractions={fractions}
         onChange={(fractions) => setFractions(fractions)}
       />

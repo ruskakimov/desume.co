@@ -4,6 +4,7 @@ import { Coord } from "./common/types";
 import { clamp } from "./common/utils";
 
 interface FractionSlidersProps {
+  width: number;
   fractions: number[];
   onChange: (fractions: number[]) => void;
 }
@@ -24,12 +25,11 @@ interface DragStart {
  * Controlled input for redistributing the total quantity between two or more fractions.
  */
 export default function FractionSliders({
+  width,
   fractions,
   onChange,
 }: FractionSlidersProps) {
   const [dragStart, setDragStart] = useState<DragStart | null>(null);
-
-  const width = 400;
 
   const isDragging = dragStart !== null;
   const finishDragging = () => setDragStart(null);
