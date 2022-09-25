@@ -44,32 +44,38 @@ export default function DocumentGrid({}) {
   }
 
   return (
-    <Container>
-      <FractionSliders
-        width={documentWidth}
-        fractions={cols}
-        onChange={(fractions) => setCols(fractions)}
-      />
-
-      <FractionSliders
-        width={documentWidth}
-        fractions={rows}
-        onChange={(fractions) => setRows(fractions)}
-      />
-
-      <div
+    <>
+      <StackRoot
         style={{
           width: documentWidth,
           height: documentHeight,
-          backgroundColor: "white",
-          margin: "20px auto",
-          display: "grid",
-          gridTemplateColumns: cols.map((fr) => fr * 100 + "%").join(" "),
-          gridTemplateRows: rows.map((fr) => fr * 100 + "%").join(" "),
         }}
       >
-        {cells}
-      </div>
+        <div
+          style={{
+            width: documentWidth,
+            height: documentHeight,
+            backgroundColor: "white",
+            display: "grid",
+            gridTemplateColumns: cols.map((fr) => fr * 100 + "%").join(" "),
+            gridTemplateRows: rows.map((fr) => fr * 100 + "%").join(" "),
+          }}
+        >
+          {cells}
+        </div>
+
+        <FractionSliders
+          width={documentWidth}
+          fractions={cols}
+          onChange={(fractions) => setCols(fractions)}
+        />
+
+        {/* <FractionSliders
+          width={documentWidth}
+          fractions={rows}
+          onChange={(fractions) => setRows(fractions)}
+        /> */}
+      </StackRoot>
 
       <button
         onClick={(e) => {
@@ -100,7 +106,7 @@ export default function DocumentGrid({}) {
       >
         Save as PDF
       </button>
-    </Container>
+    </>
   );
 }
 
@@ -126,6 +132,11 @@ function ColorBlock({ color, onChanged }: ColorBlockProps) {
   );
 }
 
-const Container = styled.div`
-  text-align: center;
+const StackRoot = styled.div`
+  margin: 20px auto;
+  position: relative;
+
+  & > * {
+    position: absolute;
+  }
 `;
