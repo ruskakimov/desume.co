@@ -75,13 +75,15 @@ export default function DocumentGrid({}) {
             unit: "pt",
           });
 
+          const absCols = cols.map((fr) => fr * documentWidth);
+
           for (let r = 0; r < rows.length; r++) {
-            for (let c = 0; c < cols.length; c++) {
-              const i = r * cols.length + c;
+            for (let c = 0; c < absCols.length; c++) {
+              const i = r * absCols.length + c;
               const color = colors[i];
-              const width = cols[c];
+              const width = absCols[c];
               const height = rows[r];
-              const x = cols.slice(0, c).reduce((a, b) => a + b, 0);
+              const x = absCols.slice(0, c).reduce((a, b) => a + b, 0);
               const y = rows.slice(0, r).reduce((a, b) => a + b, 0);
 
               doc.setFillColor(color);
