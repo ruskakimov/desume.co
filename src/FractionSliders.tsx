@@ -49,10 +49,10 @@ export default function FractionSliders({
     console.log("dragging!");
 
     const onPointerMove = (e: PointerEvent) => {
-      const absDiff = e.clientX - dragStart.pointerDownCoord.x;
+      const absDiff = dragStart.pointerDownCoord.x - e.clientX;
       const fractionIdx = dragStart.handleIndex;
       const fractionDiff = absDiff / width;
-      onChange(shiftedToNext(fractions, fractionIdx, -fractionDiff));
+      onChange(shiftedToNext(fractions, fractionIdx, fractionDiff));
     };
 
     const onPointerUp = (e: PointerEvent) => finishDragging();
