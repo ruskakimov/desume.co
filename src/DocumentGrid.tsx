@@ -10,13 +10,6 @@ const scale = 1;
 const documentWidth = a4Dimensions[0] * scale;
 const documentHeight = a4Dimensions[1] * scale;
 
-function giveToNext(array: number[], index: number, amount: number): number[] {
-  const copy = array.slice();
-  copy[index] -= amount;
-  copy[index + 1] += amount;
-  return copy;
-}
-
 export default function DocumentGrid({}) {
   const [cols, setCols] = useState([0.5, 0.3, 0.2]);
   const [rows, setRows] = useState([0.3, 0.5, 0.2]);
