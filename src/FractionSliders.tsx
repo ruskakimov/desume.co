@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Coord } from "./common/types";
-import { clamp, cumulative } from "./common/utils";
+import { clamp, cumulative } from "./common/math";
 
 interface FractionSlidersProps {
   width: number;
