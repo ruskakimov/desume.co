@@ -9,7 +9,16 @@ interface FractionSlidersProps {
   onChange: (fractions: number[]) => void;
 }
 
-function giveToNext(array: number[], index: number, amount: number): number[] {
+function shiftedToNext(
+  array: number[],
+  index: number,
+  amount: number
+): number[] {
+  // Prevent negative values in array.
+  const maxGive = array[index];
+  const maxTake = array[index + 1];
+  amount = clamp(amount, -maxTake, maxGive);
+
   const copy = array.slice();
   copy[index] -= amount;
   copy[index + 1] += amount;
@@ -42,12 +51,8 @@ export default function FractionSliders({
     const onPointerMove = (e: PointerEvent) => {
       const absDiff = e.clientX - dragStart.pointerDownCoord.x;
       const fractionIdx = dragStart.handleIndex;
-      const fractionDiff = clamp(
-        absDiff / width,
-        -fractions[fractionIdx], // max give
-        fractions[fractionIdx + 1] // max take
-      );
-      onChange(giveToNext(fractions, fractionIdx, -fractionDiff));
+      const fractionDiff = absDiff / width;
+      onChange(shiftedToNext(fractions, fractionIdx, -fractionDiff));
     };
 
     const onPointerUp = (e: PointerEvent) => finishDragging();
