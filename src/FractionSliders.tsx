@@ -25,8 +25,6 @@ export default function FractionSliders({
   useEffect(() => {
     if (!isDragging) return;
 
-    console.log("dragging!");
-
     const onPointerMove = (e: PointerEvent) => {
       const absDiff = dragStart.pointerDownCoord.x - e.clientX;
       const fractionIdx = dragStart.handleIndex;
@@ -36,12 +34,10 @@ export default function FractionSliders({
 
     const onPointerUp = (e: PointerEvent) => finishDragging();
 
-    console.log("attached listeners");
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
 
     return () => {
-      console.log("removed listeners");
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
     };
