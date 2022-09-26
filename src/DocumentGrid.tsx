@@ -65,6 +65,7 @@ export default function DocumentGrid({}) {
         </div>
 
         <FractionSliders
+          axis="horizontal"
           width={documentWidth}
           height={documentHeight}
           fractions={cols}
@@ -72,6 +73,7 @@ export default function DocumentGrid({}) {
         />
 
         <FractionSliders
+          axis="vertical"
           width={documentWidth}
           height={documentHeight}
           fractions={rows}
