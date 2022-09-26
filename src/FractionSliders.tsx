@@ -99,7 +99,6 @@ const Container = styled.div`
 
 const Handle = styled.div`
   pointer-events: auto;
-  background-color: blue;
   position: absolute;
 `;
 
