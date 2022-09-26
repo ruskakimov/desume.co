@@ -66,6 +66,7 @@ export default function DocumentGrid({}) {
 
         <FractionSliders
           width={documentWidth}
+          height={documentHeight}
           fractions={cols}
           onChange={(fractions) => setCols(fractions)}
         />

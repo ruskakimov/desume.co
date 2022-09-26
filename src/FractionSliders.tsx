@@ -5,6 +5,7 @@ import { clamp, cumulative } from "./common/math";
 
 interface FractionSlidersProps {
   width: number;
+  height: number;
   fractions: number[];
   onChange: (fractions: number[]) => void;
 }
@@ -14,6 +15,7 @@ interface FractionSlidersProps {
  */
 export default function FractionSliders({
   width,
+  height,
   fractions,
   onChange,
 }: FractionSlidersProps) {
@@ -44,26 +46,23 @@ export default function FractionSliders({
   }, [isDragging]);
 
   return (
-    <>
-      <p>{fractions.map((fr) => fr.toFixed(2)).join(", ")}</p>
-      <Container style={{ width }}>
-        {cumulative(fractions)
-          .slice(0, -1)
-          .map((leftPerc, idx) => (
-            <Handle
-              key={idx}
-              style={{ left: `${leftPerc * 100}%` }}
-              onPointerDown={(e) =>
-                setDragStart({
-                  pointerDownCoord: { x: e.clientX, y: e.clientY },
-                  handleIndex: idx,
-                })
-              }
-              draggable={false} // prevent default dnd behaviour
-            />
-          ))}
-      </Container>
-    </>
+    <Container style={{ width, height }}>
+      {cumulative(fractions)
+        .slice(0, -1)
+        .map((leftPerc, idx) => (
+          <Handle
+            key={idx}
+            style={{ left: `${leftPerc * 100}%` }}
+            onPointerDown={(e) =>
+              setDragStart({
+                pointerDownCoord: { x: e.clientX, y: e.clientY },
+                handleIndex: idx,
+              })
+            }
+            draggable={false} // prevent default dnd behaviour
+          />
+        ))}
+    </Container>
   );
 }
 
@@ -89,9 +88,6 @@ function shiftedToNext(
 }
 
 const Container = styled.div`
-  height: 100px;
-  margin: 0 auto;
-  outline: 1px solid black;
   position: relative;
 `;
 
