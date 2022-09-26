@@ -71,11 +71,12 @@ export default function DocumentGrid({}) {
           onChange={(fractions) => setCols(fractions)}
         />
 
-        {/* <FractionSliders
+        <FractionSliders
           width={documentWidth}
+          height={documentHeight}
           fractions={rows}
           onChange={(fractions) => setRows(fractions)}
-        /> */}
+        />
       </StackRoot>
 
       <button

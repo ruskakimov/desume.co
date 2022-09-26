@@ -89,9 +89,11 @@ function shiftedToNext(
 
 const Container = styled.div`
   position: relative;
+  pointer-events: none;
 `;
 
 const Handle = styled.div`
+  pointer-events: auto;
   width: 10px;
   height: 100%;
   background-color: blue;
