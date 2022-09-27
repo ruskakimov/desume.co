@@ -44,4 +44,16 @@ describe("withInsertedColumn", () => {
       [3, 4, 5],
     ]);
   });
+
+  test("can insert a column in first place", () => {
+    const mat = [
+      [1, 2],
+      [3, 4],
+    ];
+    const newMat = withInsertedColumn<number>(mat, 0, 5);
+    expect(newMat).toEqual([
+      [5, 1, 2],
+      [5, 3, 4],
+    ]);
+  });
 });
