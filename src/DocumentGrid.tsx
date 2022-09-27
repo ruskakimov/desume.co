@@ -10,33 +10,40 @@ const scale = 1;
 const documentWidth = a4Dimensions[0] * scale;
 const documentHeight = a4Dimensions[1] * scale;
 
+const colors = [
+  "#000000",
+  "#ffffff",
+  "#ef5350",
+  "#ec407a",
+  "#ab47bc",
+  "#7e57c2",
+  "#5c6bc0",
+  "#42a5f5",
+  "#29b6f6",
+  "#26c6da",
+  "#26a69a",
+];
+
 export default function DocumentGrid({}) {
   const [cols, setCols] = useState([0.5, 0.3, 0.2]);
   const [rows, setRows] = useState([0.3, 0.5, 0.2]);
-  const [colors, setColors] = useState([
-    "#ef5350",
-    "#ec407a",
-    "#ab47bc",
-    "#7e57c2",
-    "#5c6bc0",
-    "#42a5f5",
-    "#29b6f6",
-    "#26c6da",
-    "#26a69a",
-  ]);
+  const [colorIndices, setColorIndices] = useState([0, 0, 0, 1, 1, 1, 2, 2, 2]);
 
   const cells = [];
 
   for (let r = 0; r < rows.length; r++) {
     for (let c = 0; c < cols.length; c++) {
       const i = r * cols.length + c;
+      const colorIdx = colorIndices[i];
+      const color = colors[colorIdx];
+
       cells.push(
-        <ColorBlock
-          color={colors[i]}
-          onChanged={(color) => {
-            const newColors = colors.slice();
-            newColors[i] = color;
-            setColors(newColors);
+        <Cell
+          style={{ backgroundColor: color }}
+          onClick={() => {
+            const newColorIndices = colorIndices.slice();
+            newColorIndices[i] = (colorIdx + 1) % colors.length;
+            setColorIndices(newColorIndices);
           }}
         />
       );
@@ -94,7 +101,7 @@ export default function DocumentGrid({}) {
           for (let r = 0; r < absRows.length; r++) {
             for (let c = 0; c < absCols.length; c++) {
               const i = r * absCols.length + c;
-              const color = colors[i];
+              const color = colors[colorIndices[i]];
               const width = absCols[c];
               const height = absRows[r];
               const x = absCols.slice(0, c).reduce((a, b) => a + b, 0);
@@ -114,27 +121,9 @@ export default function DocumentGrid({}) {
   );
 }
 
-interface ColorBlockProps {
-  color: string;
-  onChanged?: (color: string) => void;
-}
-
-function ColorBlock({ color, onChanged }: ColorBlockProps) {
-  return (
-    <div
-      style={{
-        outline: "1px solid black",
-        backgroundColor: color,
-      }}
-    >
-      <input
-        type="color"
-        value={color}
-        onChange={(e) => onChanged?.call(null, e.target.value)}
-      />
-    </div>
-  );
-}
+const Cell = styled.div`
+  outline: 1px solid black;
+`;
 
 const StackRoot = styled.div`
   margin: 20px auto;
