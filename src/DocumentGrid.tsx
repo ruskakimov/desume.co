@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import { useState } from "react";
 import styled from "styled-components";
+import { cumulative } from "./common/math";
 import FractionSliders from "./FractionSliders";
 
 // A4 dimensions (width, height) in points.
@@ -112,15 +113,16 @@ export default function DocumentGrid({}) {
 
           const absCols = cols.map((fr) => fr * documentWidth);
           const absRows = rows.map((fr) => fr * documentHeight);
+          const colRights = cumulative(absCols);
+          const rowBottoms = cumulative(absRows);
 
           for (let r = 0; r < absRows.length; r++) {
             for (let c = 0; c < absCols.length; c++) {
-              const i = r * absCols.length + c;
               const color = colors[colorIndices[r][c]];
               const width = absCols[c];
               const height = absRows[r];
-              const x = absCols.slice(0, c).reduce((a, b) => a + b, 0);
-              const y = absRows.slice(0, r).reduce((a, b) => a + b, 0);
+              const x = colRights[c] - width;
+              const y = rowBottoms[r] - height;
 
               doc.setFillColor(color);
               doc.rect(x, y, width, height, "F");
