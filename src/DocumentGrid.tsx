@@ -72,19 +72,19 @@ export default function DocumentGrid({}) {
         </div>
 
         <FractionSliders
-          axis="horizontal"
-          width={documentWidth}
-          height={documentHeight}
-          fractions={cols}
-          onChange={(fractions) => setCols(fractions)}
-        />
-
-        <FractionSliders
           axis="vertical"
           width={documentWidth}
           height={documentHeight}
           fractions={rows}
           onChange={(fractions) => setRows(fractions)}
+        />
+
+        <FractionSliders
+          axis="horizontal"
+          width={documentWidth}
+          height={documentHeight}
+          fractions={cols}
+          onChange={(fractions) => setCols(fractions)}
         />
       </StackRoot>
 
