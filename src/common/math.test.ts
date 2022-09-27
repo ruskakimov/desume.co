@@ -1,6 +1,6 @@
-import { clamp, cumulative } from "./math";
+import { clamp, cumulative, withInsertedColumn } from "./math";
 
-describe("clamping function", () => {
+describe("clamp", () => {
   test("returns the same value if in range", () => {
     expect(clamp(12, 10, 20)).toEqual(12);
   });
@@ -14,8 +14,8 @@ describe("clamping function", () => {
   });
 });
 
-describe("cumulative range function", () => {
-  test("returns empty array", () => {
+describe("cumulative", () => {
+  test("returns an empty array", () => {
     expect(cumulative([])).toEqual([]);
   });
 
@@ -29,5 +29,19 @@ describe("cumulative range function", () => {
 
   test("works for mixed positive and negative integers", () => {
     expect(cumulative([10, -40, 15, 0])).toEqual([10, -30, -15, -15]);
+  });
+});
+
+describe("withInsertedColumn", () => {
+  test("can insert a column in last place", () => {
+    const mat = [
+      [1, 2],
+      [3, 4],
+    ];
+    const newMat = withInsertedColumn<number>(mat, 2, 5);
+    expect(newMat).toEqual([
+      [1, 2, 5],
+      [3, 4, 5],
+    ]);
   });
 });

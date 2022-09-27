@@ -1,4 +1,4 @@
-export function clamp(value: number, min: number, max: number) {
+export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
@@ -11,4 +11,11 @@ export function cumulative(array: number[]): number[] {
     total += value;
     return total;
   });
+}
+
+/**
+ * Returns a new matrix with a column inserted at [index] filled with [value].
+ */
+export function withInsertedColumn<T>(matrix: T[][], index: number, value: T) {
+  return matrix.map((row) => row.concat(value));
 }
