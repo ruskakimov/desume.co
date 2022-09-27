@@ -1,19 +1,33 @@
-import { cumulative } from "./math";
+import { clamp, cumulative } from "./math";
 
-describe("cumulative function", () => {
+describe("clamping function", () => {
+  test("returns the same value if in range", () => {
+    expect(clamp(12, 10, 20)).toEqual(12);
+  });
+
+  test("clamps smaller value to min", () => {
+    expect(clamp(5, 10, 20)).toEqual(10);
+  });
+
+  test("clamps larger value to max", () => {
+    expect(clamp(21, 10, 20)).toEqual(20);
+  });
+});
+
+describe("cumulative range function", () => {
   test("returns empty array", () => {
-    expect(cumulative([])).toStrictEqual([]);
+    expect(cumulative([])).toEqual([]);
   });
 
   test("works for positive integers", () => {
-    expect(cumulative([1, 2, 3, 4])).toStrictEqual([1, 3, 6, 10]);
+    expect(cumulative([1, 2, 3, 4])).toEqual([1, 3, 6, 10]);
   });
 
   test("works for negative integers", () => {
-    expect(cumulative([-1, -4, -2, -10])).toStrictEqual([-1, -5, -7, -17]);
+    expect(cumulative([-1, -4, -2, -10])).toEqual([-1, -5, -7, -17]);
   });
 
   test("works for mixed positive and negative integers", () => {
-    expect(cumulative([10, -40, 15, 0])).toStrictEqual([10, -30, -15, -15]);
+    expect(cumulative([10, -40, 15, 0])).toEqual([10, -30, -15, -15]);
   });
 });
