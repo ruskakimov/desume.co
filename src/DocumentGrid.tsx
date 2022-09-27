@@ -27,22 +27,24 @@ const colors = [
 export default function DocumentGrid({}) {
   const [cols, setCols] = useState([0.5, 0.5]);
   const [rows, setRows] = useState([0.5, 0.5]);
-  const [colorIndices, setColorIndices] = useState([0, 1, 2, 7]);
+  const [colorIndices, setColorIndices] = useState<number[][]>([
+    [0, 1],
+    [2, 7],
+  ]);
 
   const cells = [];
 
   for (let r = 0; r < rows.length; r++) {
     for (let c = 0; c < cols.length; c++) {
-      const i = r * cols.length + c;
-      const colorIdx = colorIndices[i];
+      const colorIdx = colorIndices[r][c];
       const color = colors[colorIdx];
 
       cells.push(
         <Cell
           style={{ backgroundColor: color }}
           onClick={() => {
-            const newColorIndices = colorIndices.slice();
-            newColorIndices[i] = (colorIdx + 1) % colors.length;
+            const newColorIndices = colorIndices.map((row) => row.slice());
+            newColorIndices[r][c] = (colorIdx + 1) % colors.length;
             setColorIndices(newColorIndices);
           }}
         />
@@ -52,7 +54,18 @@ export default function DocumentGrid({}) {
 
   return (
     <div style={{ textAlign: "center", padding: "32px" }}>
-      <button>Add column</button>
+      <button
+        onClick={() => {
+          const newColFr = 1 / (cols.length + 1);
+          const scalar = 1 - newColFr;
+          const newCols = cols.map((fr) => fr * scalar).concat(newColFr);
+          const newColorIndices = colorIndices.map((row) => [...row, 0]);
+          setCols(newCols);
+          setColorIndices(newColorIndices);
+        }}
+      >
+        Add column
+      </button>
 
       <StackRoot
         style={{
@@ -103,7 +116,7 @@ export default function DocumentGrid({}) {
           for (let r = 0; r < absRows.length; r++) {
             for (let c = 0; c < absCols.length; c++) {
               const i = r * absCols.length + c;
-              const color = colors[colorIndices[i]];
+              const color = colors[colorIndices[r][c]];
               const width = absCols[c];
               const height = absRows[r];
               const x = absCols.slice(0, c).reduce((a, b) => a + b, 0);
