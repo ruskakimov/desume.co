@@ -25,9 +25,9 @@ const colors = [
 ];
 
 export default function DocumentGrid({}) {
-  const [cols, setCols] = useState([0.5, 0.3, 0.2]);
-  const [rows, setRows] = useState([0.3, 0.5, 0.2]);
-  const [colorIndices, setColorIndices] = useState([0, 0, 0, 1, 1, 1, 2, 2, 2]);
+  const [cols, setCols] = useState([0.5, 0.5]);
+  const [rows, setRows] = useState([0.5, 0.5]);
+  const [colorIndices, setColorIndices] = useState([0, 1, 2, 7]);
 
   const cells = [];
 
@@ -51,7 +51,9 @@ export default function DocumentGrid({}) {
   }
 
   return (
-    <>
+    <div style={{ textAlign: "center", padding: "32px" }}>
+      <button>Add column</button>
+
       <StackRoot
         style={{
           width: documentWidth,
@@ -117,7 +119,7 @@ export default function DocumentGrid({}) {
       >
         Save as PDF
       </button>
-    </>
+    </div>
   );
 }
 
