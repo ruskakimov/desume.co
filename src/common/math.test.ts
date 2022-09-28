@@ -1,4 +1,4 @@
-import { clamp, cumulative, withInsertedColumn } from "./math";
+import { clamp, cumulative, withInserted, withInsertedColumn } from "./math";
 
 describe("clamp", () => {
   test("returns the same value if in range", () => {
@@ -29,6 +29,20 @@ describe("cumulative", () => {
 
   test("works for mixed positive and negative integers", () => {
     expect(cumulative([10, -40, 15, 0])).toEqual([10, -30, -15, -15]);
+  });
+});
+
+describe("withInserted", () => {
+  test("inserts a value in last place", () => {
+    expect(withInserted([1, 2, 3], 3, 4)).toEqual([1, 2, 3, 4]);
+  });
+
+  test("inserts a value in first place", () => {
+    expect(withInserted([1, 2, 3], 0, 42)).toEqual([42, 1, 2, 3]);
+  });
+
+  test("inserts a value in the middle", () => {
+    expect(withInserted([1, 2, 3], 1, 42)).toEqual([1, 42, 2, 3]);
   });
 });
 

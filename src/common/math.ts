@@ -14,6 +14,15 @@ export function cumulative(array: number[]): number[] {
 }
 
 /**
+ * Returns a new array with a [value] inserted at [index].
+ */
+export function withInserted<T>(array: T[], index: number, value: T) {
+  const copy = array.slice();
+  copy.splice(index, 0, value);
+  return copy;
+}
+
+/**
  * Returns a new matrix with a column inserted at [index] filled with [value].
  */
 export function withInsertedColumn<T>(matrix: T[][], index: number, value: T) {
