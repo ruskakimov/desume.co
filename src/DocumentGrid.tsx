@@ -61,7 +61,11 @@ export default function DocumentGrid({}) {
           const newColFr = 1 / (cols.length + 1);
           const scalar = 1 - newColFr;
           const newCols = cols.map((fr) => fr * scalar).concat(newColFr);
-          const newColorMat = withInsertedColumnAt(colorMat, 0, 0);
+          const newColorMat = withInsertedColumnAt(
+            colorMat,
+            colorMat.length,
+            0
+          );
           setCols(newCols);
           setColorMat(newColorMat);
         }}
