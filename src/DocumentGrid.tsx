@@ -27,6 +27,7 @@ export default function DocumentGrid({}) {
   for (let r = 0; r < rowSizes.length; r++) {
     for (let c = 0; c < colSizes.length; c++) {
       const content = contentMat[r][c];
+      // TODO: Select cell and modify its content
       cells.push(
         <Cell>
           <ReactMarkdown children={content} />
@@ -125,6 +126,8 @@ export default function DocumentGrid({}) {
               doc.rect(x, y, width, height, "F");
             }
           }
+
+          // TODO: Generate PDF page from HTML element (draw headers and paragraphs)
 
           doc.save("a4.pdf");
         }}
