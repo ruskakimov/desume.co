@@ -26,5 +26,5 @@ export function withInserted<T>(array: T[], index: number, value: T) {
  * Returns a new matrix with a column inserted at [index] filled with [value].
  */
 export function withInsertedColumn<T>(matrix: T[][], index: number, value: T) {
-  return matrix.map((row) => row.concat(value));
+  return matrix.map((row) => withInserted(row, index, value));
 }

@@ -70,4 +70,16 @@ describe("withInsertedColumn", () => {
       [5, 3, 4],
     ]);
   });
+
+  test("can insert a column in the middle", () => {
+    const mat = [
+      [1, 2, 3],
+      [4, 5, 6],
+    ];
+    const newMat = withInsertedColumn<number>(mat, 1, 0);
+    expect(newMat).toEqual([
+      [1, 0, 2, 3],
+      [4, 0, 5, 6],
+    ]);
+  });
 });
