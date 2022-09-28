@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/array";
 import { cumulative } from "./common/math";
@@ -13,70 +14,49 @@ const scale = 1;
 const documentWidth = a4Dimensions[0] * scale;
 const documentHeight = a4Dimensions[1] * scale;
 
-const colors = [
-  "#000000",
-  "#ffffff",
-  "#ef5350",
-  "#ec407a",
-  "#ab47bc",
-  "#7e57c2",
-  "#5c6bc0",
-  "#42a5f5",
-  "#29b6f6",
-  "#26c6da",
-  "#26a69a",
-];
-
 export default function DocumentGrid({}) {
   const [colSizes, setColSizes] = useState([0.5, 0.5]);
   const [rowSizes, setRowSizes] = useState([0.5, 0.5]);
-  const [colorMat, setColorMat] = useState<number[][]>([
-    [0, 1],
-    [2, 7],
+  const [contentMat, setContentMat] = useState<string[][]>([
+    ["", "# Hello"],
+    ["", "world"],
   ]);
 
   const cells = [];
 
   for (let r = 0; r < rowSizes.length; r++) {
     for (let c = 0; c < colSizes.length; c++) {
-      const colorIdx = colorMat[r][c];
-      const color = colors[colorIdx];
-
+      const content = contentMat[r][c];
       cells.push(
-        <Cell
-          style={{ backgroundColor: color }}
-          onClick={() => {
-            const newColorIndices = colorMat.map((row) => row.slice());
-            newColorIndices[r][c] = (colorIdx + 1) % colors.length;
-            setColorMat(newColorIndices);
-          }}
-        />
+        <Cell>
+          <ReactMarkdown children={content} />
+        </Cell>
       );
     }
   }
 
-  const insertColumnAt = (index: number, fillColor: number = 0): void => {
+  const insertColumnAt = (index: number): void => {
     const newColFr = 1 / (colSizes.length + 1);
     const scalar = 1 - newColFr;
     const squeezedCols = colSizes.map((fr) => fr * scalar);
 
     const newColSizes = withInsertedAt(squeezedCols, index, newColFr);
-    const newColorMat = withInsertedColumn(colorMat, index, fillColor);
+    const newColorMat = withInsertedColumn(contentMat, index, "");
 
     setColSizes(newColSizes);
-    setColorMat(newColorMat);
+    setContentMat(newColorMat);
   };
 
-  const insertRowAt = (index: number, fillColor: number = 0): void => {
+  const insertRowAt = (index: number): void => {
     const newRowFr = 1 / (rowSizes.length + 1);
     const scalar = 1 - newRowFr;
     const squeezedRows = rowSizes.map((fr) => fr * scalar);
 
     const newRowSizes = withInsertedAt(squeezedRows, index, newRowFr);
-    const newColorMat = withInsertedRow(colorMat, index, fillColor);
+    const newColorMat = withInsertedRow(contentMat, index, "");
 
     setRowSizes(newRowSizes);
-    setColorMat(newColorMat);
+    setContentMat(newColorMat);
   };
 
   return (
@@ -135,13 +115,13 @@ export default function DocumentGrid({}) {
 
           for (let r = 0; r < absRows.length; r++) {
             for (let c = 0; c < absCols.length; c++) {
-              const color = colors[colorMat[r][c]];
+              // const color = colors[contentMat[r][c]];
               const width = absCols[c];
               const height = absRows[r];
               const x = colRights[c] - width;
               const y = rowBottoms[r] - height;
 
-              doc.setFillColor(color);
+              // doc.setFillColor(color);
               doc.rect(x, y, width, height, "F");
             }
           }
@@ -157,6 +137,7 @@ export default function DocumentGrid({}) {
 
 const Cell = styled.div`
   outline: 1px solid black;
+  text-align: left;
 `;
 
 const StackRoot = styled.div`
