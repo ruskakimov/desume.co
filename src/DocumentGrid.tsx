@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/array";
 import { cumulative } from "./common/math";
-import { withInsertedColumn } from "./common/matrix";
+import { withInsertedColumn, withInsertedRow } from "./common/matrix";
 import FractionSliders from "./FractionSliders";
 
 // A4 dimensions (width, height) in points.
@@ -67,9 +67,23 @@ export default function DocumentGrid({}) {
     setColorMat(newColorMat);
   };
 
+  const insertRowAt = (index: number, fillColor: number = 0): void => {
+    const newRowFr = 1 / (rows.length + 1);
+    const scalar = 1 - newRowFr;
+    const squeezedRows = rows.map((fr) => fr * scalar);
+
+    const newRows = withInsertedAt(squeezedRows, index, newRowFr);
+    const newColorMat = withInsertedRow(colorMat, index, fillColor);
+
+    setRows(newRows);
+    setColorMat(newColorMat);
+  };
+
   return (
     <div style={{ textAlign: "center", padding: "32px" }}>
       <button onClick={() => insertColumnAt(0)}>Add column</button>
+
+      <button onClick={() => insertRowAt(0)}>Add row</button>
 
       <StackRoot
         style={{
