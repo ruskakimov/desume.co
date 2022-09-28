@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import { useState } from "react";
 import styled from "styled-components";
 import { cumulative } from "./common/math";
+import { withInsertedColumnAt } from "./common/matrix";
 import FractionSliders from "./FractionSliders";
 
 // A4 dimensions (width, height) in points.
@@ -28,7 +29,7 @@ const colors = [
 export default function DocumentGrid({}) {
   const [cols, setCols] = useState([0.5, 0.5]);
   const [rows, setRows] = useState([0.5, 0.5]);
-  const [colorIndices, setColorIndices] = useState<number[][]>([
+  const [colorMat, setColorMat] = useState<number[][]>([
     [0, 1],
     [2, 7],
   ]);
@@ -37,16 +38,16 @@ export default function DocumentGrid({}) {
 
   for (let r = 0; r < rows.length; r++) {
     for (let c = 0; c < cols.length; c++) {
-      const colorIdx = colorIndices[r][c];
+      const colorIdx = colorMat[r][c];
       const color = colors[colorIdx];
 
       cells.push(
         <Cell
           style={{ backgroundColor: color }}
           onClick={() => {
-            const newColorIndices = colorIndices.map((row) => row.slice());
+            const newColorIndices = colorMat.map((row) => row.slice());
             newColorIndices[r][c] = (colorIdx + 1) % colors.length;
-            setColorIndices(newColorIndices);
+            setColorMat(newColorIndices);
           }}
         />
       );
@@ -60,9 +61,9 @@ export default function DocumentGrid({}) {
           const newColFr = 1 / (cols.length + 1);
           const scalar = 1 - newColFr;
           const newCols = cols.map((fr) => fr * scalar).concat(newColFr);
-          const newColorIndices = colorIndices.map((row) => [...row, 0]);
+          const newColorMat = withInsertedColumnAt(colorMat, 0, 0);
           setCols(newCols);
-          setColorIndices(newColorIndices);
+          setColorMat(newColorMat);
         }}
       >
         Add column
@@ -118,7 +119,7 @@ export default function DocumentGrid({}) {
 
           for (let r = 0; r < absRows.length; r++) {
             for (let c = 0; c < absCols.length; c++) {
-              const color = colors[colorIndices[r][c]];
+              const color = colors[colorMat[r][c]];
               const width = absCols[c];
               const height = absRows[r];
               const x = colRights[c] - width;

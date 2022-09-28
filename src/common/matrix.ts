@@ -3,7 +3,7 @@ import { withInsertedAt } from "./array";
 /**
  * Returns a new matrix with a column inserted at [index] filled with [value].
  */
-export function withInsertedColumn<T>(
+export function withInsertedColumnAt<T>(
   matrix: T[][],
   index: number,
   value: T
