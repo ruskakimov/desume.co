@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import { useState } from "react";
 import styled from "styled-components";
+import { withInsertedAt } from "./common/array";
 import { cumulative } from "./common/math";
 import { withInsertedColumn } from "./common/matrix";
 import FractionSliders from "./FractionSliders";
@@ -54,20 +55,21 @@ export default function DocumentGrid({}) {
     }
   }
 
+  const insertColumnAt = (index: number, fillColor: number = 0): void => {
+    const newColFr = 1 / (cols.length + 1);
+    const scalar = 1 - newColFr;
+    const squeezedCols = cols.map((fr) => fr * scalar);
+
+    const newCols = withInsertedAt(squeezedCols, index, newColFr);
+    const newColorMat = withInsertedColumn(colorMat, index, fillColor);
+
+    setCols(newCols);
+    setColorMat(newColorMat);
+  };
+
   return (
     <div style={{ textAlign: "center", padding: "32px" }}>
-      <button
-        onClick={() => {
-          const newColFr = 1 / (cols.length + 1);
-          const scalar = 1 - newColFr;
-          const newCols = cols.map((fr) => fr * scalar).concat(newColFr);
-          const newColorMat = withInsertedColumn(colorMat, colorMat.length, 0);
-          setCols(newCols);
-          setColorMat(newColorMat);
-        }}
-      >
-        Add column
-      </button>
+      <button onClick={() => insertColumnAt(0)}>Add column</button>
 
       <StackRoot
         style={{
