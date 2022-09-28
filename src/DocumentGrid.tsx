@@ -28,8 +28,8 @@ const colors = [
 ];
 
 export default function DocumentGrid({}) {
-  const [cols, setCols] = useState([0.5, 0.5]);
-  const [rows, setRows] = useState([0.5, 0.5]);
+  const [colSizes, setColSizes] = useState([0.5, 0.5]);
+  const [rowSizes, setRowSizes] = useState([0.5, 0.5]);
   const [colorMat, setColorMat] = useState<number[][]>([
     [0, 1],
     [2, 7],
@@ -37,8 +37,8 @@ export default function DocumentGrid({}) {
 
   const cells = [];
 
-  for (let r = 0; r < rows.length; r++) {
-    for (let c = 0; c < cols.length; c++) {
+  for (let r = 0; r < rowSizes.length; r++) {
+    for (let c = 0; c < colSizes.length; c++) {
       const colorIdx = colorMat[r][c];
       const color = colors[colorIdx];
 
@@ -56,26 +56,26 @@ export default function DocumentGrid({}) {
   }
 
   const insertColumnAt = (index: number, fillColor: number = 0): void => {
-    const newColFr = 1 / (cols.length + 1);
+    const newColFr = 1 / (colSizes.length + 1);
     const scalar = 1 - newColFr;
-    const squeezedCols = cols.map((fr) => fr * scalar);
+    const squeezedCols = colSizes.map((fr) => fr * scalar);
 
-    const newCols = withInsertedAt(squeezedCols, index, newColFr);
+    const newColSizes = withInsertedAt(squeezedCols, index, newColFr);
     const newColorMat = withInsertedColumn(colorMat, index, fillColor);
 
-    setCols(newCols);
+    setColSizes(newColSizes);
     setColorMat(newColorMat);
   };
 
   const insertRowAt = (index: number, fillColor: number = 0): void => {
-    const newRowFr = 1 / (rows.length + 1);
+    const newRowFr = 1 / (rowSizes.length + 1);
     const scalar = 1 - newRowFr;
-    const squeezedRows = rows.map((fr) => fr * scalar);
+    const squeezedRows = rowSizes.map((fr) => fr * scalar);
 
-    const newRows = withInsertedAt(squeezedRows, index, newRowFr);
+    const newRowSizes = withInsertedAt(squeezedRows, index, newRowFr);
     const newColorMat = withInsertedRow(colorMat, index, fillColor);
 
-    setRows(newRows);
+    setRowSizes(newRowSizes);
     setColorMat(newColorMat);
   };
 
@@ -97,8 +97,8 @@ export default function DocumentGrid({}) {
             height: documentHeight,
             backgroundColor: "white",
             display: "grid",
-            gridTemplateColumns: cols.map((fr) => fr * 100 + "%").join(" "),
-            gridTemplateRows: rows.map((fr) => fr * 100 + "%").join(" "),
+            gridTemplateColumns: colSizes.map((fr) => fr * 100 + "%").join(" "),
+            gridTemplateRows: rowSizes.map((fr) => fr * 100 + "%").join(" "),
           }}
         >
           {cells}
@@ -108,16 +108,16 @@ export default function DocumentGrid({}) {
           axis="vertical"
           width={documentWidth}
           height={documentHeight}
-          fractions={rows}
-          onChange={(fractions) => setRows(fractions)}
+          fractions={rowSizes}
+          onChange={(fractions) => setRowSizes(fractions)}
         />
 
         <FractionSliders
           axis="horizontal"
           width={documentWidth}
           height={documentHeight}
-          fractions={cols}
-          onChange={(fractions) => setCols(fractions)}
+          fractions={colSizes}
+          onChange={(fractions) => setColSizes(fractions)}
         />
       </StackRoot>
 
@@ -128,8 +128,8 @@ export default function DocumentGrid({}) {
             unit: "pt",
           });
 
-          const absCols = cols.map((fr) => fr * documentWidth);
-          const absRows = rows.map((fr) => fr * documentHeight);
+          const absCols = colSizes.map((fr) => fr * documentWidth);
+          const absRows = rowSizes.map((fr) => fr * documentHeight);
           const colRights = cumulative(absCols);
           const rowBottoms = cumulative(absRows);
 
