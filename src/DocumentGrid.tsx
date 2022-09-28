@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import { useState } from "react";
 import styled from "styled-components";
 import { cumulative } from "./common/math";
-import { withInsertedColumnAt } from "./common/matrix";
+import { withInsertedColumn } from "./common/matrix";
 import FractionSliders from "./FractionSliders";
 
 // A4 dimensions (width, height) in points.
@@ -61,11 +61,7 @@ export default function DocumentGrid({}) {
           const newColFr = 1 / (cols.length + 1);
           const scalar = 1 - newColFr;
           const newCols = cols.map((fr) => fr * scalar).concat(newColFr);
-          const newColorMat = withInsertedColumnAt(
-            colorMat,
-            colorMat.length,
-            0
-          );
+          const newColorMat = withInsertedColumn(colorMat, colorMat.length, 0);
           setCols(newCols);
           setColorMat(newColorMat);
         }}
