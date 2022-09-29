@@ -179,7 +179,9 @@ const StackRoot = styled.div`
 const ContextMenu = styled.div`
   width: 150px;
   height: 150px;
-  background-color: black;
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
   position: fixed;
   top: 0;
   left: 0;
