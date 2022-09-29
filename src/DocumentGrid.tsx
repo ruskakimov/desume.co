@@ -156,7 +156,12 @@ export default function DocumentGrid({}) {
       {contextMenu && (
         <ContextMenu
           style={{ top: contextMenu.topLeft.y, left: contextMenu.topLeft.x }}
-        />
+        >
+          <ContextMenuItem>Add row before</ContextMenuItem>
+          <ContextMenuItem>Add row after</ContextMenuItem>
+          <ContextMenuItem>Add column before</ContextMenuItem>
+          <ContextMenuItem>Add column after</ContextMenuItem>
+        </ContextMenu>
       )}
     </div>
   );
@@ -177,12 +182,27 @@ const StackRoot = styled.div`
 `;
 
 const ContextMenu = styled.div`
-  width: 150px;
-  height: 150px;
+  width: 20rem;
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
   border-radius: 4px;
   position: fixed;
   top: 0;
   left: 0;
+  overflow: hidden;
+`;
+
+const ContextMenuItem = styled.button`
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: initial;
+
+  padding: 1em;
+  font-size: 14px;
+  text-align: left;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 `;
