@@ -17,6 +17,8 @@ const documentHeight = a4Dimensions[1] * scale;
 
 interface ContextMenu {
   topLeft: Coord;
+  columnIndex: number;
+  rowIndex: number;
 }
 
 export default function DocumentGrid({}) {
@@ -36,7 +38,19 @@ export default function DocumentGrid({}) {
       const content = contentMat[r][c];
       // TODO: Select cell and modify its content
       cells.push(
-        <Cell>
+        <Cell
+          onContextMenu={(e) => {
+            e.preventDefault();
+            setContextMenu({
+              topLeft: {
+                x: e.clientX,
+                y: e.clientY,
+              },
+              columnIndex: c,
+              rowIndex: r,
+            });
+          }}
+        >
           <ReactMarkdown children={content} />
         </Cell>
       );
@@ -49,7 +63,7 @@ export default function DocumentGrid({}) {
     const squeezedCols = colSizes.map((fr) => fr * scalar);
 
     const newColSizes = withInsertedAt(squeezedCols, index, newColFr);
-    const newColorMat = withInsertedColumn(contentMat, index, "");
+    const newColorMat = withInsertedColumn(contentMat, index, "test");
 
     setColSizes(newColSizes);
     setContentMat(newColorMat);
@@ -61,25 +75,14 @@ export default function DocumentGrid({}) {
     const squeezedRows = rowSizes.map((fr) => fr * scalar);
 
     const newRowSizes = withInsertedAt(squeezedRows, index, newRowFr);
-    const newColorMat = withInsertedRow(contentMat, index, "");
+    const newColorMat = withInsertedRow(contentMat, index, "test");
 
     setRowSizes(newRowSizes);
     setContentMat(newColorMat);
   };
 
   return (
-    <div
-      style={{ textAlign: "center", padding: "32px" }}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        setContextMenu({
-          topLeft: {
-            x: e.clientX,
-            y: e.clientY,
-          },
-        });
-      }}
-    >
+    <div style={{ textAlign: "center", padding: "32px" }}>
       <button onClick={() => insertColumnAt(0)}>Add column</button>
 
       <button onClick={() => insertRowAt(0)}>Add row</button>
@@ -157,10 +160,38 @@ export default function DocumentGrid({}) {
         <ContextMenu
           style={{ top: contextMenu.topLeft.y, left: contextMenu.topLeft.x }}
         >
-          <ContextMenuItem>Add row before</ContextMenuItem>
-          <ContextMenuItem>Add row after</ContextMenuItem>
-          <ContextMenuItem>Add column before</ContextMenuItem>
-          <ContextMenuItem>Add column after</ContextMenuItem>
+          <ContextMenuItem
+            onClick={() => {
+              insertRowAt(contextMenu.rowIndex);
+              setContextMenu(undefined);
+            }}
+          >
+            Add row before
+          </ContextMenuItem>
+          <ContextMenuItem
+            onClick={() => {
+              insertRowAt(contextMenu.rowIndex + 1);
+              setContextMenu(undefined);
+            }}
+          >
+            Add row after
+          </ContextMenuItem>
+          <ContextMenuItem
+            onClick={() => {
+              insertColumnAt(contextMenu.columnIndex);
+              setContextMenu(undefined);
+            }}
+          >
+            Add column before
+          </ContextMenuItem>
+          <ContextMenuItem
+            onClick={() => {
+              insertColumnAt(contextMenu.columnIndex + 1);
+              setContextMenu(undefined);
+            }}
+          >
+            Add column after
+          </ContextMenuItem>
         </ContextMenu>
       )}
     </div>
