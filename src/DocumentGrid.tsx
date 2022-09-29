@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/array";
@@ -30,6 +30,24 @@ export default function DocumentGrid({}) {
   ]);
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!contextMenu) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      const isInside = contextMenuRef.current!.contains(
+        e.target as Node | null
+      );
+      if (!isInside) setContextMenu(undefined);
+    };
+
+    window.addEventListener("pointerdown", onPointerDown);
+
+    return () => {
+      window.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [contextMenu]);
 
   const cells = [];
 
@@ -158,6 +176,7 @@ export default function DocumentGrid({}) {
 
       {contextMenu && (
         <ContextMenu
+          ref={contextMenuRef}
           style={{ top: contextMenu.topLeft.y, left: contextMenu.topLeft.x }}
         >
           <ContextMenuItem
@@ -235,5 +254,6 @@ const ContextMenuItem = styled.button`
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
   }
 `;
