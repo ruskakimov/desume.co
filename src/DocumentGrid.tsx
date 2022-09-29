@@ -234,8 +234,9 @@ const StackRoot = styled.div`
 const ContextMenu = styled.div`
   width: 20rem;
   background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
@@ -248,12 +249,12 @@ const ContextMenuItem = styled.button`
   border: none;
   background-color: initial;
 
-  padding: 1em;
+  padding: 0.8em 1.2em;
   font-size: 14px;
   text-align: left;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
     cursor: pointer;
   }
 `;
