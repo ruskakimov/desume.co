@@ -235,7 +235,7 @@ const StackRoot = styled.div`
 `;
 
 const ContextMenu = styled.div`
-  width: 20rem;
+  width: 15rem;
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -244,6 +244,7 @@ const ContextMenu = styled.div`
   top: 0;
   left: 0;
   overflow: hidden;
+  padding: 8px 0;
 `;
 
 const ContextMenuItem = styled.button`
@@ -252,7 +253,7 @@ const ContextMenuItem = styled.button`
   border: none;
   background-color: initial;
 
-  padding: 0.8em 1.2em;
+  padding: 0.4em 1.2em;
   font-size: 14px;
   text-align: left;
 
@@ -263,6 +264,6 @@ const ContextMenuItem = styled.button`
 `;
 
 const ContextMenuSeparator = styled.hr`
-  margin: 0;
+  margin: 8px 0;
   border: 0.5px solid rgba(0, 0, 0, 0.1);
 `;
