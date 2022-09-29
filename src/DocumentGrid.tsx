@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { withInsertedAt } from "./common/array";
 import { cumulative } from "./common/math";
 import { withInsertedColumn, withInsertedRow } from "./common/matrix";
+import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
 
 // A4 dimensions (width, height) in points.
@@ -14,6 +15,10 @@ const scale = 1;
 const documentWidth = a4Dimensions[0] * scale;
 const documentHeight = a4Dimensions[1] * scale;
 
+interface ContextMenu {
+  topLeft: Coord;
+}
+
 export default function DocumentGrid({}) {
   const [colSizes, setColSizes] = useState([0.5, 0.5]);
   const [rowSizes, setRowSizes] = useState([0.5, 0.5]);
@@ -21,6 +26,8 @@ export default function DocumentGrid({}) {
     ["", "# Hello"],
     ["", "world"],
   ]);
+
+  const [contextMenu, setContextMenu] = useState<ContextMenu>();
 
   const cells = [];
 
@@ -61,7 +68,18 @@ export default function DocumentGrid({}) {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "32px" }}>
+    <div
+      style={{ textAlign: "center", padding: "32px" }}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        setContextMenu({
+          topLeft: {
+            x: e.clientX,
+            y: e.clientY,
+          },
+        });
+      }}
+    >
       <button onClick={() => insertColumnAt(0)}>Add column</button>
 
       <button onClick={() => insertRowAt(0)}>Add row</button>
@@ -134,6 +152,12 @@ export default function DocumentGrid({}) {
       >
         Save as PDF
       </button>
+
+      {contextMenu && (
+        <ContextMenu
+          style={{ top: contextMenu.topLeft.y, left: contextMenu.topLeft.x }}
+        />
+      )}
     </div>
   );
 }
@@ -150,4 +174,13 @@ const StackRoot = styled.div`
   & > * {
     position: absolute;
   }
+`;
+
+const ContextMenu = styled.div`
+  width: 150px;
+  height: 150px;
+  background-color: black;
+  position: fixed;
+  top: 0;
+  left: 0;
 `;
