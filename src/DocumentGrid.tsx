@@ -195,6 +195,9 @@ export default function DocumentGrid({}) {
           >
             Add row after
           </ContextMenuItem>
+
+          <ContextMenuSeparator />
+
           <ContextMenuItem
             onClick={() => {
               insertColumnAt(contextMenu.columnIndex);
@@ -257,4 +260,9 @@ const ContextMenuItem = styled.button`
     background-color: rgba(0, 0, 0, 0.05);
     cursor: pointer;
   }
+`;
+
+const ContextMenuSeparator = styled.hr`
+  margin: 0;
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
 `;
