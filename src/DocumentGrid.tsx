@@ -4,15 +4,13 @@ import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/functions/array";
 import { withInsertedColumn, withInsertedRow } from "./common/functions/matrix";
+import { a4SizeInPoints } from "./common/sizes";
 import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
 
-// A4 dimensions (width, height) in points.
-const a4Dimensions: [number, number] = [595.28, 842.89];
-
 const scale = 1;
-const documentWidth = a4Dimensions[0] * scale;
-const documentHeight = a4Dimensions[1] * scale;
+const documentWidth = a4SizeInPoints[0] * scale;
+const documentHeight = a4SizeInPoints[1] * scale;
 
 interface ContextMenu {
   topLeft: Coord;
