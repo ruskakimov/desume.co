@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/functions/array";
-import { cumulative } from "./common/functions/math";
 import { withInsertedColumn, withInsertedRow } from "./common/functions/matrix";
 import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
@@ -31,6 +30,8 @@ export default function DocumentGrid({}) {
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!contextMenu) return;
@@ -112,6 +113,7 @@ export default function DocumentGrid({}) {
         }}
       >
         <div
+          ref={rootRef}
           style={{
             width: documentWidth,
             height: documentHeight,
@@ -142,33 +144,10 @@ export default function DocumentGrid({}) {
       </StackRoot>
 
       <button
-        onClick={(e) => {
-          // Default export is a4 paper, portrait, using millimeters for units
-          const doc = new jsPDF({
-            unit: "pt",
-          });
-
-          const absCols = colSizes.map((fr) => fr * documentWidth);
-          const absRows = rowSizes.map((fr) => fr * documentHeight);
-          const colRights = cumulative(absCols);
-          const rowBottoms = cumulative(absRows);
-
-          for (let r = 0; r < absRows.length; r++) {
-            for (let c = 0; c < absCols.length; c++) {
-              // const color = colors[contentMat[r][c]];
-              const width = absCols[c];
-              const height = absRows[r];
-              const x = colRights[c] - width;
-              const y = rowBottoms[r] - height;
-
-              // doc.setFillColor(color);
-              doc.rect(x, y, width, height, "F");
-            }
+        onClick={() => {
+          if (rootRef.current) {
+            generatePdf(rootRef.current);
           }
-
-          // TODO: Generate PDF page from HTML element (draw headers and paragraphs)
-
-          doc.save("a4.pdf");
         }}
       >
         Save as PDF
@@ -267,3 +246,31 @@ const ContextMenuSeparator = styled.hr`
   margin: 8px 0;
   border: 0.5px solid rgba(0, 0, 0, 0.1);
 `;
+
+function generatePdf(root: HTMLElement): jsPDF {
+  const doc = new jsPDF({ format: "a4" });
+
+  // const absCols = colSizes.map((fr) => fr * documentWidth);
+  // const absRows = rowSizes.map((fr) => fr * documentHeight);
+  // const colRights = cumulative(absCols);
+  // const rowBottoms = cumulative(absRows);
+
+  // for (let r = 0; r < absRows.length; r++) {
+  //   for (let c = 0; c < absCols.length; c++) {
+  //     // const color = colors[contentMat[r][c]];
+  //     const width = absCols[c];
+  //     const height = absRows[r];
+  //     const x = colRights[c] - width;
+  //     const y = rowBottoms[r] - height;
+
+  //     // doc.setFillColor(color);
+  //     doc.rect(x, y, width, height, "F");
+  //   }
+  // }
+
+  const rootRect = root.getBoundingClientRect();
+
+  root.childNodes.forEach((cell) => console.log(cell.textContent));
+
+  return doc;
+}
