@@ -2,9 +2,9 @@ import jsPDF from "jspdf";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
-import { withInsertedAt } from "./common/array";
-import { cumulative } from "./common/math";
-import { withInsertedColumn, withInsertedRow } from "./common/matrix";
+import { withInsertedAt } from "./common/functions/array";
+import { cumulative } from "./common/functions/math";
+import { withInsertedColumn, withInsertedRow } from "./common/functions/matrix";
 import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
 
