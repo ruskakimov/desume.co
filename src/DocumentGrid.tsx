@@ -245,8 +245,8 @@ const ContextMenuSeparator = styled.hr`
   border: 0.5px solid rgba(0, 0, 0, 0.1);
 `;
 
-function generatePdf(root: HTMLElement): jsPDF {
-  const doc = new jsPDF({ format: "a4", unit: "pt" });
+function generatePdf(root: HTMLElement) {
+  const pdf = new jsPDF({ format: "a4", unit: "pt" });
 
   // const absCols = colSizes.map((fr) => fr * documentWidth);
   // const absRows = rowSizes.map((fr) => fr * documentHeight);
@@ -267,14 +267,23 @@ function generatePdf(root: HTMLElement): jsPDF {
   // }
 
   const rootRect = root.getBoundingClientRect();
+  const scalar = a4SizeInPoints.width / rootRect.width;
   const cells = Array.from(root.children);
 
   cells.forEach((cell) => {
-    const { top, left } = cell.getBoundingClientRect();
     const elements = Array.from(cell.children);
 
-    elements.forEach((el) => console.log(el.nodeName));
+    elements.forEach((el) => {
+      const { top, left, bottom, right, width, height } =
+        el.getBoundingClientRect();
+      const x = (left - rootRect.left) * scalar;
+      const yTop = (top - rootRect.top) * scalar;
+      const yBottom = (bottom - rootRect.top) * scalar;
+
+      pdf.rect(x, yTop, width, height);
+      pdf.text(el.textContent ?? "", x, yBottom);
+    });
   });
 
-  return doc;
+  pdf.save();
 }
