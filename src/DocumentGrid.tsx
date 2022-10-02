@@ -200,6 +200,14 @@ export default function DocumentGrid({}) {
 const Cell = styled.div`
   outline: 1px solid black;
   text-align: left;
+
+  & > * {
+    margin: 0;
+  }
+
+  & > h1 {
+    font-size: 64px;
+  }
 `;
 
 const StackRoot = styled.div`
@@ -246,7 +254,7 @@ const ContextMenuSeparator = styled.hr`
 `;
 
 function generatePdf(root: HTMLElement) {
-  const pdf = new jsPDF({ format: "a4", unit: "pt" });
+  const doc = new jsPDF({ format: "a4", unit: "pt" });
 
   // const absCols = colSizes.map((fr) => fr * documentWidth);
   // const absRows = rowSizes.map((fr) => fr * documentHeight);
@@ -276,14 +284,21 @@ function generatePdf(root: HTMLElement) {
     elements.forEach((el) => {
       const { top, left, bottom, right, width, height } =
         el.getBoundingClientRect();
+
       const x = (left - rootRect.left) * scalar;
       const yTop = (top - rootRect.top) * scalar;
-      const yBottom = (bottom - rootRect.top) * scalar;
 
-      pdf.rect(x, yTop, width, height);
-      pdf.text(el.textContent ?? "", x, yBottom);
+      // We assume to only receive px values here
+      const fontSizePx = parseFloat(
+        getComputedStyle(el).getPropertyValue("font-size")
+      );
+
+      doc.rect(x, yTop, width, height);
+      doc
+        .setFontSize(fontSizePx * scalar)
+        .text(el.textContent ?? "", x, yTop, { baseline: "top" });
     });
   });
 
-  pdf.save();
+  doc.save();
 }
