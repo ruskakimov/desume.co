@@ -1,4 +1,5 @@
 import jsPDF from "jspdf";
+import { SignatureHelpTriggerCharacter } from "typescript";
 import { Box } from "../common/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
@@ -25,15 +26,20 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
     Array.from(cell.children).forEach((el) => {
       const elBox = pdfBoxOf(el);
+      const styles = getComputedStyle(el);
 
       // We assume to only receive px values here
-      const fontSizePx = parseFloat(
-        getComputedStyle(el).getPropertyValue("font-size")
-      );
+      const fontSizePx = parseFloat(styles.getPropertyValue("font-size"));
+      const fontFamily = styles.getPropertyValue("font-family");
+      const fontStyle = styles.getPropertyValue("font-style") as FontStyle;
+      const fontWeight = parseInt(styles.getPropertyValue("font-weight"));
 
       renderBox(doc, elBox);
       renderText(doc, elBox.topLeft, el.textContent ?? "", {
         fontSizePt: fontSizePx * pdfScalar,
+        fontFamily,
+        fontStyle,
+        fontWeight,
       });
     });
   });
@@ -54,8 +60,13 @@ function renderBox(doc: jsPDF, pdfBox: Box) {
   );
 }
 
+type FontStyle = "normal" | "italic" | "oblique";
+
 interface TextOptions {
   fontSizePt: number;
+  fontFamily: string;
+  fontStyle: FontStyle;
+  fontWeight: number;
 }
 
 function renderText(
@@ -65,6 +76,7 @@ function renderText(
   options: TextOptions
 ) {
   doc
+    .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
     .setFontSize(options.fontSizePt)
     .text(text, topLeft.x, topLeft.y, { baseline: "top" });
 }

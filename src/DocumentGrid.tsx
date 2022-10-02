@@ -203,6 +203,7 @@ const Cell = styled.div`
 
   & > * {
     margin: 0;
+    font-family: "times";
   }
 
   & > h1 {
