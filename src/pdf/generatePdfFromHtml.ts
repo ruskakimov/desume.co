@@ -16,15 +16,19 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
   const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
 
+  const pdfBoxOf = (element: Element) => {
+    return boxFromDomRect(element.getBoundingClientRect())
+      .relativeTo(pageBox)
+      .scaleBy(pdfScalar);
+  };
+
   const cells = Array.from(pageElement.children);
 
   cells.forEach((cell) => {
     const elements = Array.from(cell.children);
 
     elements.forEach((el) => {
-      const pdfBox = boxFromDomRect(el.getBoundingClientRect())
-        .relativeTo(pageBox)
-        .scaleBy(pdfScalar);
+      const pdfBox = pdfBoxOf(el);
 
       // We assume to only receive px values here
       const fontSizePx = parseFloat(
