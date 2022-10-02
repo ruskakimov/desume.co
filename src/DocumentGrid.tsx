@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/functions/array";
 import { withInsertedColumn, withInsertedRow } from "./common/functions/matrix";
-import { a4SizeInPoints } from "./common/sizes";
+import { a4SizeInPoints } from "./common/constants/sizes";
 import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
 
