@@ -1,5 +1,4 @@
 import jsPDF from "jspdf";
-import { SignatureHelpTriggerCharacter } from "typescript";
 import { Box } from "../common/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
