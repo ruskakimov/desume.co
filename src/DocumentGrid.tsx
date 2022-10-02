@@ -1,4 +1,3 @@
-import jsPDF from "jspdf";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
@@ -7,6 +6,7 @@ import { withInsertedColumn, withInsertedRow } from "./common/functions/matrix";
 import { a4SizeInPoints } from "./common/constants/sizes";
 import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
+import { generatePdfFromHtml } from "./pdf/generatePdfFromHtml";
 
 const scale = 1;
 const documentWidth = a4SizeInPoints.width * scale;
@@ -144,7 +144,7 @@ export default function DocumentGrid({}) {
       <button
         onClick={() => {
           if (rootRef.current) {
-            generatePdf(rootRef.current);
+            generatePdfFromHtml(rootRef.current).save();
           }
         }}
       >
@@ -252,53 +252,3 @@ const ContextMenuSeparator = styled.hr`
   margin: 8px 0;
   border: 0.5px solid rgba(0, 0, 0, 0.1);
 `;
-
-function generatePdf(root: HTMLElement) {
-  const doc = new jsPDF({ format: "a4", unit: "pt" });
-
-  // const absCols = colSizes.map((fr) => fr * documentWidth);
-  // const absRows = rowSizes.map((fr) => fr * documentHeight);
-  // const colRights = cumulative(absCols);
-  // const rowBottoms = cumulative(absRows);
-
-  // for (let r = 0; r < absRows.length; r++) {
-  //   for (let c = 0; c < absCols.length; c++) {
-  //     // const color = colors[contentMat[r][c]];
-  //     const width = absCols[c];
-  //     const height = absRows[r];
-  //     const x = colRights[c] - width;
-  //     const y = rowBottoms[r] - height;
-
-  //     // doc.setFillColor(color);
-  //     doc.rect(x, y, width, height, "F");
-  //   }
-  // }
-
-  const rootRect = root.getBoundingClientRect();
-  const scalar = a4SizeInPoints.width / rootRect.width;
-  const cells = Array.from(root.children);
-
-  cells.forEach((cell) => {
-    const elements = Array.from(cell.children);
-
-    elements.forEach((el) => {
-      const { top, left, bottom, right, width, height } =
-        el.getBoundingClientRect();
-
-      const x = (left - rootRect.left) * scalar;
-      const yTop = (top - rootRect.top) * scalar;
-
-      // We assume to only receive px values here
-      const fontSizePx = parseFloat(
-        getComputedStyle(el).getPropertyValue("font-size")
-      );
-
-      doc.rect(x, yTop, width, height);
-      doc
-        .setFontSize(fontSizePx * scalar)
-        .text(el.textContent ?? "", x, yTop, { baseline: "top" });
-    });
-  });
-
-  doc.save();
-}
