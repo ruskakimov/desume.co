@@ -22,12 +22,17 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       .scaleBy(pdfScalar);
   };
 
-  const cells = Array.from(pageElement.children);
+  Array.from(pageElement.children).forEach((cell) => {
+    const cellBox = pdfBoxOf(cell);
 
-  cells.forEach((cell) => {
-    const elements = Array.from(cell.children);
+    doc.rect(
+      cellBox.topLeft.x,
+      cellBox.topLeft.y,
+      cellBox.size.width,
+      cellBox.size.height
+    );
 
-    elements.forEach((el) => {
+    Array.from(cell.children).forEach((el) => {
       const pdfBox = pdfBoxOf(el);
 
       // We assume to only receive px values here
