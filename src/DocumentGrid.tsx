@@ -204,6 +204,7 @@ const Cell = styled.div`
   & > * {
     margin: 0;
     font-family: "times";
+    line-height: 1.5;
   }
 
   & > h1 {

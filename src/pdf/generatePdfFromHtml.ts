@@ -27,15 +27,18 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       const elBox = pdfBoxOf(el);
       const styles = getComputedStyle(el);
 
+      renderBox(doc, elBox);
+
       // We assume to only receive px values here
       const fontSizePx = parseFloat(styles.getPropertyValue("font-size"));
       const fontFamily = styles.getPropertyValue("font-family");
       const fontStyle = styles.getPropertyValue("font-style") as FontStyle;
       const fontWeight = parseInt(styles.getPropertyValue("font-weight"));
+      const lineHeight = parseFloat(styles.getPropertyValue("line-height"));
 
-      renderBox(doc, elBox);
       renderText(doc, elBox.topLeft, el.textContent ?? "", {
         fontSizePt: fontSizePx * pdfScalar,
+        lineHeightPt: lineHeight * pdfScalar,
         fontFamily,
         fontStyle,
         fontWeight,
@@ -63,6 +66,7 @@ type FontStyle = "normal" | "italic" | "oblique";
 
 interface TextOptions {
   fontSizePt: number;
+  lineHeightPt: number;
   fontFamily: string;
   fontStyle: FontStyle;
   fontWeight: number;
@@ -74,8 +78,15 @@ function renderText(
   text: string,
   options: TextOptions
 ) {
+  // TODO: Baseline(top) doesn't work with custom line-height value
+  // Either: pass baselineY here (need to know ascender/descender ratio)
+  // Or: find a work-around
+  // Or: submit a PR patch
+  // Or: choose another library that doesn't have this flaw (but also supports char distance)
   doc
     .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
     .setFontSize(options.fontSizePt)
-    .text(text, topLeft.x, topLeft.y, { baseline: "top" });
+    .text(text, topLeft.x, topLeft.y, {
+      lineHeightFactor: options.lineHeightPt / options.fontSizePt,
+    });
 }
