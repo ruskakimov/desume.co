@@ -9,8 +9,8 @@ import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
 
 const scale = 1;
-const documentWidth = a4SizeInPoints[0] * scale;
-const documentHeight = a4SizeInPoints[1] * scale;
+const documentWidth = a4SizeInPoints.width * scale;
+const documentHeight = a4SizeInPoints.height * scale;
 
 interface ContextMenu {
   topLeft: Coord;
@@ -246,7 +246,7 @@ const ContextMenuSeparator = styled.hr`
 `;
 
 function generatePdf(root: HTMLElement): jsPDF {
-  const doc = new jsPDF({ format: "a4" });
+  const doc = new jsPDF({ format: "a4", unit: "pt" });
 
   // const absCols = colSizes.map((fr) => fr * documentWidth);
   // const absRows = rowSizes.map((fr) => fr * documentHeight);
@@ -267,8 +267,14 @@ function generatePdf(root: HTMLElement): jsPDF {
   // }
 
   const rootRect = root.getBoundingClientRect();
+  const cells = Array.from(root.children);
 
-  root.childNodes.forEach((cell) => console.log(cell.textContent));
+  cells.forEach((cell) => {
+    const { top, left } = cell.getBoundingClientRect();
+    const elements = Array.from(cell.children);
+
+    elements.forEach((el) => console.log(el.nodeName));
+  });
 
   return doc;
 }

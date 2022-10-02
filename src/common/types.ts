@@ -3,7 +3,7 @@ export interface Coord {
   y: number;
 }
 
-/**
- * Width and height.
- */
-export type Size = [number, number];
+export interface Size {
+  width: number;
+  height: number;
+}
