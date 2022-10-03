@@ -30,11 +30,11 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       renderBox(doc, elBox);
 
       // We assume to only receive px values here
-      const fontSizePx = parseFloat(styles.getPropertyValue("font-size"));
-      const fontFamily = styles.getPropertyValue("font-family");
-      const fontStyle = styles.getPropertyValue("font-style") as FontStyle;
-      const fontWeight = parseInt(styles.getPropertyValue("font-weight"));
-      const lineHeight = parseFloat(styles.getPropertyValue("line-height"));
+      const fontSizePx = parseFloat(styles.fontSize);
+      const fontFamily = styles.fontFamily;
+      const fontStyle = styles.fontStyle as FontStyle;
+      const fontWeight = parseInt(styles.fontWeight);
+      const lineHeight = parseFloat(styles.lineHeight);
 
       renderText(doc, elBox.topLeft, el.textContent ?? "", {
         fontSizePt: fontSizePx * pdfScalar,
