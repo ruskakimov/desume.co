@@ -47,6 +47,7 @@ export function getFontProperties(fontFamily: string): FontProperties {
   container.remove();
 
   return {
+    // TODO: Calculate normal line-height
     normalLineHeightFactor: 1,
     baselineRatio,
   };

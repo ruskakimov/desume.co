@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import { Box } from "../common/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
+import { getFontProperties } from "./fontProperties";
 import { PDF } from "./types";
 
 /**
@@ -31,14 +32,23 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
       // We assume to only receive px values here
       const fontSizePx = parseFloat(styles.fontSize);
+      const lineHeightPx = parseFloat(styles.lineHeight);
       const fontFamily = styles.fontFamily;
       const fontStyle = styles.fontStyle as FontStyle;
       const fontWeight = parseInt(styles.fontWeight);
-      const lineHeight = parseFloat(styles.lineHeight);
 
-      renderText(doc, elBox.topLeft, el.textContent ?? "", {
+      const bRatio = getFontProperties(fontFamily).baselineRatio;
+      const baselineTopOffsetPx =
+        (lineHeightPx - fontSizePx) / 2 + bRatio * fontSizePx;
+
+      const baselineLeft: Coord = {
+        x: elBox.topLeft.x,
+        y: elBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
+      };
+
+      renderText(doc, baselineLeft, el.textContent ?? "", {
         fontSizePt: fontSizePx * pdfScalar,
-        lineHeightPt: lineHeight * pdfScalar,
+        lineHeightPt: lineHeightPx * pdfScalar,
         fontFamily,
         fontStyle,
         fontWeight,
@@ -74,19 +84,14 @@ interface TextOptions {
 
 function renderText(
   doc: jsPDF,
-  topLeft: Coord,
+  baselineLeft: Coord,
   text: string,
   options: TextOptions
 ) {
-  // TODO: Baseline(top) doesn't work with custom line-height value
-  // Either: pass baselineY here (need to know ascender/descender ratio)
-  // Or: find a work-around
-  // Or: submit a PR patch
-  // Or: choose another library that doesn't have this flaw (but also supports char distance)
   doc
     .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
     .setFontSize(options.fontSizePt)
-    .text(text, topLeft.x, topLeft.y, {
+    .text(text, baselineLeft.x, baselineLeft.y, {
       lineHeightFactor: options.lineHeightPt / options.fontSizePt,
     });
 }
