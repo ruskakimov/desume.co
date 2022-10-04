@@ -19,19 +19,18 @@ export function getFontProperties(fontFamily: string): FontProperties {
   container.style.top = "0";
   container.style.left = "0";
 
+  const emSize = 1000;
+
   const h1 = document.createElement("h1");
   h1.appendChild(document.createTextNode("T"));
   h1.style.fontFamily = fontFamily;
   h1.style.margin = "0";
-  h1.style.fontSize = "1000px";
-  h1.style.lineHeight = "1";
+  h1.style.fontSize = `${emSize}px`;
 
   const base = document.createElement("span");
   base.style.display = "inline-block";
-  base.style.height = "10px";
-  base.style.width = "500px";
-  base.style.backgroundColor = "red";
-  base.style.marginLeft = "-500px";
+  base.style.height = "1px";
+  base.style.width = "1px";
 
   container.appendChild(h1);
   container.appendChild(base);
@@ -41,14 +40,18 @@ export function getFontProperties(fontFamily: string): FontProperties {
 
   const h1Rect = h1.getBoundingClientRect();
   const baseRect = base.getBoundingClientRect();
-  const baselineRatio = (baseRect.bottom - h1Rect.top) / h1Rect.height;
+
+  const normalLineHeightFactor = h1Rect.height / emSize;
+
+  const virtualSpace = h1Rect.height - emSize;
+  const emSquareTop = h1Rect.top + virtualSpace / 2;
+  const baselineRatio = (baseRect.bottom - emSquareTop) / emSize;
 
   // Clean-up DOM
   container.remove();
 
   return {
-    // TODO: Calculate normal line-height
-    normalLineHeightFactor: 1,
+    normalLineHeightFactor,
     baselineRatio,
   };
 }
