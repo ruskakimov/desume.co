@@ -2,14 +2,19 @@ import puppeteer from "puppeteer";
 import { FontProperties, getFontProperties } from "./fontProperties";
 
 describe("getFontProperties", () => {
+  let browser: puppeteer.Browser;
   let page: puppeteer.Page;
 
   beforeAll(async () => {
-    const browser = await puppeteer.launch();
+    browser = await puppeteer.launch();
     page = await browser.newPage();
     await page.addScriptTag({
       content: getFontProperties.toString(),
     });
+  });
+
+  afterAll(async () => {
+    await browser.close();
   });
 
   test("calculates Arial properties", async () => {
