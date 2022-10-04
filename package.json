@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/styled-components": "^5.1.26",
     "jspdf": "^2.5.1",
+    "puppeteer": "^18.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.3",
