@@ -100,10 +100,6 @@ export default function DocumentGrid({}) {
 
   return (
     <div style={{ textAlign: "center", padding: "32px" }}>
-      <button onClick={() => insertColumnAt(0)}>Add column</button>
-
-      <button onClick={() => insertRowAt(0)}>Add row</button>
-
       <StackRoot
         style={{
           width: documentWidth,
