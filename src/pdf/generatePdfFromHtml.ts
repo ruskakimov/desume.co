@@ -37,6 +37,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       const fontStyle = styles.fontStyle as FontStyle;
       const fontWeight = parseInt(styles.fontWeight);
 
+      // TODO: Calc properties once per font
       const bRatio = getFontProperties(fontFamily).baselineRatio;
       const baselineTopOffsetPx =
         (lineHeightPx - fontSizePx) / 2 + bRatio * fontSizePx;
