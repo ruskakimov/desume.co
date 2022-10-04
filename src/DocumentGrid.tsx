@@ -196,6 +196,7 @@ export default function DocumentGrid({}) {
 const Cell = styled.div`
   outline: 1px solid black;
   text-align: left;
+  user-select: none;
 
   & > * {
     margin: 0;
