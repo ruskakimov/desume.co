@@ -2,13 +2,17 @@ import puppeteer from "puppeteer";
 import { FontProperties, getFontProperties } from "./fontProperties";
 
 describe("getFontProperties", () => {
-  test("calculates Arial properties", async () => {
+  let page: puppeteer.Page;
+
+  beforeAll(async () => {
     const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    page = await browser.newPage();
     await page.addScriptTag({
       content: getFontProperties.toString(),
     });
+  });
 
+  test("calculates Arial properties", async () => {
     const arialFontProperties: FontProperties = {
       normalLineHeightFactor: 1.15,
       baselineRatio: 0.8465,
