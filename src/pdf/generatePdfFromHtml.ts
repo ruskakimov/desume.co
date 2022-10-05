@@ -53,6 +53,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
         fontFamily,
         fontStyle,
         fontWeight,
+        maxWidth: elBox.size.width,
       });
     });
   });
@@ -81,6 +82,7 @@ interface TextOptions {
   fontFamily: string;
   fontStyle: FontStyle;
   fontWeight: number;
+  maxWidth: number;
 }
 
 function renderText(
@@ -93,6 +95,7 @@ function renderText(
     .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
     .setFontSize(options.fontSizePt)
     .text(text, baselineLeft.x, baselineLeft.y, {
+      maxWidth: options.maxWidth,
       lineHeightFactor: options.lineHeightPt / options.fontSizePt,
     });
 }

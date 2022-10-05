@@ -23,7 +23,10 @@ export default function DocumentGrid({}) {
   const [rowSizes, setRowSizes] = useState([0.5, 0.5]);
   const [contentMat, setContentMat] = useState<string[][]>([
     ["", "# Hello"],
-    ["", "world"],
+    [
+      "",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In imperdiet nibh purus, a pharetra arcu pharetra vel. Mauris sit amet erat volutpat, scelerisque augue ac, tincidunt urna. Nunc quis vestibulum arcu. Nunc nec posuere dolor. Cras sed porttitor mauris. Nulla rhoncus dui quis purus iaculis eleifend. Donec rutrum enim sed nisl euismod, quis ornare felis malesuada. Curabitur blandit turpis ac orci ultrices semper. Integer placerat suscipit ipsum, a pulvinar massa efficitur nec. In ligula sem, tristique quis interdum sit amet, eleifend vitae est. Cras sodales gravida libero nec vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam rutrum efficitur turpis, ut laoreet urna. In congue arcu sit amet velit vulputate ornare. Duis ultrices tincidunt vestibulum. Nullam hendrerit elementum arcu, vitae rhoncus odio consectetur dictum.",
+    ],
   ]);
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
