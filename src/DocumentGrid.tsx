@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/functions/array";
-import { withInsertedColumn, withInsertedRow } from "./common/functions/matrix";
+import {
+  CellCoord,
+  withChangedCell,
+  withInsertedColumn,
+  withInsertedRow,
+} from "./common/functions/matrix";
 import { a4SizeInPoints } from "./common/constants/sizes";
 import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
@@ -18,6 +23,11 @@ interface ContextMenu {
   rowIndex: number;
 }
 
+const initialSelectedCell: CellCoord = {
+  rowIndex: 0,
+  colIndex: 1,
+};
+
 export default function DocumentGrid({}) {
   const [colSizes, setColSizes] = useState([0.5, 0.5]);
   const [rowSizes, setRowSizes] = useState([0.5, 0.5]);
@@ -28,6 +38,14 @@ export default function DocumentGrid({}) {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In imperdiet nibh purus, a pharetra arcu pharetra vel. Mauris sit amet erat volutpat, scelerisque augue ac, tincidunt urna. Nunc quis vestibulum arcu. Nunc nec posuere dolor. Cras sed porttitor mauris. Nulla rhoncus dui quis purus iaculis eleifend. Donec rutrum enim sed nisl euismod, quis ornare felis malesuada. Curabitur blandit turpis ac orci ultrices semper. Integer placerat suscipit ipsum, a pulvinar massa efficitur nec. In ligula sem, tristique quis interdum sit amet, eleifend vitae est. Cras sodales gravida libero nec vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam rutrum efficitur turpis, ut laoreet urna. In congue arcu sit amet velit vulputate ornare. Duis ultrices tincidunt vestibulum. Nullam hendrerit elementum arcu, vitae rhoncus odio consectetur dictum.",
     ],
   ]);
+
+  const [selectedCell, setSelectedCell] =
+    useState<CellCoord>(initialSelectedCell);
+
+  const updateSelectedCellContent = (content: string) => {
+    const newContentMat = withChangedCell(contentMat, selectedCell, content);
+    setContentMat(newContentMat);
+  };
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -56,9 +74,17 @@ export default function DocumentGrid({}) {
   for (let r = 0; r < rowSizes.length; r++) {
     for (let c = 0; c < colSizes.length; c++) {
       const content = contentMat[r][c];
-      // TODO: Select cell and modify its content
+      const isSelected =
+        selectedCell.rowIndex === r && selectedCell.colIndex === c;
+
       cells.push(
         <Cell
+          style={{
+            outline: isSelected ? "2px solid blue" : undefined,
+          }}
+          onClick={(e) => {
+            setSelectedCell({ rowIndex: r, colIndex: c });
+          }}
           onContextMenu={(e) => {
             e.preventDefault();
             setContextMenu({
@@ -101,44 +127,67 @@ export default function DocumentGrid({}) {
     setContentMat(newColorMat);
   };
 
+  const selectedCellContent =
+    contentMat[selectedCell.rowIndex][selectedCell.colIndex];
+
   return (
     <div style={{ textAlign: "center", padding: "32px" }}>
-      <StackRoot
+      <div
         style={{
-          width: documentWidth,
-          height: documentHeight,
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: 20,
+          alignItems: "stretch",
         }}
       >
-        <div
-          ref={rootRef}
+        <StackRoot
           style={{
             width: documentWidth,
             height: documentHeight,
-            backgroundColor: "white",
-            display: "grid",
-            gridTemplateColumns: colSizes.map((fr) => fr * 100 + "%").join(" "),
-            gridTemplateRows: rowSizes.map((fr) => fr * 100 + "%").join(" "),
           }}
         >
-          {cells}
-        </div>
+          <div
+            ref={rootRef}
+            style={{
+              width: documentWidth,
+              height: documentHeight,
+              backgroundColor: "white",
+              display: "grid",
+              gridTemplateColumns: colSizes
+                .map((fr) => fr * 100 + "%")
+                .join(" "),
+              gridTemplateRows: rowSizes.map((fr) => fr * 100 + "%").join(" "),
+            }}
+          >
+            {cells}
+          </div>
 
-        <FractionSliders
-          axis="vertical"
-          width={documentWidth}
-          height={documentHeight}
-          fractions={rowSizes}
-          onChange={(fractions) => setRowSizes(fractions)}
-        />
+          <FractionSliders
+            axis="vertical"
+            width={documentWidth}
+            height={documentHeight}
+            fractions={rowSizes}
+            onChange={(fractions) => setRowSizes(fractions)}
+          />
 
-        <FractionSliders
-          axis="horizontal"
-          width={documentWidth}
-          height={documentHeight}
-          fractions={colSizes}
-          onChange={(fractions) => setColSizes(fractions)}
+          <FractionSliders
+            axis="horizontal"
+            width={documentWidth}
+            height={documentHeight}
+            fractions={colSizes}
+            onChange={(fractions) => setColSizes(fractions)}
+          />
+        </StackRoot>
+
+        <textarea
+          style={{
+            marginLeft: 40,
+            width: 400,
+          }}
+          value={selectedCellContent}
+          onChange={(e) => updateSelectedCellContent(e.target.value)}
         />
-      </StackRoot>
+      </div>
 
       <button
         onClick={() => {
@@ -213,7 +262,6 @@ const Cell = styled.div`
 `;
 
 const StackRoot = styled.div`
-  margin: 20px auto;
   position: relative;
 
   & > * {
