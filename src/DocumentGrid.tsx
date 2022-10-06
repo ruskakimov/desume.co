@@ -74,9 +74,14 @@ export default function DocumentGrid({}) {
   for (let r = 0; r < rowSizes.length; r++) {
     for (let c = 0; c < colSizes.length; c++) {
       const content = contentMat[r][c];
-      // TODO: Select cell and modify its content
+      const isSelected =
+        selectedCell.rowIndex === r && selectedCell.colIndex === c;
+
       cells.push(
         <Cell
+          style={{
+            outline: isSelected ? "2px solid blue" : undefined,
+          }}
           onContextMenu={(e) => {
             e.preventDefault();
             setContextMenu({
