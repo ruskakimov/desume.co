@@ -82,6 +82,9 @@ export default function DocumentGrid({}) {
           style={{
             outline: isSelected ? "2px solid blue" : undefined,
           }}
+          onClick={(e) => {
+            setSelectedCell({ rowIndex: r, colIndex: c });
+          }}
           onContextMenu={(e) => {
             e.preventDefault();
             setContextMenu({
