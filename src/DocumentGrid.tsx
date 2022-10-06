@@ -132,47 +132,62 @@ export default function DocumentGrid({}) {
 
   return (
     <div style={{ textAlign: "center", padding: "32px" }}>
-      <textarea
-        value={selectedCellContent}
-        onChange={(e) => updateSelectedCellContent(e.target.value)}
-      />
-
-      <StackRoot
+      <div
         style={{
-          width: documentWidth,
-          height: documentHeight,
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: 20,
+          alignItems: "stretch",
         }}
       >
-        <div
-          ref={rootRef}
+        <StackRoot
           style={{
             width: documentWidth,
             height: documentHeight,
-            backgroundColor: "white",
-            display: "grid",
-            gridTemplateColumns: colSizes.map((fr) => fr * 100 + "%").join(" "),
-            gridTemplateRows: rowSizes.map((fr) => fr * 100 + "%").join(" "),
           }}
         >
-          {cells}
-        </div>
+          <div
+            ref={rootRef}
+            style={{
+              width: documentWidth,
+              height: documentHeight,
+              backgroundColor: "white",
+              display: "grid",
+              gridTemplateColumns: colSizes
+                .map((fr) => fr * 100 + "%")
+                .join(" "),
+              gridTemplateRows: rowSizes.map((fr) => fr * 100 + "%").join(" "),
+            }}
+          >
+            {cells}
+          </div>
 
-        <FractionSliders
-          axis="vertical"
-          width={documentWidth}
-          height={documentHeight}
-          fractions={rowSizes}
-          onChange={(fractions) => setRowSizes(fractions)}
-        />
+          <FractionSliders
+            axis="vertical"
+            width={documentWidth}
+            height={documentHeight}
+            fractions={rowSizes}
+            onChange={(fractions) => setRowSizes(fractions)}
+          />
 
-        <FractionSliders
-          axis="horizontal"
-          width={documentWidth}
-          height={documentHeight}
-          fractions={colSizes}
-          onChange={(fractions) => setColSizes(fractions)}
+          <FractionSliders
+            axis="horizontal"
+            width={documentWidth}
+            height={documentHeight}
+            fractions={colSizes}
+            onChange={(fractions) => setColSizes(fractions)}
+          />
+        </StackRoot>
+
+        <textarea
+          style={{
+            marginLeft: 40,
+            width: 400,
+          }}
+          value={selectedCellContent}
+          onChange={(e) => updateSelectedCellContent(e.target.value)}
         />
-      </StackRoot>
+      </div>
 
       <button
         onClick={() => {
@@ -247,7 +262,6 @@ const Cell = styled.div`
 `;
 
 const StackRoot = styled.div`
-  margin: 20px auto;
   position: relative;
 
   & > * {
