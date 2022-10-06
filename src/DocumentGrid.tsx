@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { withInsertedAt } from "./common/functions/array";
-import { withInsertedColumn, withInsertedRow } from "./common/functions/matrix";
+import {
+  CellCoord,
+  withChangedCell,
+  withInsertedColumn,
+  withInsertedRow,
+} from "./common/functions/matrix";
 import { a4SizeInPoints } from "./common/constants/sizes";
 import { Coord } from "./common/types";
 import FractionSliders from "./FractionSliders";
@@ -18,6 +23,11 @@ interface ContextMenu {
   rowIndex: number;
 }
 
+const initialSelectedCell: CellCoord = {
+  rowIndex: 0,
+  colIndex: 0,
+};
+
 export default function DocumentGrid({}) {
   const [colSizes, setColSizes] = useState([0.5, 0.5]);
   const [rowSizes, setRowSizes] = useState([0.5, 0.5]);
@@ -28,6 +38,14 @@ export default function DocumentGrid({}) {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In imperdiet nibh purus, a pharetra arcu pharetra vel. Mauris sit amet erat volutpat, scelerisque augue ac, tincidunt urna. Nunc quis vestibulum arcu. Nunc nec posuere dolor. Cras sed porttitor mauris. Nulla rhoncus dui quis purus iaculis eleifend. Donec rutrum enim sed nisl euismod, quis ornare felis malesuada. Curabitur blandit turpis ac orci ultrices semper. Integer placerat suscipit ipsum, a pulvinar massa efficitur nec. In ligula sem, tristique quis interdum sit amet, eleifend vitae est. Cras sodales gravida libero nec vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam rutrum efficitur turpis, ut laoreet urna. In congue arcu sit amet velit vulputate ornare. Duis ultrices tincidunt vestibulum. Nullam hendrerit elementum arcu, vitae rhoncus odio consectetur dictum.",
     ],
   ]);
+
+  const [selectedCell, setSelectedCell] =
+    useState<CellCoord>(initialSelectedCell);
+
+  const updateSelectedCellContent = (content: string) => {
+    const newContentMat = withChangedCell(contentMat, selectedCell, content);
+    setContentMat(newContentMat);
+  };
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
