@@ -25,7 +25,7 @@ interface ContextMenu {
 
 const initialSelectedCell: CellCoord = {
   rowIndex: 0,
-  colIndex: 0,
+  colIndex: 1,
 };
 
 export default function DocumentGrid({}) {
@@ -119,8 +119,16 @@ export default function DocumentGrid({}) {
     setContentMat(newColorMat);
   };
 
+  const selectedCellContent =
+    contentMat[selectedCell.rowIndex][selectedCell.colIndex];
+
   return (
     <div style={{ textAlign: "center", padding: "32px" }}>
+      <textarea
+        value={selectedCellContent}
+        onChange={(e) => updateSelectedCellContent(e.target.value)}
+      />
+
       <StackRoot
         style={{
           width: documentWidth,
