@@ -47,6 +47,16 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
         y: elBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
       };
 
+      // Draw baseline
+      doc.setDrawColor("#ff0000");
+      doc.line(
+        baselineLeft.x,
+        baselineLeft.y,
+        baselineLeft.x + elBox.size.width,
+        baselineLeft.y
+      );
+      doc.setDrawColor("#000000");
+
       renderText(doc, baselineLeft, el.textContent ?? "", {
         fontSizePt: fontSizePx * pdfScalar,
         lineHeightPt: lineHeightPx * pdfScalar,
