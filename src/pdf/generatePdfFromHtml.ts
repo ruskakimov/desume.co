@@ -70,13 +70,21 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   function renderTextElement(el: Element) {
     const elBox = pdfBoxOf(el);
-    const textProps = getTextProperties(el, pdfScalar);
+    const styles = getComputedStyle(el);
+
+    const textOptions: TextOptions = {
+      fontSizePt: parseFloat(styles.fontSize) * pdfScalar,
+      lineHeightPt: parseFloat(styles.lineHeight) * pdfScalar,
+      fontFamily: styles.fontFamily,
+      fontStyle: styles.fontStyle as FontStyle,
+      fontWeight: parseInt(styles.fontWeight),
+    };
 
     // TODO: Calc properties once per font
-    const bRatio = getFontProperties(textProps.fontFamily).baselineRatio;
+    const bRatio = getFontProperties(textOptions.fontFamily).baselineRatio;
     const baselineTopOffsetPt =
-      (textProps.lineHeightPt - textProps.fontSizePt) / 2 +
-      bRatio * textProps.fontSizePt;
+      (textOptions.lineHeightPt - textOptions.fontSizePt) / 2 +
+      bRatio * textOptions.fontSizePt;
 
     const baselineLeft: Coord = {
       x: elBox.topLeft.x,
@@ -94,7 +102,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
         el.textContent ?? "",
         baselineLeft,
         elBox.size.width,
-        textProps
+        textOptions
       );
   }
 
@@ -110,19 +118,4 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
 function boxFromDomRect({ x, y, width, height }: DOMRect): Box {
   return new Box(x, y, width, height);
-}
-
-function getTextProperties(
-  textElement: Element,
-  pdfScalar: number
-): TextOptions {
-  const styles = getComputedStyle(textElement);
-
-  return {
-    fontSizePt: parseFloat(styles.fontSize) * pdfScalar,
-    lineHeightPt: parseFloat(styles.lineHeight) * pdfScalar,
-    fontFamily: styles.fontFamily,
-    fontStyle: styles.fontStyle as FontStyle,
-    fontWeight: parseInt(styles.fontWeight),
-  };
 }
