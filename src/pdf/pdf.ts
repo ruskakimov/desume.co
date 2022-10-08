@@ -14,7 +14,6 @@ export interface TextOptions {
   fontFamily: string;
   fontStyle: FontStyle;
   fontWeight: number;
-  maxWidth: number;
 }
 
 /**
@@ -49,11 +48,16 @@ export class PDF {
       .restoreGraphicsState();
   }
 
-  drawText(baselineLeft: Coord, text: string, options: TextOptions) {
+  drawText(
+    text: string,
+    baselineLeft: Coord,
+    maxWidth: number,
+    options: TextOptions
+  ) {
     // Draw baseline for testing purposes
     this.drawLine(
       baselineLeft,
-      { x: baselineLeft.x + options.maxWidth, y: baselineLeft.y },
+      { x: baselineLeft.x + maxWidth, y: baselineLeft.y },
       { color: "#ff0000" }
     );
 
@@ -61,7 +65,7 @@ export class PDF {
       .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
       .setFontSize(options.fontSizePt)
       .text(text, baselineLeft.x, baselineLeft.y, {
-        maxWidth: options.maxWidth,
+        maxWidth,
         lineHeightFactor: options.lineHeightPt / options.fontSizePt,
       });
   }

@@ -2,7 +2,7 @@ import { Box } from "../common/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
 import { getFontProperties } from "./fontProperties";
-import { FontStyle, PDF } from "./pdf";
+import { FontStyle, PDF, TextOptions } from "./pdf";
 
 /**
  * Generates a single-page PDF document from an HTML element.
@@ -54,47 +54,43 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       y: markerBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
     };
 
-    doc.drawText(baselineLeft, styles.content.slice(1, -1) ?? "", {
-      fontSizePt: fontSizePx * pdfScalar,
-      lineHeightPt: lineHeightPx * pdfScalar,
-      fontFamily,
-      fontStyle,
-      fontWeight,
-      maxWidth: markerBox.size.width,
-    });
+    doc.drawText(
+      styles.content.slice(1, -1) ?? "",
+      baselineLeft,
+      markerBox.size.width,
+      {
+        fontSizePt: fontSizePx * pdfScalar,
+        lineHeightPt: lineHeightPx * pdfScalar,
+        fontFamily,
+        fontStyle,
+        fontWeight,
+      }
+    );
   }
 
   function renderTextElement(el: Element) {
     const elBox = pdfBoxOf(el);
-    const styles = getComputedStyle(el);
-
-    doc.drawBox(elBox);
-
-    // We assume to only receive px values here
-    const fontSizePx = parseFloat(styles.fontSize);
-    const lineHeightPx = parseFloat(styles.lineHeight);
-    const fontFamily = styles.fontFamily;
-    const fontStyle = styles.fontStyle as FontStyle;
-    const fontWeight = parseInt(styles.fontWeight);
+    const textProps = getTextProperties(el, pdfScalar);
 
     // TODO: Calc properties once per font
-    const bRatio = getFontProperties(fontFamily).baselineRatio;
-    const baselineTopOffsetPx =
-      (lineHeightPx - fontSizePx) / 2 + bRatio * fontSizePx;
+    const bRatio = getFontProperties(textProps.fontFamily).baselineRatio;
+    const baselineTopOffsetPt =
+      (textProps.lineHeightPt - textProps.fontSizePt) / 2 +
+      bRatio * textProps.fontSizePt;
 
     const baselineLeft: Coord = {
       x: elBox.topLeft.x,
-      y: elBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
+      y: elBox.topLeft.y + baselineTopOffsetPt,
     };
 
-    doc.drawText(baselineLeft, el.textContent ?? "", {
-      fontSizePt: fontSizePx * pdfScalar,
-      lineHeightPt: lineHeightPx * pdfScalar,
-      fontFamily,
-      fontStyle,
-      fontWeight,
-      maxWidth: elBox.size.width,
-    });
+    // TODO: Chain
+    doc.drawBox(elBox);
+    doc.drawText(
+      el.textContent ?? "",
+      baselineLeft,
+      elBox.size.width,
+      textProps
+    );
   }
 
   Array.from(pageElement.children).forEach((cell) => {
@@ -109,4 +105,19 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
 function boxFromDomRect({ x, y, width, height }: DOMRect): Box {
   return new Box(x, y, width, height);
+}
+
+function getTextProperties(
+  textElement: Element,
+  pdfScalar: number
+): TextOptions {
+  const styles = getComputedStyle(textElement);
+
+  return {
+    fontSizePt: parseFloat(styles.fontSize) * pdfScalar,
+    lineHeightPt: parseFloat(styles.lineHeight) * pdfScalar,
+    fontFamily: styles.fontFamily,
+    fontStyle: styles.fontStyle as FontStyle,
+    fontWeight: parseInt(styles.fontWeight),
+  };
 }
