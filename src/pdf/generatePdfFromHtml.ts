@@ -68,7 +68,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const elBox = pdfBoxOf(el);
     const styles = getComputedStyle(el);
 
-    doc.drawRect(elBox);
+    doc.drawBox(elBox);
 
     // We assume to only receive px values here
     const fontSizePx = parseFloat(styles.fontSize);
@@ -99,7 +99,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   Array.from(pageElement.children).forEach((cell) => {
     const cellBox = pdfBoxOf(cell);
-    doc.drawRect(cellBox);
+    doc.drawBox(cellBox);
 
     Array.from(cell.children).forEach((el) => renderElement(el));
   });

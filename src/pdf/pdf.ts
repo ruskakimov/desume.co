@@ -32,7 +32,7 @@ export class PDF {
     this.jsPdf.save();
   }
 
-  drawRect(box: Box) {
+  drawBox(box: Box) {
     this.jsPdf.rect(
       box.topLeft.x,
       box.topLeft.y,
