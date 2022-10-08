@@ -16,7 +16,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   const pdfBoxOf = (element: Element) => {
     return boxFromDomRect(element.getBoundingClientRect())
       .relativeTo(pageBox)
-      .scaleBy(pdfScalar);
+      .scaledBy(pdfScalar);
   };
 
   function renderElement(el: Element) {
@@ -35,7 +35,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   function renderMarker(li: Element) {
     const styles = getComputedStyle(li, "::marker");
-    const markerBox = pdfBoxOf(li).translateBy(-parseFloat(styles.width), 0);
+    const markerBox = pdfBoxOf(li).translatedBy(-parseFloat(styles.width), 0);
 
     // We assume to only receive px values here
     const fontSizePx = parseFloat(styles.fontSize);

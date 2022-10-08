@@ -28,11 +28,11 @@ export class Box {
     );
   }
 
-  translateBy(dx: number, dy: number): Box {
+  translatedBy(dx: number, dy: number): Box {
     return new Box(this.x + dx, this.y + dy, this.width, this.height);
   }
 
-  scaleBy(scalar: number): Box {
+  scaledBy(scalar: number): Box {
     return new Box(this.x, this.y, this.width * scalar, this.height * scalar);
   }
 }
