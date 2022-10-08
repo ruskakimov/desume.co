@@ -22,12 +22,46 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   function renderElement(el: Element) {
     if (el.children.length === 0) {
+      if (el.nodeName === "LI") {
+        renderMarker(el);
+      }
       renderTextElement(el);
       return;
     }
 
     Array.from(el.children).forEach((child) => {
       renderElement(child);
+    });
+  }
+
+  function renderMarker(li: Element) {
+    const styles = getComputedStyle(li, "::marker");
+    const markerBox = pdfBoxOf(li).translateBy(-parseFloat(styles.width), 0);
+
+    // We assume to only receive px values here
+    const fontSizePx = parseFloat(styles.fontSize);
+    const lineHeightPx = parseFloat(styles.lineHeight);
+    const fontFamily = styles.fontFamily;
+    const fontStyle = styles.fontStyle as FontStyle;
+    const fontWeight = parseInt(styles.fontWeight);
+
+    // TODO: Calc properties once per font
+    const bRatio = getFontProperties(fontFamily).baselineRatio;
+    const baselineTopOffsetPx =
+      (lineHeightPx - fontSizePx) / 2 + bRatio * fontSizePx;
+
+    const baselineLeft: Coord = {
+      x: markerBox.topLeft.x,
+      y: markerBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
+    };
+
+    renderText(doc, baselineLeft, styles.content.slice(1, -1) ?? "", {
+      fontSizePt: fontSizePx * pdfScalar,
+      lineHeightPt: lineHeightPx * pdfScalar,
+      fontFamily,
+      fontStyle,
+      fontWeight,
+      maxWidth: markerBox.size.width,
     });
   }
 
