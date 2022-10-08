@@ -1,15 +1,14 @@
-import jsPDF from "jspdf";
 import { Box } from "../common/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
 import { getFontProperties } from "./fontProperties";
-import { PDF } from "./types";
+import { FontStyle, PDF } from "./pdf";
 
 /**
  * Generates a single-page PDF document from an HTML element.
  */
 export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
-  const doc = new jsPDF({ format: "a4", unit: "pt" });
+  const doc = new PDF();
 
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
   const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
@@ -55,7 +54,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       y: markerBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
     };
 
-    renderText(doc, baselineLeft, styles.content.slice(1, -1) ?? "", {
+    doc.drawText(baselineLeft, styles.content.slice(1, -1) ?? "", {
       fontSizePt: fontSizePx * pdfScalar,
       lineHeightPt: lineHeightPx * pdfScalar,
       fontFamily,
@@ -69,7 +68,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const elBox = pdfBoxOf(el);
     const styles = getComputedStyle(el);
 
-    renderBox(doc, elBox);
+    doc.drawRect(elBox);
 
     // We assume to only receive px values here
     const fontSizePx = parseFloat(styles.fontSize);
@@ -88,7 +87,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       y: elBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
     };
 
-    renderText(doc, baselineLeft, el.textContent ?? "", {
+    doc.drawText(baselineLeft, el.textContent ?? "", {
       fontSizePt: fontSizePx * pdfScalar,
       lineHeightPt: lineHeightPx * pdfScalar,
       fontFamily,
@@ -100,59 +99,14 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   Array.from(pageElement.children).forEach((cell) => {
     const cellBox = pdfBoxOf(cell);
-    renderBox(doc, cellBox);
+    doc.drawRect(cellBox);
 
     Array.from(cell.children).forEach((el) => renderElement(el));
   });
 
-  return new PDF(doc);
+  return doc;
 }
 
 function boxFromDomRect({ x, y, width, height }: DOMRect): Box {
   return new Box(x, y, width, height);
-}
-
-function renderBox(doc: jsPDF, pdfBox: Box) {
-  doc.rect(
-    pdfBox.topLeft.x,
-    pdfBox.topLeft.y,
-    pdfBox.size.width,
-    pdfBox.size.height
-  );
-}
-
-type FontStyle = "normal" | "italic" | "oblique";
-
-interface TextOptions {
-  fontSizePt: number;
-  lineHeightPt: number;
-  fontFamily: string;
-  fontStyle: FontStyle;
-  fontWeight: number;
-  maxWidth: number;
-}
-
-function renderText(
-  doc: jsPDF,
-  baselineLeft: Coord,
-  text: string,
-  options: TextOptions
-) {
-  // Draw baseline
-  doc.setDrawColor("#ff0000");
-  doc.line(
-    baselineLeft.x,
-    baselineLeft.y,
-    baselineLeft.x + options.maxWidth,
-    baselineLeft.y
-  );
-  doc.setDrawColor("#000000");
-
-  doc
-    .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
-    .setFontSize(options.fontSizePt)
-    .text(text, baselineLeft.x, baselineLeft.y, {
-      maxWidth: options.maxWidth,
-      lineHeightFactor: options.lineHeightPt / options.fontSizePt,
-    });
 }
