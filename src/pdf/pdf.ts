@@ -57,12 +57,14 @@ export class PDF {
     options: TextOptions
   ): PDF {
     this.jsPdf
+      .saveGraphicsState()
       .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
       .setFontSize(options.fontSizePt)
       .text(text, baselineLeft.x, baselineLeft.y, {
         maxWidth,
         lineHeightFactor: options.lineHeightPt / options.fontSizePt,
-      });
+      })
+      .restoreGraphicsState();
     return this;
   }
 }
