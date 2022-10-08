@@ -31,21 +31,23 @@ export class PDF {
     this.jsPdf.save();
   }
 
-  drawBox(box: Box) {
+  drawBox(box: Box): PDF {
     this.jsPdf.rect(
       box.topLeft.x,
       box.topLeft.y,
       box.size.width,
       box.size.height
     );
+    return this;
   }
 
-  drawLine(point1: Coord, point2: Coord, options?: LineOptions) {
+  drawLine(point1: Coord, point2: Coord, options?: LineOptions): PDF {
     this.jsPdf
       .saveGraphicsState()
       .setDrawColor(options?.color ?? PDF.defaultColor)
       .line(point1.x, point1.y, point2.x, point2.y)
       .restoreGraphicsState();
+    return this;
   }
 
   drawText(
@@ -53,14 +55,7 @@ export class PDF {
     baselineLeft: Coord,
     maxWidth: number,
     options: TextOptions
-  ) {
-    // Draw baseline for testing purposes
-    this.drawLine(
-      baselineLeft,
-      { x: baselineLeft.x + maxWidth, y: baselineLeft.y },
-      { color: "#ff0000" }
-    );
-
+  ): PDF {
     this.jsPdf
       .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
       .setFontSize(options.fontSizePt)
@@ -68,5 +63,6 @@ export class PDF {
         maxWidth,
         lineHeightFactor: options.lineHeightPt / options.fontSizePt,
       });
+    return this;
   }
 }

@@ -82,15 +82,20 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       x: elBox.topLeft.x,
       y: elBox.topLeft.y + baselineTopOffsetPt,
     };
+    const baselineRight: Coord = {
+      x: baselineLeft.x + elBox.size.width,
+      y: baselineLeft.y,
+    };
 
-    // TODO: Chain
-    doc.drawBox(elBox);
-    doc.drawText(
-      el.textContent ?? "",
-      baselineLeft,
-      elBox.size.width,
-      textProps
-    );
+    doc
+      .drawBox(elBox)
+      .drawLine(baselineLeft, baselineRight, { color: "#ff0000" })
+      .drawText(
+        el.textContent ?? "",
+        baselineLeft,
+        elBox.size.width,
+        textProps
+      );
   }
 
   Array.from(pageElement.children).forEach((cell) => {
