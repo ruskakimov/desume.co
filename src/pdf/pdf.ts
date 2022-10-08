@@ -2,6 +2,10 @@ import jsPDF from "jspdf";
 import { Box } from "../common/box";
 import { Coord } from "../common/types";
 
+export interface LineOptions {
+  color?: string;
+}
+
 export type FontStyle = "normal" | "italic" | "oblique";
 
 export interface TextOptions {
@@ -17,6 +21,7 @@ export interface TextOptions {
  * A wrapper around a 3rd party PDF document object that prevents tight coupling to 3rd party code.
  */
 export class PDF {
+  static defaultColor: string = "#000000";
   private jsPdf: jsPDF;
 
   constructor() {
@@ -36,16 +41,21 @@ export class PDF {
     );
   }
 
+  drawLine(point1: Coord, point2: Coord, options?: LineOptions) {
+    this.jsPdf
+      .saveGraphicsState()
+      .setDrawColor(options?.color ?? PDF.defaultColor)
+      .line(point1.x, point1.y, point2.x, point2.y)
+      .restoreGraphicsState();
+  }
+
   drawText(baselineLeft: Coord, text: string, options: TextOptions) {
-    // Draw baseline
-    this.jsPdf.setDrawColor("#ff0000");
-    this.jsPdf.line(
-      baselineLeft.x,
-      baselineLeft.y,
-      baselineLeft.x + options.maxWidth,
-      baselineLeft.y
+    // Draw baseline for testing purposes
+    this.drawLine(
+      baselineLeft,
+      { x: baselineLeft.x + options.maxWidth, y: baselineLeft.y },
+      { color: "#ff0000" }
     );
-    this.jsPdf.setDrawColor("#000000");
 
     this.jsPdf
       .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
