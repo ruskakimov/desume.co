@@ -20,42 +20,55 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       .scaleBy(pdfScalar);
   };
 
+  function renderElement(el: Element) {
+    if (el.children.length === 0) {
+      renderTextElement(el);
+      return;
+    }
+
+    Array.from(el.children).forEach((child) => {
+      renderElement(child);
+    });
+  }
+
+  function renderTextElement(el: Element) {
+    const elBox = pdfBoxOf(el);
+    const styles = getComputedStyle(el);
+
+    renderBox(doc, elBox);
+
+    // We assume to only receive px values here
+    const fontSizePx = parseFloat(styles.fontSize);
+    const lineHeightPx = parseFloat(styles.lineHeight);
+    const fontFamily = styles.fontFamily;
+    const fontStyle = styles.fontStyle as FontStyle;
+    const fontWeight = parseInt(styles.fontWeight);
+
+    // TODO: Calc properties once per font
+    const bRatio = getFontProperties(fontFamily).baselineRatio;
+    const baselineTopOffsetPx =
+      (lineHeightPx - fontSizePx) / 2 + bRatio * fontSizePx;
+
+    const baselineLeft: Coord = {
+      x: elBox.topLeft.x,
+      y: elBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
+    };
+
+    renderText(doc, baselineLeft, el.textContent ?? "", {
+      fontSizePt: fontSizePx * pdfScalar,
+      lineHeightPt: lineHeightPx * pdfScalar,
+      fontFamily,
+      fontStyle,
+      fontWeight,
+      maxWidth: elBox.size.width,
+    });
+  }
+
   Array.from(pageElement.children).forEach((cell) => {
     const cellBox = pdfBoxOf(cell);
     renderBox(doc, cellBox);
 
-    Array.from(cell.children).forEach((el) => {
-      const elBox = pdfBoxOf(el);
-      const styles = getComputedStyle(el);
-
-      renderBox(doc, elBox);
-
-      // We assume to only receive px values here
-      const fontSizePx = parseFloat(styles.fontSize);
-      const lineHeightPx = parseFloat(styles.lineHeight);
-      const fontFamily = styles.fontFamily;
-      const fontStyle = styles.fontStyle as FontStyle;
-      const fontWeight = parseInt(styles.fontWeight);
-
-      // TODO: Calc properties once per font
-      const bRatio = getFontProperties(fontFamily).baselineRatio;
-      const baselineTopOffsetPx =
-        (lineHeightPx - fontSizePx) / 2 + bRatio * fontSizePx;
-
-      const baselineLeft: Coord = {
-        x: elBox.topLeft.x,
-        y: elBox.topLeft.y + baselineTopOffsetPx * pdfScalar,
-      };
-
-      renderText(doc, baselineLeft, el.textContent ?? "", {
-        fontSizePt: fontSizePx * pdfScalar,
-        lineHeightPt: lineHeightPx * pdfScalar,
-        fontFamily,
-        fontStyle,
-        fontWeight,
-        maxWidth: elBox.size.width,
-      });
-    });
+    Array.from(cell.children).forEach((el) => renderElement(el));
   });
 
   return new PDF(doc);
