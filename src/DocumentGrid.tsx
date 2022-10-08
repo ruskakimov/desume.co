@@ -259,6 +259,10 @@ const Cell = styled.div`
   & > h1 {
     font-size: 64px;
   }
+
+  li::marker {
+    content: "• ";
+  }
 `;
 
 const StackRoot = styled.div`
