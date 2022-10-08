@@ -261,7 +261,7 @@ const Cell = styled.div`
   }
 
   li::marker {
-    content: "• ";
+    content: "";
   }
 `;
 
