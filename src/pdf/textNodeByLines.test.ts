@@ -1,0 +1,30 @@
+import puppeteer from "puppeteer";
+import { textNodeByLines } from "./textNodeByLines";
+
+describe("textNodeByLines", () => {
+  let browser: puppeteer.Browser;
+  let page: puppeteer.Page;
+
+  beforeAll(async () => {
+    browser = await puppeteer.launch();
+    page = await browser.newPage();
+    await page.addScriptTag({
+      content: textNodeByLines.toString(),
+    });
+  });
+
+  afterAll(async () => {
+    await browser.close();
+  });
+
+  test("", async () => {
+    await page.setContent(`<p id="target">Single line of text</p>`);
+
+    const lines = await page.evaluate(async () => {
+      const element = document.getElementById("target");
+      const textNode = element?.childNodes[0];
+      return (window as any)["textNodeByLines"](textNode);
+    });
+    expect(lines).toEqual(["Single line of text"]);
+  });
+});
