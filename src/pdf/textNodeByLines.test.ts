@@ -17,7 +17,7 @@ describe("textNodeByLines", () => {
     await browser.close();
   });
 
-  test("", async () => {
+  test("parses single line", async () => {
     await page.setContent(`<p id="target">Single line of text</p>`);
 
     const lines = await page.evaluate(async () => {
@@ -26,5 +26,18 @@ describe("textNodeByLines", () => {
       return (window as any)["textNodeByLines"](textNode);
     });
     expect(lines).toEqual(["Single line of text"]);
+  });
+
+  test("parses two lines", async () => {
+    await page.setContent(`
+      <p id="target" style="width: 100px; font-size: 16px; font-family: "times";">Lorem ipsum dolor sit amet</p>
+    `);
+
+    const lines = await page.evaluate(async () => {
+      const element = document.getElementById("target");
+      const textNode = element?.childNodes[0];
+      return (window as any)["textNodeByLines"](textNode);
+    });
+    expect(lines).toEqual(["Lorem ipsum", "dolor sit amet"]);
   });
 });
