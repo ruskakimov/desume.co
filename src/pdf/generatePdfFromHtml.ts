@@ -1,7 +1,7 @@
 import { Box } from "../common/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
-import { getFontProperties } from "./fontProperties";
+import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
 
 /**
