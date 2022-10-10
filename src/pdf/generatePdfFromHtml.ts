@@ -76,12 +76,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       doc
         .drawBox(lineBox)
         .drawLine(baselineLeft, baselineRight, { color: "#ff0000" })
-        .drawText(
-          lineStrings[i] ?? "",
-          baselineLeft,
-          lineBox.size.width + textOptions.fontSizePt,
-          textOptions
-        );
+        .drawText(lineStrings[i] ?? "", baselineLeft, textOptions);
     });
   }
 
