@@ -3,6 +3,7 @@ import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
 import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
+import { textNodeByLines } from "./text/textNodeByLines";
 
 /**
  * Generates a single-page PDF document from an HTML element.
@@ -36,6 +37,8 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const elBox = pdfBoxOf(el);
     const styles = window.getComputedStyle(el);
 
+    doc.drawBox(elBox);
+
     const textOptions: TextOptions = {
       fontSizePt: parseFloat(styles.fontSize) * pdfScalar,
       lineHeightPt: parseFloat(styles.lineHeight) * pdfScalar,
@@ -46,28 +49,37 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
     // TODO: Calc properties once per font
     const bRatio = getFontProperties(textOptions.fontFamily).baselineRatio;
-    const baselineTopOffsetPt =
-      (textOptions.lineHeightPt - textOptions.fontSizePt) / 2 +
-      bRatio * textOptions.fontSizePt;
 
-    const baselineLeft: Coord = {
-      x: elBox.topLeft.x,
-      y: elBox.topLeft.y + baselineTopOffsetPt,
-    };
-    const baselineRight: Coord = {
-      x: baselineLeft.x + elBox.size.width,
-      y: baselineLeft.y,
-    };
+    const lineStrings = textNodeByLines(text);
 
-    doc
-      .drawBox(elBox)
-      .drawLine(baselineLeft, baselineRight, { color: "#ff0000" })
-      .drawText(
-        el.textContent ?? "",
-        baselineLeft,
-        elBox.size.width,
-        textOptions
-      );
+    const range = new Range();
+    range.selectNode(text);
+    const lineBoxes = Array.from(range.getClientRects()).map(boxFromDomRect);
+    range.detach();
+
+    lineBoxes.forEach((lineBox, i) => {
+      const baselineTopOffsetPt = bRatio * textOptions.fontSizePt;
+      // (textOptions.lineHeightPt - textOptions.fontSizePt) / 2 +
+
+      const baselineLeft: Coord = {
+        x: lineBox.topLeft.x,
+        y: lineBox.topLeft.y + baselineTopOffsetPt,
+      };
+      const baselineRight: Coord = {
+        x: baselineLeft.x + lineBox.size.width,
+        y: baselineLeft.y,
+      };
+
+      doc
+        .drawBox(lineBox)
+        .drawLine(baselineLeft, baselineRight, { color: "#ff0000" })
+        .drawText(
+          lineStrings[i] ?? "",
+          baselineLeft,
+          lineBox.size.width + textOptions.fontSizePt,
+          textOptions
+        );
+    });
   }
 
   Array.from(pageElement.children).forEach((cell) => {
