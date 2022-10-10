@@ -1,5 +1,6 @@
 /**
  * Returns text content broken into lines that browser rendered.
+ * Source: https://www.bennadel.com/blog/4310-detecting-rendered-line-breaks-in-a-text-node-in-javascript.htm
  */
 export function textNodeByLines(textNode: Text): string[] {
   if (textNode.nodeType !== 3) {
