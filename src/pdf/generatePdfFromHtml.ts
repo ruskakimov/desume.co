@@ -54,7 +54,9 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
     const range = new Range();
     range.selectNode(text);
-    const lineBoxes = Array.from(range.getClientRects()).map(boxFromDomRect);
+    const lineBoxes = Array.from(range.getClientRects()).map((rect) =>
+      boxFromDomRect(rect).relativeTo(pageBox).scaledBy(pdfScalar)
+    );
     range.detach();
 
     lineBoxes.forEach((lineBox, i) => {
