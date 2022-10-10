@@ -19,13 +19,15 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       .scaledBy(pdfScalar);
   };
 
-  function renderElement(el: Element) {
-    if (el.children.length === 0) {
-      renderTextElement(el);
+  function renderNode(node: Node) {
+    if (node.childNodes.length === 0) {
+      if (node.nodeType === 3) {
+        renderTextElement(node.parentElement!);
+      }
       return;
     }
-    Array.from(el.children).forEach((child) => {
-      renderElement(child);
+    Array.from(node.childNodes).forEach((child) => {
+      renderNode(child);
     });
   }
 
@@ -71,7 +73,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const cellBox = pdfBoxOf(cell);
     doc.drawBox(cellBox);
 
-    Array.from(cell.children).forEach((el) => renderElement(el));
+    Array.from(cell.children).forEach((el) => renderNode(el));
   });
 
   return doc;
