@@ -21,8 +21,8 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   function renderNode(node: Node) {
     if (node.childNodes.length === 0) {
-      if (node.nodeType === 3) {
-        renderTextElement(node.parentElement!);
+      if (node instanceof Text) {
+        renderTextNode(node);
       }
       return;
     }
@@ -31,7 +31,8 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     });
   }
 
-  function renderTextElement(el: Element) {
+  function renderTextNode(text: Text) {
+    const el = text.parentElement!;
     const elBox = pdfBoxOf(el);
     const styles = window.getComputedStyle(el);
 
