@@ -60,8 +60,9 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     range.detach();
 
     lineBoxes.forEach((lineBox, i) => {
-      const baselineTopOffsetPt = bRatio * textOptions.fontSizePt;
-      // (textOptions.lineHeightPt - textOptions.fontSizePt) / 2 +
+      const baselineTopOffsetPt =
+        (lineBox.size.height - textOptions.fontSizePt) / 2 +
+        bRatio * textOptions.fontSizePt;
 
       const baselineLeft: Coord = {
         x: lineBox.topLeft.x,
