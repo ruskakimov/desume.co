@@ -3,7 +3,7 @@ import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
 import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
-import { textNodeByLines } from "./text/textNodeUtils";
+import { textNodeByLines, textNodeLineRects } from "./text/textNodeUtils";
 
 /**
  * Generates a single-page PDF document from an HTML element.
@@ -49,11 +49,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const bRatio = getFontProperties(textOptions.fontFamily).baselineRatio;
 
     const lineStrings = textNodeByLines(text);
-
-    const range = new Range();
-    range.selectNode(text);
-    const lineBoxes = Array.from(range.getClientRects()).map(pdfBoxFromDomRect);
-    range.detach();
+    const lineBoxes = textNodeLineRects(text).map(pdfBoxFromDomRect);
 
     lineBoxes.forEach((lineBox, i) => {
       const baselineTopOffsetPt =
