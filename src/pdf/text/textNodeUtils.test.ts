@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import { textNodeByLines } from "./textNodeByLines";
+import { textNodeByLines } from "./textNodeUtils";
 
 describe("textNodeByLines", () => {
   let browser: puppeteer.Browser;

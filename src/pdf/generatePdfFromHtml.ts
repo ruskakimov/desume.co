@@ -3,7 +3,7 @@ import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
 import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
-import { textNodeByLines } from "./text/textNodeByLines";
+import { textNodeByLines } from "./text/textNodeUtils";
 
 /**
  * Generates a single-page PDF document from an HTML element.
