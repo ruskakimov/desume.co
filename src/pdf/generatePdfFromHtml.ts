@@ -14,10 +14,8 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
   const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
 
-  const pdfBoxOf = (element: Element) => {
-    return boxFromDomRect(element.getBoundingClientRect())
-      .relativeTo(pageBox)
-      .scaledBy(pdfScalar);
+  const pdfBoxFromDomRect = (domRect: DOMRect) => {
+    return boxFromDomRect(domRect).relativeTo(pageBox).scaledBy(pdfScalar);
   };
 
   function renderNode(node: Node) {
@@ -34,7 +32,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   function renderTextNode(text: Text) {
     const el = text.parentElement!;
-    const elBox = pdfBoxOf(el);
+    const elBox = pdfBoxFromDomRect(el.getBoundingClientRect());
     const styles = window.getComputedStyle(el);
 
     doc.drawBox(elBox);
@@ -54,9 +52,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
     const range = new Range();
     range.selectNode(text);
-    const lineBoxes = Array.from(range.getClientRects()).map((rect) =>
-      boxFromDomRect(rect).relativeTo(pageBox).scaledBy(pdfScalar)
-    );
+    const lineBoxes = Array.from(range.getClientRects()).map(pdfBoxFromDomRect);
     range.detach();
 
     lineBoxes.forEach((lineBox, i) => {
@@ -81,7 +77,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   }
 
   Array.from(pageElement.children).forEach((cell) => {
-    const cellBox = pdfBoxOf(cell);
+    const cellBox = pdfBoxFromDomRect(cell.getBoundingClientRect());
     doc.drawBox(cellBox);
 
     Array.from(cell.children).forEach((el) => renderNode(el));
