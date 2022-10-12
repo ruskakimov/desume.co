@@ -50,18 +50,12 @@ export class PDF {
     return this;
   }
 
-  drawText(
-    text: string,
-    baselineLeft: Coord,
-    maxWidth: number,
-    options: TextOptions
-  ): PDF {
+  drawText(text: string, baselineLeft: Coord, options: TextOptions): PDF {
     this.jsPdf
       .saveGraphicsState()
       .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
       .setFontSize(options.fontSizePt)
       .text(text, baselineLeft.x, baselineLeft.y, {
-        maxWidth,
         lineHeightFactor: options.lineHeightPt / options.fontSizePt,
       })
       .restoreGraphicsState();

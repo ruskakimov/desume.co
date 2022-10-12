@@ -28,15 +28,34 @@ const initialSelectedCell: CellCoord = {
   colIndex: 1,
 };
 
+const sampleRichText = `
+### Features
+
+Some text should be **bold** and other text can be *italic*. Plus this long long long long text is positioned correctly.
+`;
+
+const sampleHeader = `
+# Hello
+`;
+
+const sampleList = `
+- • Hello
+- • World
+- • Again
+- • Deleted every junk file
+- • Searched every nook and cranny
+`;
+
+const sampleParagraph = `
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. In imperdiet nibh purus, a pharetra arcu pharetra vel. Mauris sit amet erat volutpat, scelerisque augue ac, tincidunt urna. Nunc quis vestibulum arcu. Nunc nec posuere dolor. Cras sed porttitor mauris. Nulla rhoncus dui quis purus iaculis eleifend. Donec rutrum enim sed nisl euismod, quis ornare felis malesuada. Curabitur blandit turpis ac orci ultrices semper. Integer placerat suscipit ipsum, a pulvinar massa efficitur nec. In ligula sem, tristique quis interdum sit amet, eleifend vitae est. Cras sodales gravida libero nec vulputate.
+`;
+
 export default function DocumentGrid({}) {
   const [colSizes, setColSizes] = useState([0.5, 0.5]);
   const [rowSizes, setRowSizes] = useState([0.5, 0.5]);
   const [contentMat, setContentMat] = useState<string[][]>([
-    ["", "# Hello"],
-    [
-      "",
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In imperdiet nibh purus, a pharetra arcu pharetra vel. Mauris sit amet erat volutpat, scelerisque augue ac, tincidunt urna. Nunc quis vestibulum arcu. Nunc nec posuere dolor. Cras sed porttitor mauris. Nulla rhoncus dui quis purus iaculis eleifend. Donec rutrum enim sed nisl euismod, quis ornare felis malesuada. Curabitur blandit turpis ac orci ultrices semper. Integer placerat suscipit ipsum, a pulvinar massa efficitur nec. In ligula sem, tristique quis interdum sit amet, eleifend vitae est. Cras sodales gravida libero nec vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam rutrum efficitur turpis, ut laoreet urna. In congue arcu sit amet velit vulputate ornare. Duis ultrices tincidunt vestibulum. Nullam hendrerit elementum arcu, vitae rhoncus odio consectetur dictum.",
-    ],
+    [sampleRichText, sampleHeader],
+    [sampleList, sampleParagraph],
   ]);
 
   const [selectedCell, setSelectedCell] =

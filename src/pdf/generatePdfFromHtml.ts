@@ -1,8 +1,9 @@
 import { Box } from "../common/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/types";
-import { getFontProperties } from "./fontProperties";
+import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
+import { textNodeByLines, textNodeLineRects } from "./text/textNodeUtils";
 
 /**
  * Generates a single-page PDF document from an HTML element.
@@ -13,25 +14,28 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
   const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
 
-  const pdfBoxOf = (element: Element) => {
-    return boxFromDomRect(element.getBoundingClientRect())
-      .relativeTo(pageBox)
-      .scaledBy(pdfScalar);
+  const pdfBoxFromDomRect = (domRect: DOMRect) => {
+    return boxFromDomRect(domRect).relativeTo(pageBox).scaledBy(pdfScalar);
   };
 
-  function renderElement(el: Element) {
-    if (el.children.length === 0) {
-      renderTextElement(el);
+  function renderNode(node: Node) {
+    if (node.childNodes.length === 0) {
+      if (node instanceof Text) {
+        renderTextNode(node);
+      }
       return;
     }
-    Array.from(el.children).forEach((child) => {
-      renderElement(child);
+    Array.from(node.childNodes).forEach((child) => {
+      renderNode(child);
     });
   }
 
-  function renderTextElement(el: Element) {
-    const elBox = pdfBoxOf(el);
+  function renderTextNode(text: Text) {
+    const el = text.parentElement!;
+    const elBox = pdfBoxFromDomRect(el.getBoundingClientRect());
     const styles = window.getComputedStyle(el);
+
+    doc.drawBox(elBox);
 
     const textOptions: TextOptions = {
       fontSizePt: parseFloat(styles.fontSize) * pdfScalar,
@@ -43,35 +47,36 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
     // TODO: Calc properties once per font
     const bRatio = getFontProperties(textOptions.fontFamily).baselineRatio;
-    const baselineTopOffsetPt =
-      (textOptions.lineHeightPt - textOptions.fontSizePt) / 2 +
-      bRatio * textOptions.fontSizePt;
 
-    const baselineLeft: Coord = {
-      x: elBox.topLeft.x,
-      y: elBox.topLeft.y + baselineTopOffsetPt,
-    };
-    const baselineRight: Coord = {
-      x: baselineLeft.x + elBox.size.width,
-      y: baselineLeft.y,
-    };
+    const lineStrings = textNodeByLines(text);
+    const lineBoxes = textNodeLineRects(text).map(pdfBoxFromDomRect);
 
-    doc
-      .drawBox(elBox)
-      .drawLine(baselineLeft, baselineRight, { color: "#ff0000" })
-      .drawText(
-        el.textContent ?? "",
-        baselineLeft,
-        elBox.size.width,
-        textOptions
-      );
+    lineBoxes.forEach((lineBox, i) => {
+      const baselineTopOffsetPt =
+        (lineBox.size.height - textOptions.fontSizePt) / 2 +
+        bRatio * textOptions.fontSizePt;
+
+      const baselineLeft: Coord = {
+        x: lineBox.topLeft.x,
+        y: lineBox.topLeft.y + baselineTopOffsetPt,
+      };
+      const baselineRight: Coord = {
+        x: baselineLeft.x + lineBox.size.width,
+        y: baselineLeft.y,
+      };
+
+      doc
+        .drawBox(lineBox)
+        .drawLine(baselineLeft, baselineRight, { color: "#ff0000" })
+        .drawText(lineStrings[i] ?? "", baselineLeft, textOptions);
+    });
   }
 
   Array.from(pageElement.children).forEach((cell) => {
-    const cellBox = pdfBoxOf(cell);
+    const cellBox = pdfBoxFromDomRect(cell.getBoundingClientRect());
     doc.drawBox(cellBox);
 
-    Array.from(cell.children).forEach((el) => renderElement(el));
+    Array.from(cell.children).forEach((el) => renderNode(el));
   });
 
   return doc;
