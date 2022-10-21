@@ -1,6 +1,7 @@
 import { readFile } from "fs/promises";
 import path from "path";
 import puppeteer from "puppeteer";
+import gm from "gm";
 
 describe("generatePdfFromHtml correctly renders", () => {
   let browser: puppeteer.Browser;
@@ -36,6 +37,20 @@ describe("generatePdfFromHtml correctly renders", () => {
     });
 
     // Waits for download to finish
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1000));
+
+    // gm convert -density 300 expected.pdf expected.png
+    // gm convert -density 300 1.pdf 1.png
+
+    gm(path.join(__dirname, "./downloads/1.pdf"))
+      .command("convert")
+      .in("-density", "300") // DPI
+      .write(path.join(__dirname, "./downloads/output.png"), (err) => {
+        // TODO: Promisify
+        console.log(err);
+      });
+
+    // TODO: Remove once promisified
+    await new Promise((r) => setTimeout(r, 3000));
   });
 });
