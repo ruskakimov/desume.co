@@ -32,7 +32,7 @@ describe("generatePdfFromHtml correctly renders", () => {
 
     await page.evaluate(async () => {
       const container = document.getElementById("container");
-      return (window as any).generatePdfFromHtml(container).save();
+      return (window as any).generatePdfFromHtml(container).save("1.pdf");
     });
 
     // Waits for download to finish

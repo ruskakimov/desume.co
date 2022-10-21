@@ -27,8 +27,8 @@ export class PDF {
     this.jsPdf = new jsPDF({ format: "a4", unit: "pt" });
   }
 
-  save() {
-    this.jsPdf.save();
+  save(filename?: string) {
+    this.jsPdf.save(filename);
   }
 
   drawBox(box: Box): PDF {
