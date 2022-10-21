@@ -10,6 +10,12 @@ describe("generatePdfFromHtml correctly renders", () => {
     browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
 
+    const client = await page.target().createCDPSession();
+    await client.send("Page.setDownloadBehavior", {
+      behavior: "allow",
+      downloadPath: path.join(__dirname, "./downloads"),
+    });
+
     // [IMPORTANT] Build PDF generation code before running this test.
     const bundlePath = path.join(__dirname, "./bundle/bundle.js");
     await page.addScriptTag({ path: bundlePath });

@@ -25,3 +25,4 @@ yarn-error.log*
 # pdf test build
 /src/pdf/render-tests/build
 /src/pdf/render-tests/bundle
+/src/pdf/render-tests/downloads
