@@ -27,7 +27,8 @@ describe("generatePdfFromHtml correctly renders", () => {
   });
 
   test("a single line of text", async () => {
-    const htmlPath = path.join(__dirname, "./1-single-line-of-text/input.html");
+    const testCaseFolder = path.join(__dirname, "./1-single-line-of-text");
+    const htmlPath = path.join(testCaseFolder, "./input.html");
     const html = await readFile(htmlPath, "utf-8");
     await page.setContent(html);
 
@@ -39,18 +40,21 @@ describe("generatePdfFromHtml correctly renders", () => {
     // Waits for download to finish
     await new Promise((r) => setTimeout(r, 1000));
 
-    // gm convert -density 300 expected.pdf expected.png
-    // gm convert -density 300 1.pdf 1.png
-
-    gm(path.join(__dirname, "./downloads/1.pdf"))
-      .command("convert")
-      .in("-density", "300") // DPI
-      .write(path.join(__dirname, "./downloads/output.png"), (err) => {
-        // TODO: Promisify
-        console.log(err);
-      });
-
-    // TODO: Remove once promisified
-    await new Promise((r) => setTimeout(r, 3000));
+    await pdfToPng(
+      path.join(__dirname, "./downloads/1.pdf"),
+      path.join(testCaseFolder, "./output.png")
+    );
   });
 });
+
+function pdfToPng(pdfPath: string, pngPath: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    gm(pdfPath)
+      .command("convert")
+      .in("-density", "300") // DPI
+      .write(pngPath, (err) => {
+        if (err === null) resolve();
+        else reject(err);
+      });
+  });
+}
