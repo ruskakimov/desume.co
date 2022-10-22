@@ -44,6 +44,13 @@ describe("generatePdfFromHtml correctly renders", () => {
       path.join(__dirname, "./downloads/1.pdf"),
       path.join(testCaseFolder, "./output.png")
     );
+
+    const areEqual = await areImagesEqual(
+      path.join(testCaseFolder, "./output.png"),
+      path.join(testCaseFolder, "./expected.png")
+    );
+
+    expect(areEqual).toEqual(true);
   });
 });
 
@@ -53,8 +60,25 @@ function pdfToPng(pdfPath: string, pngPath: string): Promise<void> {
       .command("convert")
       .in("-density", "300") // DPI
       .write(pngPath, (err) => {
-        if (err === null) resolve();
-        else reject(err);
+        if (err) reject(err);
+        else resolve();
       });
+  });
+}
+
+function areImagesEqual(
+  image1Path: string,
+  image2Path: string
+): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    gm.compare(
+      image1Path,
+      image2Path,
+      0, // tolerance
+      (err, isEqual, meanSquaredError, rawOutput) => {
+        if (err) reject(err);
+        else resolve(isEqual);
+      }
+    );
   });
 }
