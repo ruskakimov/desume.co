@@ -34,14 +34,14 @@ describe("generatePdfFromHtml correctly renders", () => {
 
     await page.evaluate(async () => {
       const container = document.getElementById("container");
-      return (window as any).generatePdfFromHtml(container).save("1.pdf");
+      return (window as any).generatePdfFromHtml(container).save("output.pdf");
     });
 
     // Waits for download to finish
     await new Promise((r) => setTimeout(r, 1000));
 
     await pdfToPng(
-      path.join(__dirname, "./downloads/1.pdf"),
+      path.join(__dirname, "./downloads/output.pdf"),
       path.join(testCaseFolder, "./output.png")
     );
 
@@ -74,7 +74,7 @@ function areImagesEqual(
     gm.compare(
       image1Path,
       image2Path,
-      0, // tolerance
+      0, // error tolerance
       (err, isEqual, meanSquaredError, rawOutput) => {
         if (err) reject(err);
         else resolve(isEqual);

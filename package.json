@@ -29,7 +29,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-pdf-test": "npx tsc ./src/pdf/render-tests/testEntry.ts -t es5 -m commonjs --outDir ./src/pdf/render-tests/build && npx webpack-cli --config ./src/pdf/render-tests/webpack.config.js"
+    "build-pdf-test": "npx tsc ./src/pdf/render-tests/testEntry.ts -t es5 -m commonjs --outDir ./src/pdf/render-tests/build && npx webpack-cli --config ./src/pdf/render-tests/webpack.config.js",
+    "pdf-test": "yarn run build-pdf-test && yarn test ./src/pdf/render-tests --watchAll=false"
   },
   "eslintConfig": {
     "extends": [
