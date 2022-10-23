@@ -61,14 +61,21 @@ export function textNodeByLines(textNode: Text): string[] {
     lineCharacters.push(textContent.charAt(i));
   }
 
-  // // At this point, we have an array (lines) of arrays (characters). Let's
-  // // collapse the character buffers down into a single text value.
-  // lines = lines.map(function operator(characters) {
-  //   return collapseWhiteSpace(characters.join(""));
-  // });
+  /**
+   * I normalize the white-space in the given value such that the amount of white-
+   * space matches the rendered white-space (browsers collapse strings of white-space
+   * down to single space character, visually, and this is just updating the text to
+   * match that behavior).
+   */
+
+  // At this point, we have an array (lines) of arrays (characters). Let's
+  // collapse the character buffers down into a single text value.
+  lines = lines.map(function operator(characters) {
+    return characters.join("").trim().replace(/\s+/g, " ");
+  });
 
   // DEBUGGING: Draw boxes around our client rectangles.
   // drawRectBoxes(range.getClientRects());
 
-  return lines.map((chars) => chars.join(""));
+  return lines;
 }

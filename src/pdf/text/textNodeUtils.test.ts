@@ -38,6 +38,6 @@ describe("textNodeByLines", () => {
       const textNode = element?.childNodes[0];
       return (window as any)["textNodeByLines"](textNode);
     });
-    expect(lines).toEqual(["Lorem ipsum ", "dolor sit amet"]);
+    expect(lines).toEqual(["Lorem ipsum", "dolor sit amet"]);
   });
 });

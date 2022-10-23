@@ -35,7 +35,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const elBox = pdfBoxFromDomRect(el.getBoundingClientRect());
     const styles = window.getComputedStyle(el);
 
-    doc.drawBox(elBox);
+    // doc.drawBox(elBox);
 
     const textOptions: TextOptions = {
       fontSizePt: parseFloat(styles.fontSize) * pdfScalar,
@@ -66,8 +66,8 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       };
 
       doc
-        .drawBox(lineBox)
-        .drawLine(baselineLeft, baselineRight, { color: "#ff0000" })
+        // .drawBox(lineBox)
+        // .drawLine(baselineLeft, baselineRight, { color: "#00ff00" })
         .drawText(lineStrings[i] ?? "", baselineLeft, textOptions);
     });
   }
