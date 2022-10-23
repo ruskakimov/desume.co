@@ -74,7 +74,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   Array.from(pageElement.children).forEach((cell) => {
     const cellBox = pdfBoxFromDomRect(cell.getBoundingClientRect());
-    doc.drawBox(cellBox);
+    // doc.drawBox(cellBox);
 
     Array.from(cell.children).forEach((el) => renderNode(el));
   });

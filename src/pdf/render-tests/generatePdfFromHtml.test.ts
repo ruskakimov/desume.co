@@ -27,32 +27,48 @@ describe("generatePdfFromHtml correctly renders", () => {
   });
 
   test("a single line of text", async () => {
-    const testCaseFolder = path.join(__dirname, "./1-single-line-of-text");
-    const htmlPath = path.join(testCaseFolder, "./input.html");
-    const html = await readFile(htmlPath, "utf-8");
-    await page.setContent(html);
+    const matches = await outputMatchesExpected("1-single-line-of-text", page);
+    expect(matches).toEqual(true);
+  });
 
-    await page.evaluate(async () => {
-      const container = document.getElementById("container");
-      return (window as any).generatePdfFromHtml(container).save("output.pdf");
-    });
-
-    // Waits for download to finish
-    await new Promise((r) => setTimeout(r, 1000));
-
-    await pdfToPng(
-      path.join(__dirname, "./downloads/output.pdf"),
-      path.join(testCaseFolder, "./output.png")
+  test("multiple lines of text", async () => {
+    const matches = await outputMatchesExpected(
+      "2-multiple-lines-of-text",
+      page
     );
-
-    const areEqual = await areImagesEqual(
-      path.join(testCaseFolder, "./output.png"),
-      path.join(testCaseFolder, "./expected.png")
-    );
-
-    expect(areEqual).toEqual(true);
+    expect(matches).toEqual(true);
   });
 });
+
+async function outputMatchesExpected(
+  testFolderName: string,
+  page: puppeteer.Page
+): Promise<boolean> {
+  const testCaseFolder = path.join(__dirname, testFolderName);
+  const htmlPath = path.join(testCaseFolder, "./input.html");
+  const html = await readFile(htmlPath, "utf-8");
+  await page.setContent(html);
+
+  await page.evaluate(async (testFolderName) => {
+    const container = document.getElementById("container");
+    return (window as any)
+      .generatePdfFromHtml(container)
+      .save(`${testFolderName}.pdf`);
+  }, testFolderName);
+
+  // Waits for download to finish
+  await new Promise((r) => setTimeout(r, 1000));
+
+  await pdfToPng(
+    path.join(__dirname, `./downloads/${testFolderName}.pdf`),
+    path.join(testCaseFolder, "./output.png")
+  );
+
+  return areImagesEqual(
+    path.join(testCaseFolder, "./output.png"),
+    path.join(testCaseFolder, "./expected.png")
+  );
+}
 
 function pdfToPng(pdfPath: string, pngPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
