@@ -27,23 +27,20 @@ describe("generatePdfFromHtml correctly renders", () => {
   });
 
   test("a single line of text", async () => {
-    const matches = await outputMatchesExpected("1-single-line-of-text", page);
-    expect(matches).toEqual(true);
+    const diff = await outputAndExpectedDiff("1-single-line-of-text", page);
+    expect(diff).toEqual(0);
   });
 
   test("multiple lines of text", async () => {
-    const matches = await outputMatchesExpected(
-      "2-multiple-lines-of-text",
-      page
-    );
-    expect(matches).toEqual(true);
+    const diff = await outputAndExpectedDiff("2-multiple-lines-of-text", page);
+    expect(diff).toEqual(0);
   });
 });
 
-async function outputMatchesExpected(
+async function outputAndExpectedDiff(
   testFolderName: string,
   page: puppeteer.Page
-): Promise<boolean> {
+): Promise<number> {
   const testCaseFolder = path.join(__dirname, testFolderName);
   const htmlPath = path.join(testCaseFolder, "./input.html");
   const html = await readFile(htmlPath, "utf-8");
@@ -64,9 +61,10 @@ async function outputMatchesExpected(
     path.join(testCaseFolder, "./output.png")
   );
 
-  return areImagesEqual(
+  return imageDiff(
     path.join(testCaseFolder, "./output.png"),
-    path.join(testCaseFolder, "./expected.png")
+    path.join(testCaseFolder, "./expected.png"),
+    path.join(testCaseFolder, "./diff.png")
   );
 }
 
@@ -82,18 +80,23 @@ function pdfToPng(pdfPath: string, pngPath: string): Promise<void> {
   });
 }
 
-function areImagesEqual(
+function imageDiff(
   image1Path: string,
-  image2Path: string
-): Promise<boolean> {
+  image2Path: string,
+  diffPath: string
+): Promise<number> {
   return new Promise((resolve, reject) => {
     gm.compare(
       image1Path,
       image2Path,
-      0, // error tolerance
+      {
+        file: diffPath,
+        highlightStyle: "Tint",
+        tolerance: 0,
+      },
       (err, isEqual, meanSquaredError, rawOutput) => {
         if (err) reject(err);
-        else resolve(isEqual);
+        else resolve(meanSquaredError);
       }
     );
   });
