@@ -8,7 +8,7 @@ describe("generatePdfFromHtml correctly renders", () => {
   let page: puppeteer.Page;
 
   beforeAll(async () => {
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch({ headless: true });
     page = await browser.newPage();
 
     const client = await page.target().createCDPSession();
