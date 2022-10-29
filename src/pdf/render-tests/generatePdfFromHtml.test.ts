@@ -8,7 +8,7 @@ describe("generatePdfFromHtml correctly renders", () => {
   let page: puppeteer.Page;
 
   beforeAll(async () => {
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
 
     const client = await page.target().createCDPSession();
@@ -33,6 +33,11 @@ describe("generatePdfFromHtml correctly renders", () => {
 
   test("multiple lines of text", async () => {
     const diff = await outputAndExpectedDiff("2-multiple-lines-of-text", page);
+    expect(diff).toEqual(0);
+  });
+
+  test("rich text", async () => {
+    const diff = await outputAndExpectedDiff("3-rich-text", page);
     expect(diff).toEqual(0);
   });
 });

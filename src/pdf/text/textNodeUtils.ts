@@ -71,7 +71,7 @@ export function textNodeByLines(textNode: Text): string[] {
   // At this point, we have an array (lines) of arrays (characters). Let's
   // collapse the character buffers down into a single text value.
   lines = lines.map(function operator(characters) {
-    return characters.join("").trim().replace(/\s+/g, " ");
+    return characters.join("");
   });
 
   // DEBUGGING: Draw boxes around our client rectangles.
