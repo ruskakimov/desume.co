@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { Coord } from "./common/types";
 import { clamp, cumulative } from "./common/functions/math";
 
@@ -51,15 +50,26 @@ export default function FractionSliders({
     };
   }, [isDragging]);
 
-  const Handle = isHorizontal ? VerticalHandle : HorizontalHandle;
+  const handleClass = isHorizontal
+    ? "pointer-events-auto absolute w-3 h-full -translate-x-1/2 hover:cursor-ew-resize flex justify-center"
+    : "pointer-events-auto absolute h-3 w-full -translate-y-1/2 hover:cursor-ns-resize flex items-center";
+
+  const line = isHorizontal ? (
+    <div className="w-px h-full bg-gray-3" />
+  ) : (
+    <div className="h-px w-full bg-gray-3" />
+  );
 
   return (
-    <Container style={{ width: width ?? "100%", height: height ?? "100%" }}>
+    <div
+      className="relative pointer-events-none"
+      style={{ width: width ?? "100%", height: height ?? "100%" }}
+    >
       {cumulative(fractions)
         .slice(0, -1)
         .map((fr, idx) => (
-          <Handle
-            key={idx}
+          <div
+            className={handleClass}
             style={{ [isHorizontal ? "left" : "top"]: `${fr * 100}%` }}
             onPointerDown={(e) =>
               setDragStart({
@@ -68,9 +78,11 @@ export default function FractionSliders({
               })
             }
             draggable={false} // prevent default dnd behaviour
-          />
+          >
+            {line}
+          </div>
         ))}
-    </Container>
+    </div>
   );
 }
 
@@ -94,35 +106,3 @@ function shiftedToNext(
   copy[index + 1] += amount;
   return copy;
 }
-
-const Container = styled.div`
-  position: relative;
-  pointer-events: none;
-`;
-
-const Handle = styled.div`
-  pointer-events: auto;
-  position: absolute;
-`;
-
-const VerticalHandle = styled(Handle)`
-  width: 10px;
-  height: 100%;
-  transform: translateX(-50%);
-  background-color: grey;
-
-  &:hover {
-    cursor: ew-resize;
-  }
-`;
-
-const HorizontalHandle = styled(Handle)`
-  height: 10px;
-  width: 100%;
-  transform: translateY(-50%);
-  background-color: grey;
-
-  &:hover {
-    cursor: ns-resize;
-  }
-`;
