@@ -11,29 +11,33 @@ export default function DocumentGrid({}) {
   const [rowSizes, setRowSizes] = useState([0.1, 0.8, 0.1]);
 
   return (
-    <div className="h-full relative">
-      <div className="py-16">
-        <div className="relative">
-          <div
-            className="mx-auto bg-white outline outline-1 outline-gray-3"
-            style={{
-              width: documentWidth,
-              height: documentHeight,
-              display: "grid",
-              gridTemplateColumns: colSizes
-                .map((fr) => fr * 100 + "%")
-                .join(" "),
-              gridTemplateRows: rowSizes.map((fr) => fr * 100 + "%").join(" "),
-            }}
-          ></div>
+    <div className="h-full w-full relative">
+      <div className="max-h-full overflow-scroll">
+        <div className="py-32">
+          <div className="relative">
+            <div
+              className="mx-auto bg-white outline outline-1 outline-gray-3"
+              style={{
+                width: documentWidth,
+                height: documentHeight,
+                display: "grid",
+                gridTemplateColumns: colSizes
+                  .map((fr) => fr * 100 + "%")
+                  .join(" "),
+                gridTemplateRows: rowSizes
+                  .map((fr) => fr * 100 + "%")
+                  .join(" "),
+              }}
+            ></div>
 
-          <div className="w-full absolute top-0 left-1/2 -translate-x-1/2">
-            <FractionSliders
-              axis="vertical"
-              height={documentHeight}
-              fractions={rowSizes}
-              onChange={(fractions) => setRowSizes(fractions)}
-            />
+            <div className="w-full absolute top-0 left-1/2 -translate-x-1/2">
+              <FractionSliders
+                axis="vertical"
+                height={documentHeight}
+                fractions={rowSizes}
+                onChange={(fractions) => setRowSizes(fractions)}
+              />
+            </div>
           </div>
         </div>
       </div>
