@@ -12,16 +12,10 @@ export default function DocumentGrid({}) {
 
   return (
     <div className="h-full relative">
-      <div>
-        <div
-          className="relative"
-          style={{
-            width: documentWidth,
-            height: documentHeight,
-          }}
-        >
+      <div className="py-16">
+        <div className="relative">
           <div
-            className="absolute bg-white outline outline-1 outline-gray-3"
+            className="mx-auto bg-white outline outline-1 outline-gray-3"
             style={{
               width: documentWidth,
               height: documentHeight,
@@ -33,17 +27,18 @@ export default function DocumentGrid({}) {
             }}
           ></div>
 
-          <FractionSliders
-            axis="vertical"
-            width={documentWidth}
-            height={documentHeight}
-            fractions={rowSizes}
-            onChange={(fractions) => setRowSizes(fractions)}
-          />
+          <div className="w-full absolute top-0 left-1/2 -translate-x-1/2">
+            <FractionSliders
+              axis="vertical"
+              height={documentHeight}
+              fractions={rowSizes}
+              onChange={(fractions) => setRowSizes(fractions)}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="h-full absolute top-0 left-1/2 -translate-x-1/2">
+      <div className="h-full absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none">
         <FractionSliders
           axis="horizontal"
           width={documentWidth}
