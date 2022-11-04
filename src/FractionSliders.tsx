@@ -5,8 +5,8 @@ import { clamp, cumulative } from "./common/functions/math";
 
 interface FractionSlidersProps {
   axis: "vertical" | "horizontal";
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   fractions: number[];
   onChange: (fractions: number[]) => void;
 }
@@ -21,6 +21,9 @@ export default function FractionSliders({
   fractions,
   onChange,
 }: FractionSlidersProps) {
+  if (axis === "vertical" && height === undefined) throw Error();
+  if (axis === "horizontal" && width === undefined) throw Error();
+
   const [dragStart, setDragStart] = useState<DragStart | null>(null);
 
   const isHorizontal = axis === "horizontal";
@@ -32,8 +35,8 @@ export default function FractionSliders({
 
     const onPointerMove = (e: PointerEvent) => {
       const diff = isHorizontal
-        ? (dragStart.pointerDownCoord.x - e.clientX) / width
-        : (dragStart.pointerDownCoord.y - e.clientY) / height;
+        ? (dragStart.pointerDownCoord.x - e.clientX) / width!
+        : (dragStart.pointerDownCoord.y - e.clientY) / height!;
       onChange(shiftedToNext(fractions, dragStart.handleIndex, diff));
     };
 
@@ -51,7 +54,7 @@ export default function FractionSliders({
   const Handle = isHorizontal ? VerticalHandle : HorizontalHandle;
 
   return (
-    <Container style={{ width, height }}>
+    <Container style={{ width: width ?? "100%", height: height ?? "100%" }}>
       {cumulative(fractions)
         .slice(0, -1)
         .map((fr, idx) => (
@@ -106,6 +109,7 @@ const VerticalHandle = styled(Handle)`
   width: 10px;
   height: 100%;
   transform: translateX(-50%);
+  background-color: grey;
 
   &:hover {
     cursor: ew-resize;
@@ -116,6 +120,7 @@ const HorizontalHandle = styled(Handle)`
   height: 10px;
   width: 100%;
   transform: translateY(-50%);
+  background-color: grey;
 
   &:hover {
     cursor: ns-resize;
