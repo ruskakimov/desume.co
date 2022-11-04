@@ -198,17 +198,17 @@ export default function DocumentGrid({}) {
           />
         </StackRoot>
 
-        <textarea
+        {/* <textarea
           style={{
             marginLeft: 40,
             width: 400,
           }}
           value={selectedCellContent}
           onChange={(e) => updateSelectedCellContent(e.target.value)}
-        />
+        /> */}
       </div>
 
-      <button
+      {/* <button
         onClick={() => {
           if (rootRef.current) {
             generatePdfFromHtml(rootRef.current).save();
@@ -216,7 +216,7 @@ export default function DocumentGrid({}) {
         }}
       >
         Save as PDF
-      </button>
+      </button> */}
 
       {contextMenu && (
         <ContextMenu
