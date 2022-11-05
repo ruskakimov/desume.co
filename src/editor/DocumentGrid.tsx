@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
 import { a4SizeInPoints } from "../common/constants/sizes";
+import { setPageMargins } from "../features/document/documentSlice";
 import FractionSliders from "./FractionSliders";
 
 const scale = 1;
@@ -7,8 +9,14 @@ const documentWidth = a4SizeInPoints.width * scale;
 const documentHeight = a4SizeInPoints.height * scale;
 
 export default function DocumentGrid({}) {
-  const [colSizes, setColSizes] = useState([0.1, 0.8, 0.1]);
-  const [rowSizes, setRowSizes] = useState([0.1, 0.8, 0.1]);
+  const pageMargins = useSelector(
+    (state: RootState) => state.document.pageMargins
+  );
+  const dispatch = useDispatch();
+
+  const { top, left, right, bottom } = pageMargins;
+  const colTemplate = `${left * 100}% 1fr ${right * 100}%`;
+  const rowTemplate = `${top * 100}% 1fr ${bottom * 100}%`;
 
   return (
     <div className="h-full w-full relative">
@@ -21,12 +29,8 @@ export default function DocumentGrid({}) {
                 width: documentWidth,
                 height: documentHeight,
                 display: "grid",
-                gridTemplateColumns: colSizes
-                  .map((fr) => fr * 100 + "%")
-                  .join(" "),
-                gridTemplateRows: rowSizes
-                  .map((fr) => fr * 100 + "%")
-                  .join(" "),
+                gridTemplateColumns: colTemplate,
+                gridTemplateRows: rowTemplate,
               }}
             ></div>
 
@@ -34,8 +38,16 @@ export default function DocumentGrid({}) {
               <FractionSliders
                 axis="vertical"
                 height={documentHeight}
-                fractions={rowSizes}
-                onChange={(fractions) => setRowSizes(fractions)}
+                fractions={[top, 1 - top - bottom, bottom]}
+                onChange={(fractions) =>
+                  dispatch(
+                    setPageMargins({
+                      ...pageMargins,
+                      top: fractions[0],
+                      bottom: fractions[2],
+                    })
+                  )
+                }
               />
             </div>
           </div>
@@ -46,8 +58,16 @@ export default function DocumentGrid({}) {
         <FractionSliders
           axis="horizontal"
           width={documentWidth}
-          fractions={colSizes}
-          onChange={(fractions) => setColSizes(fractions)}
+          fractions={[left, 1 - left - right, right]}
+          onChange={(fractions) =>
+            dispatch(
+              setPageMargins({
+                ...pageMargins,
+                left: fractions[0],
+                right: fractions[2],
+              })
+            )
+          }
         />
       </div>
     </div>
