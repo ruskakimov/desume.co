@@ -6,14 +6,12 @@ import FractionSliders from "./FractionSliders";
 interface PageProps {
   pageWidth: number;
   pageHeight: number;
+  children: React.ReactNode;
 }
 
-export default function Page({ pageHeight, pageWidth }: PageProps) {
+export default function Page({ pageHeight, pageWidth, children }: PageProps) {
   const pageMargins = useSelector(
     (state: RootState) => state.document.pageMargins
-  );
-  const docComponents = useSelector(
-    (state: RootState) => state.document.components
   );
   const dispatch = useDispatch();
 
@@ -34,11 +32,7 @@ export default function Page({ pageHeight, pageWidth }: PageProps) {
           gridTemplateRows: rowTemplate,
         }}
       >
-        <div className="col-start-2 row-start-2">
-          {docComponents.map((component, index) => (
-            <h1 key={index}>{component.text}</h1>
-          ))}
-        </div>
+        <div className="col-start-2 row-start-2">{children}</div>
       </div>
 
       <div className="w-full absolute top-0 left-1/2 -translate-x-1/2">

@@ -13,6 +13,9 @@ export default function DocumentArea({}) {
   const pageMargins = useSelector(
     (state: RootState) => state.document.pageMargins
   );
+  const docComponents = useSelector(
+    (state: RootState) => state.document.components
+  );
   const dispatch = useDispatch();
 
   const { left, right } = pageMargins;
@@ -21,7 +24,11 @@ export default function DocumentArea({}) {
     <div className="h-full w-full relative">
       <div className="max-h-full overflow-scroll">
         <div className="py-32">
-          <Page pageWidth={documentWidth} pageHeight={documentHeight} />
+          <Page pageWidth={documentWidth} pageHeight={documentHeight}>
+            {docComponents.map((component, index) => (
+              <h1 key={index}>{component.text}</h1>
+            ))}
+          </Page>
         </div>
       </div>
 
