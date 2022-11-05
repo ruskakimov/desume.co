@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { PageMargins } from "./types";
+import { DocumentComponent, PageMargins } from "./types";
 
 export interface DocumentState {
   pageMargins: PageMargins;
-  components: any[];
+  components: DocumentComponent[];
 }
 
 const initialState: DocumentState = {
@@ -24,7 +24,7 @@ export const documentSlice = createSlice({
     setPageMargins: (state, action: PayloadAction<PageMargins>) => {
       state.pageMargins = action.payload;
     },
-    appendComponent: (state, action: PayloadAction<any>) => {
+    appendComponent: (state, action: PayloadAction<DocumentComponent>) => {
       state.components.push(action.payload);
     },
   },

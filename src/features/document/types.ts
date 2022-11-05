@@ -7,3 +7,9 @@ export interface PageMargins {
   right: number;
   bottom: number;
 }
+
+export type DocumentComponent = HeadingComponent;
+
+export interface HeadingComponent {
+  text: string;
+}
