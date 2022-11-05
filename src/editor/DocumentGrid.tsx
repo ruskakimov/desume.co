@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { a4SizeInPoints } from "./common/constants/sizes";
+import { a4SizeInPoints } from "../common/constants/sizes";
 import FractionSliders from "./FractionSliders";
 
 const scale = 1;
