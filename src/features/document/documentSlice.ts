@@ -5,6 +5,7 @@ import { DocumentComponent, PageMargins } from "./types";
 export interface DocumentState {
   pageMargins: PageMargins;
   components: DocumentComponent[];
+  selectedComponentIndex?: number;
 }
 
 const initialState: DocumentState = {
@@ -27,9 +28,17 @@ export const documentSlice = createSlice({
     appendComponent: (state, action: PayloadAction<DocumentComponent>) => {
       state.components.push(action.payload);
     },
+    updateSelectedComponent: (
+      state,
+      action: PayloadAction<DocumentComponent>
+    ) => {
+      if (!state.selectedComponentIndex) return;
+      state.components[state.selectedComponentIndex] = action.payload;
+    },
   },
 });
 
-export const { setPageMargins, appendComponent } = documentSlice.actions;
+export const { setPageMargins, appendComponent, updateSelectedComponent } =
+  documentSlice.actions;
 
 export default documentSlice.reducer;
