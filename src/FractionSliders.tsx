@@ -51,13 +51,13 @@ export default function FractionSliders({
   }, [isDragging]);
 
   const handleClass = isHorizontal
-    ? "pointer-events-auto absolute w-3 h-full -translate-x-1/2 hover:cursor-ew-resize flex justify-center"
-    : "pointer-events-auto absolute h-3 w-full -translate-y-1/2 hover:cursor-ns-resize flex items-center";
+    ? "group pointer-events-auto absolute w-3 h-full -translate-x-1/2 hover:cursor-ew-resize flex justify-center"
+    : "group pointer-events-auto absolute h-3 w-full -translate-y-1/2 hover:cursor-ns-resize flex items-center";
 
   const line = isHorizontal ? (
-    <div className="w-px h-full bg-gray-3" />
+    <div className="w-px h-full bg-gray-3 group-hover:bg-blue transition-colors" />
   ) : (
-    <div className="h-px w-full bg-gray-3" />
+    <div className="h-px w-full bg-gray-3 group-hover:bg-blue transition-colors" />
   );
 
   return (
