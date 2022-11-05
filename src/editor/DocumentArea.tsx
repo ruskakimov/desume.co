@@ -27,6 +27,7 @@ export default function DocumentArea({}) {
         <div className="py-32">
           <div className="relative">
             <div
+              id="page-1"
               className="mx-auto bg-white outline outline-1 outline-gray-3"
               style={{
                 width: documentWidth,
