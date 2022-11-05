@@ -31,6 +31,9 @@ export const documentSlice = createSlice({
     selectComponentWithIndex: (state, action: PayloadAction<number>) => {
       state.selectedComponentIndex = action.payload;
     },
+    removeSelection: (state) => {
+      state.selectedComponentIndex = undefined;
+    },
     updateSelectedComponent: (
       state,
       action: PayloadAction<DocumentComponent>
@@ -45,6 +48,7 @@ export const {
   setPageMargins,
   appendComponent,
   selectComponentWithIndex,
+  removeSelection,
   updateSelectedComponent,
 } = documentSlice.actions;
 
