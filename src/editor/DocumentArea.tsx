@@ -12,6 +12,9 @@ export default function DocumentArea({}) {
   const pageMargins = useSelector(
     (state: RootState) => state.document.pageMargins
   );
+  const docComponents = useSelector(
+    (state: RootState) => state.document.components
+  );
   const dispatch = useDispatch();
 
   const { top, left, right, bottom } = pageMargins;
@@ -32,7 +35,17 @@ export default function DocumentArea({}) {
                 gridTemplateColumns: colTemplate,
                 gridTemplateRows: rowTemplate,
               }}
-            ></div>
+            >
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div>
+                {docComponents.map((component, index) => (
+                  <h1 key={index}>{component.text}</h1>
+                ))}
+              </div>
+            </div>
 
             <div className="w-full absolute top-0 left-1/2 -translate-x-1/2">
               <FractionSliders
