@@ -26,13 +26,17 @@ export default function DocumentArea() {
         {components.map((component, index) => (
           <div
             key={index}
-            className={classNames("pointer-events-auto select-none", {
-              "outline outline-1 outline-blue":
-                index === selectedComponentIndex,
-            })}
+            className={classNames(
+              "pointer-events-auto select-none ring-inset",
+              {
+                "hover:ring-1 hover:ring-blue/50":
+                  index !== selectedComponentIndex,
+                "ring-1 ring-blue": index === selectedComponentIndex,
+              }
+            )}
             onClick={() => dispatch(selectComponentWithIndex(index))}
           >
-            <h1>{component.text}</h1>
+            <h1 className="py-2">{component.text}</h1>
           </div>
         ))}
       </Page>
@@ -50,10 +54,6 @@ function DocumentAreaShell(props: { children: React.ReactNode }) {
 
   return (
     <div className="h-full w-full relative">
-      <div className="max-h-full overflow-scroll">
-        <div className="py-32">{props.children}</div>
-      </div>
-
       <div className="h-full absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none">
         <FractionSliders
           axis="horizontal"
@@ -69,6 +69,10 @@ function DocumentAreaShell(props: { children: React.ReactNode }) {
             )
           }
         />
+      </div>
+
+      <div className="max-h-full overflow-scroll">
+        <div className="py-32">{props.children}</div>
       </div>
     </div>
   );

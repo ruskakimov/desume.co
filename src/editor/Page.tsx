@@ -21,20 +21,6 @@ export default function Page({ pageHeight, pageWidth, children }: PageProps) {
 
   return (
     <div className="relative">
-      <div
-        id="page-1"
-        className="mx-auto bg-white outline outline-1 outline-gray-3"
-        style={{
-          width: pageWidth,
-          height: pageHeight,
-          display: "grid",
-          gridTemplateColumns: colTemplate,
-          gridTemplateRows: rowTemplate,
-        }}
-      >
-        <div className="col-start-2 row-start-2">{children}</div>
-      </div>
-
       <div className="w-full absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none">
         <FractionSliders
           axis="vertical"
@@ -50,6 +36,20 @@ export default function Page({ pageHeight, pageWidth, children }: PageProps) {
             )
           }
         />
+      </div>
+
+      <div
+        id="page-1"
+        className="mx-auto relative bg-white outline outline-1 outline-gray-3"
+        style={{
+          width: pageWidth,
+          height: pageHeight,
+          display: "grid",
+          gridTemplateColumns: colTemplate,
+          gridTemplateRows: rowTemplate,
+        }}
+      >
+        <div className="col-start-2 row-start-2">{children}</div>
       </div>
     </div>
   );
