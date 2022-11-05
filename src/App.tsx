@@ -1,7 +1,7 @@
 import "./App.css";
 import PrimaryButton from "./common/components/PrimaryButton";
 import DocumentGrid from "./DocumentGrid";
-import logo from "./text-logo.svg";
+import logo from "./assets/text-logo.svg";
 
 function App() {
   return (
