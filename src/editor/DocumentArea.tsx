@@ -3,6 +3,7 @@ import { RootState } from "../app/store";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { setPageMargins } from "../features/document/documentSlice";
 import FractionSliders from "./FractionSliders";
+import Page from "./Page";
 
 const scale = 1;
 const documentWidth = a4SizeInPoints.width * scale;
@@ -12,59 +13,15 @@ export default function DocumentArea({}) {
   const pageMargins = useSelector(
     (state: RootState) => state.document.pageMargins
   );
-  const docComponents = useSelector(
-    (state: RootState) => state.document.components
-  );
   const dispatch = useDispatch();
 
-  const { top, left, right, bottom } = pageMargins;
-  const colTemplate = `${left * 100}% 1fr ${right * 100}%`;
-  const rowTemplate = `${top * 100}% 1fr ${bottom * 100}%`;
+  const { left, right } = pageMargins;
 
   return (
     <div className="h-full w-full relative">
       <div className="max-h-full overflow-scroll">
         <div className="py-32">
-          <div className="relative">
-            <div
-              id="page-1"
-              className="mx-auto bg-white outline outline-1 outline-gray-3"
-              style={{
-                width: documentWidth,
-                height: documentHeight,
-                display: "grid",
-                gridTemplateColumns: colTemplate,
-                gridTemplateRows: rowTemplate,
-              }}
-            >
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div>
-                {docComponents.map((component, index) => (
-                  <h1 key={index}>{component.text}</h1>
-                ))}
-              </div>
-            </div>
-
-            <div className="w-full absolute top-0 left-1/2 -translate-x-1/2">
-              <FractionSliders
-                axis="vertical"
-                height={documentHeight}
-                fractions={[top, 1 - top - bottom, bottom]}
-                onChange={(fractions) =>
-                  dispatch(
-                    setPageMargins({
-                      ...pageMargins,
-                      top: fractions[0],
-                      bottom: fractions[2],
-                    })
-                  )
-                }
-              />
-            </div>
-          </div>
+          <Page pageWidth={documentWidth} pageHeight={documentHeight} />
         </div>
       </div>
 
