@@ -28,6 +28,9 @@ export const documentSlice = createSlice({
     appendComponent: (state, action: PayloadAction<DocumentComponent>) => {
       state.components.push(action.payload);
     },
+    selectComponentWithIndex: (state, action: PayloadAction<number>) => {
+      state.selectedComponentIndex = action.payload;
+    },
     updateSelectedComponent: (
       state,
       action: PayloadAction<DocumentComponent>
@@ -38,7 +41,11 @@ export const documentSlice = createSlice({
   },
 });
 
-export const { setPageMargins, appendComponent, updateSelectedComponent } =
-  documentSlice.actions;
+export const {
+  setPageMargins,
+  appendComponent,
+  selectComponentWithIndex,
+  updateSelectedComponent,
+} = documentSlice.actions;
 
 export default documentSlice.reducer;

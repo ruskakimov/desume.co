@@ -1,8 +1,12 @@
+import classNames from "classnames";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { a4SizeInPoints } from "../common/constants/sizes";
-import { setPageMargins } from "../features/document/documentSlice";
+import {
+  selectComponentWithIndex,
+  setPageMargins,
+} from "../features/document/documentSlice";
 import FractionSliders from "./FractionSliders";
 import Page from "./Page";
 
@@ -11,15 +15,25 @@ const documentWidth = a4SizeInPoints.width * scale;
 const documentHeight = a4SizeInPoints.height * scale;
 
 export default function DocumentArea() {
-  const docComponents = useSelector(
-    (state: RootState) => state.document.components
+  const { components, selectedComponentIndex } = useSelector(
+    (state: RootState) => state.document
   );
+  const dispatch = useDispatch();
 
   return (
     <DocumentAreaShell>
       <Page pageWidth={documentWidth} pageHeight={documentHeight}>
-        {docComponents.map((component, index) => (
-          <h1 key={index}>{component.text}</h1>
+        {components.map((component, index) => (
+          <div
+            key={index}
+            className={classNames("pointer-events-auto select-none", {
+              "outline outline-1 outline-blue":
+                index === selectedComponentIndex,
+            })}
+            onClick={() => dispatch(selectComponentWithIndex(index))}
+          >
+            <h1>{component.text}</h1>
+          </div>
         ))}
       </Page>
     </DocumentAreaShell>

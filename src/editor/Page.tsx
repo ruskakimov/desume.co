@@ -35,7 +35,7 @@ export default function Page({ pageHeight, pageWidth, children }: PageProps) {
         <div className="col-start-2 row-start-2">{children}</div>
       </div>
 
-      <div className="w-full absolute top-0 left-1/2 -translate-x-1/2">
+      <div className="w-full absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none">
         <FractionSliders
           axis="vertical"
           height={pageHeight}
