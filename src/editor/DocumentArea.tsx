@@ -8,7 +8,7 @@ const scale = 1;
 const documentWidth = a4SizeInPoints.width * scale;
 const documentHeight = a4SizeInPoints.height * scale;
 
-export default function DocumentGrid({}) {
+export default function DocumentArea({}) {
   const pageMargins = useSelector(
     (state: RootState) => state.document.pageMargins
   );

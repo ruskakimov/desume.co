@@ -1,7 +1,7 @@
 import logo from "../assets/text-logo.svg";
 import PrimaryButton from "../common/components/PrimaryButton";
 import ComponentBar from "./ComponentBar";
-import DocumentGrid from "./DocumentGrid";
+import DocumentArea from "./DocumentArea";
 
 export default function Editor() {
   return (
@@ -14,8 +14,8 @@ export default function Editor() {
         <section className="shrink-0 w-60 bg-gray-1 border-r border-gray-3">
           <ComponentBar />
         </section>
-        <section className="grow overflow-auto bg-gray-2">
-          <DocumentGrid />
+        <section className="grow bg-gray-2">
+          <DocumentArea />
         </section>
         <section className="shrink-0 w-80 bg-gray-1 border-l border-gray-3"></section>
       </main>
