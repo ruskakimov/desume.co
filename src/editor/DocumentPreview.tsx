@@ -11,7 +11,7 @@ const scale = 1;
 const documentWidth = a4SizeInPoints.width * scale;
 const documentHeight = a4SizeInPoints.height * scale;
 
-export default function DocumentArea() {
+export default function DocumentPreview() {
   const content = useSelector((state: RootState) => state.document.content);
 
   return (

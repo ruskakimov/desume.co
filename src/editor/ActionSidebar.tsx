@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import MarkdownArea from "./MarkdownArea";
 import Tabs from "./Tabs";
 
-export default function ComponentBar() {
+export default function ActionSidebar() {
   const dispatch = useDispatch();
 
   return (

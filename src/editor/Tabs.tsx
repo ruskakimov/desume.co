@@ -6,6 +6,7 @@ export default function Tabs() {
       <Tab selected text="Write" />
       <Tab text="Style" />
       <Tab text="Format" />
+      <Tab text="Export" />
     </div>
   );
 }
