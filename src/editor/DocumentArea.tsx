@@ -1,4 +1,5 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { a4SizeInPoints } from "../common/constants/sizes";
@@ -16,7 +17,20 @@ export default function DocumentArea() {
   return (
     <DocumentAreaShell>
       <Page pageWidth={documentWidth} pageHeight={documentHeight}>
-        {content}
+        <ReactMarkdown
+          children={content}
+          components={{
+            h1: (props) => (
+              <h1
+                style={{ fontSize: 32, color: "red", marginBottom: 16 }}
+                {...props}
+              ></h1>
+            ),
+            p: (props) => (
+              <p style={{ fontSize: 14, marginBottom: 16 }} {...props}></p>
+            ),
+          }}
+        />
       </Page>
     </DocumentAreaShell>
   );
