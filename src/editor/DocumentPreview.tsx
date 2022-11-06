@@ -1,13 +1,9 @@
-import classNames from "classnames";
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { a4SizeInPoints } from "../common/constants/sizes";
-import {
-  removeSelection,
-  selectComponentWithIndex,
-  setPageMargins,
-} from "../features/document/documentSlice";
+import { setPageMargins } from "../features/document/documentSlice";
 import FractionSliders from "./FractionSliders";
 import Page from "./Page";
 
@@ -15,36 +11,26 @@ const scale = 1;
 const documentWidth = a4SizeInPoints.width * scale;
 const documentHeight = a4SizeInPoints.height * scale;
 
-export default function DocumentArea() {
-  const { components, selectedComponentIndex } = useSelector(
-    (state: RootState) => state.document
-  );
-  const dispatch = useDispatch();
+export default function DocumentPreview() {
+  const content = useSelector((state: RootState) => state.document.content);
 
   return (
-    <DocumentAreaShell onClick={() => dispatch(removeSelection())}>
+    <DocumentAreaShell>
       <Page pageWidth={documentWidth} pageHeight={documentHeight}>
-        {components.map((component, index) => {
-          const selected = index === selectedComponentIndex;
-          return (
-            <div
-              key={index}
-              className={classNames(
-                "pointer-events-auto select-none ring-inset",
-                {
-                  "hover:ring-1 hover:ring-blue/50": !selected,
-                  "ring-1 ring-blue": selected,
-                }
-              )}
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch(selectComponentWithIndex(index));
-              }}
-            >
-              <h1 className="py-2">{component.text}</h1>
-            </div>
-          );
-        })}
+        <ReactMarkdown
+          children={content}
+          components={{
+            h1: (props) => (
+              <h1
+                style={{ fontSize: 32, color: "red", marginBottom: 16 }}
+                {...props}
+              />
+            ),
+            p: (props) => (
+              <p style={{ fontSize: 14, marginBottom: 16 }} {...props} />
+            ),
+          }}
+        />
       </Page>
     </DocumentAreaShell>
   );
@@ -83,7 +69,7 @@ function DocumentAreaShell({ children, ...props }: DocumentAreaShellProps) {
       </div>
 
       <div className="max-h-full overflow-scroll">
-        <div className="py-32">{children}</div>
+        <div className="py-8">{children}</div>
       </div>
     </div>
   );

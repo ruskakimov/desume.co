@@ -1,9 +1,8 @@
 import logo from "../assets/text-logo.svg";
 import PrimaryButton from "../common/components/PrimaryButton";
 import { generatePdfFromHtml } from "../pdf/generatePdfFromHtml";
-import ComponentBar from "./ComponentBar";
-import ConfigurationBar from "./CongirationBar";
-import DocumentArea from "./DocumentArea";
+import ActionSidebar from "./ActionSidebar";
+import DocumentPreview from "./DocumentPreview";
 
 export default function Editor() {
   return (
@@ -22,14 +21,11 @@ export default function Editor() {
         </PrimaryButton>
       </header>
       <main className="grow min-h-0 flex flex-row">
-        <section className="shrink-0 w-60 bg-gray-1 border-r border-gray-3">
-          <ComponentBar />
+        <section className="w-2/5 max-w-2xl bg-gray-1 border-r border-gray-3">
+          <ActionSidebar />
         </section>
         <section className="grow bg-gray-2">
-          <DocumentArea />
-        </section>
-        <section className="shrink-0 w-80 bg-gray-1 border-l border-gray-3">
-          <ConfigurationBar />
+          <DocumentPreview />
         </section>
       </main>
     </div>
