@@ -1,19 +1,14 @@
 import { useDispatch } from "react-redux";
-import { appendComponent } from "../features/document/documentSlice";
-import { HeadingComponent } from "../features/document/types";
-import ComponentCard from "./ComponentCard";
-import TextArea from "./TextArea";
+import MarkdownArea from "./MarkdownArea";
+import Tabs from "./Tabs";
 
 export default function ComponentBar() {
   const dispatch = useDispatch();
 
-  const heading: HeadingComponent = {
-    text: "Hello",
-  };
-
   return (
-    <div className="p-4">
-      <TextArea />
-    </div>
+    <>
+      <Tabs />
+      <MarkdownArea />
+    </>
   );
 }
