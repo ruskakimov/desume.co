@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { setPageMargins } from "../features/document/documentSlice";
+import defaultStyles from "./defaultStyles";
 import FractionSliders from "./FractionSliders";
 import Page from "./Page";
 
@@ -20,15 +21,13 @@ export default function DocumentPreview() {
         <ReactMarkdown
           children={content}
           components={{
-            h1: (props) => (
-              <h1
-                style={{ fontSize: 32, color: "red", marginBottom: 16 }}
-                {...props}
-              />
-            ),
-            p: (props) => (
-              <p style={{ fontSize: 14, marginBottom: 16 }} {...props} />
-            ),
+            h1: (props) => <h1 style={defaultStyles.h1} {...props} />,
+            h2: (props) => <h2 style={defaultStyles.h2} {...props} />,
+            h3: (props) => <h3 style={defaultStyles.h3} {...props} />,
+            h4: (props) => <h4 style={defaultStyles.h4} {...props} />,
+            h5: (props) => <h5 style={defaultStyles.h5} {...props} />,
+            h6: (props) => <h6 style={defaultStyles.h6} {...props} />,
+            p: (props) => <p style={defaultStyles.p} {...props} />,
           }}
         />
       </Page>
