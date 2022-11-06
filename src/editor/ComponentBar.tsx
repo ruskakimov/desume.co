@@ -6,9 +6,9 @@ export default function ComponentBar() {
   const dispatch = useDispatch();
 
   return (
-    <>
+    <div className="h-full flex flex-col">
       <Tabs />
       <MarkdownArea />
-    </>
+    </div>
   );
 }

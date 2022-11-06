@@ -2,7 +2,6 @@ import logo from "../assets/text-logo.svg";
 import PrimaryButton from "../common/components/PrimaryButton";
 import { generatePdfFromHtml } from "../pdf/generatePdfFromHtml";
 import ComponentBar from "./ComponentBar";
-import ConfigurationBar from "./CongirationBar";
 import DocumentArea from "./DocumentArea";
 
 export default function Editor() {
@@ -22,7 +21,7 @@ export default function Editor() {
         </PrimaryButton>
       </header>
       <main className="grow min-h-0 flex flex-row">
-        <section className="w-2/5 bg-gray-1 border-r border-gray-3">
+        <section className="w-2/5 max-w-2xl bg-gray-1 border-r border-gray-3">
           <ComponentBar />
         </section>
         <section className="grow bg-gray-2">
