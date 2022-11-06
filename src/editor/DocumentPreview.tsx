@@ -19,16 +19,19 @@ export default function DocumentPreview() {
     <DocumentAreaShell>
       <Page pageWidth={documentWidth} pageHeight={documentHeight}>
         <ReactMarkdown
+          className="prose"
           children={content}
-          components={{
-            h1: (props) => <h1 style={defaultStyles.h1} {...props} />,
-            h2: (props) => <h2 style={defaultStyles.h2} {...props} />,
-            h3: (props) => <h3 style={defaultStyles.h3} {...props} />,
-            h4: (props) => <h4 style={defaultStyles.h4} {...props} />,
-            h5: (props) => <h5 style={defaultStyles.h5} {...props} />,
-            h6: (props) => <h6 style={defaultStyles.h6} {...props} />,
-            p: (props) => <p style={defaultStyles.p} {...props} />,
-          }}
+          components={
+            {
+              // h1: (props) => <h1 style={defaultStyles.h1} {...props} />,
+              // h2: (props) => <h2 style={defaultStyles.h2} {...props} />,
+              // h3: (props) => <h3 style={defaultStyles.h3} {...props} />,
+              // h4: (props) => <h4 style={defaultStyles.h4} {...props} />,
+              // h5: (props) => <h5 style={defaultStyles.h5} {...props} />,
+              // h6: (props) => <h6 style={defaultStyles.h6} {...props} />,
+              // p: (props) => <p style={defaultStyles.p} {...props} />,
+            }
+          }
         />
       </Page>
     </DocumentAreaShell>
