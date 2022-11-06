@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { DocumentComponent, PageMargins } from "./types";
+import { PageMargins } from "./types";
 
 export interface DocumentState {
   pageMargins: PageMargins;
-  components: DocumentComponent[];
-  selectedComponentIndex?: number;
+  content: string;
 }
 
 const initialState: DocumentState = {
@@ -15,7 +14,7 @@ const initialState: DocumentState = {
     right: 0.1,
     bottom: 0.05,
   },
-  components: [],
+  content: "",
 };
 
 export const documentSlice = createSlice({
@@ -25,31 +24,12 @@ export const documentSlice = createSlice({
     setPageMargins: (state, action: PayloadAction<PageMargins>) => {
       state.pageMargins = action.payload;
     },
-    appendComponent: (state, action: PayloadAction<DocumentComponent>) => {
-      state.components.push(action.payload);
-    },
-    selectComponentWithIndex: (state, action: PayloadAction<number>) => {
-      state.selectedComponentIndex = action.payload;
-    },
-    removeSelection: (state) => {
-      state.selectedComponentIndex = undefined;
-    },
-    updateSelectedComponent: (
-      state,
-      action: PayloadAction<DocumentComponent>
-    ) => {
-      if (!state.selectedComponentIndex) return;
-      state.components[state.selectedComponentIndex] = action.payload;
+    setContent: (state, action: PayloadAction<string>) => {
+      state.content = action.payload;
     },
   },
 });
 
-export const {
-  setPageMargins,
-  appendComponent,
-  selectComponentWithIndex,
-  removeSelection,
-  updateSelectedComponent,
-} = documentSlice.actions;
+export const { setPageMargins, setContent } = documentSlice.actions;
 
 export default documentSlice.reducer;
