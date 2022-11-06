@@ -19,7 +19,7 @@ export default function DocumentPreview() {
     <DocumentAreaShell>
       <Page pageWidth={documentWidth} pageHeight={documentHeight}>
         <ReactMarkdown
-          className="prose"
+          className="prose prose-sm"
           children={content}
           components={
             {
