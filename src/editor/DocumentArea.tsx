@@ -69,7 +69,7 @@ function DocumentAreaShell({ children, ...props }: DocumentAreaShellProps) {
       </div>
 
       <div className="max-h-full overflow-scroll">
-        <div className="py-32">{children}</div>
+        <div className="py-8">{children}</div>
       </div>
     </div>
   );
