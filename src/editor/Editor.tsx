@@ -22,14 +22,11 @@ export default function Editor() {
         </PrimaryButton>
       </header>
       <main className="grow min-h-0 flex flex-row">
-        <section className="shrink-0 w-60 bg-gray-1 border-r border-gray-3">
+        <section className="w-2/5 bg-gray-1 border-r border-gray-3">
           <ComponentBar />
         </section>
         <section className="grow bg-gray-2">
           <DocumentArea />
-        </section>
-        <section className="shrink-0 w-80 bg-gray-1 border-l border-gray-3">
-          <ConfigurationBar />
         </section>
       </main>
     </div>
