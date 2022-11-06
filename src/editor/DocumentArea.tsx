@@ -24,10 +24,10 @@ export default function DocumentArea() {
               <h1
                 style={{ fontSize: 32, color: "red", marginBottom: 16 }}
                 {...props}
-              ></h1>
+              />
             ),
             p: (props) => (
-              <p style={{ fontSize: 14, marginBottom: 16 }} {...props}></p>
+              <p style={{ fontSize: 14, marginBottom: 16 }} {...props} />
             ),
           }}
         />
