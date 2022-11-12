@@ -3,6 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import logo from "../assets/logo.svg";
+import ContentForm from "./ContentForm";
 
 const user = {
   name: "Tom Cook",
@@ -13,7 +14,6 @@ const user = {
 const navigation = [
   { name: "Content", href: "#", current: true },
   { name: "Format", href: "#", current: false },
-  { name: "Export", href: "#", current: false },
 ];
 
 const userNavigation = [
@@ -33,40 +33,42 @@ export default function Example() {
         <body class="h-full">
         ```
       */}
-      <div className="min-h-full">
-        <Disclosure as="nav" className="bg-white shadow-sm">
+      <div className="absolute inset-0 flex flex-col overflow-hidden">
+        <Disclosure as="nav" className="bg-white shadow z-10">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 justify-between">
-                  <div className="flex flex-shrink-0 items-center">
-                    <img
-                      className="block h-8 w-auto lg:hidden"
-                      src={logo}
-                      alt="PDFEGG"
-                    />
-                    <img
-                      className="hidden h-8 w-auto lg:block"
-                      src={logo}
-                      alt="PDFEGG"
-                    />
-                  </div>
-                  <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "border-gray-800 text-gray-900"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                          "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        )}
-                        aria-current={item.current ? "page" : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
+                  <div className="flex">
+                    <div className="flex flex-shrink-0 items-center">
+                      <img
+                        className="block h-8 w-auto lg:hidden"
+                        src={logo}
+                        alt="PDFEGG"
+                      />
+                      <img
+                        className="hidden h-8 w-auto lg:block"
+                        src={logo}
+                        alt="PDFEGG"
+                      />
+                    </div>
+                    <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">
+                      {navigation.map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className={classNames(
+                            item.current
+                              ? "border-gray-800 text-gray-900"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                            "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                          )}
+                          aria-current={item.current ? "page" : undefined}
+                        >
+                          {item.name}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     <button
@@ -200,7 +202,7 @@ export default function Example() {
           )}
         </Disclosure>
 
-        <div className="py-10">
+        <div className="py-10 overflow-y-scroll">
           <header className="sm:hidden">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
@@ -209,7 +211,9 @@ export default function Example() {
             </div>
           </header>
           <main>
-            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8"></div>
+            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+              <ContentForm />
+            </div>
           </main>
         </div>
       </div>
