@@ -19,6 +19,7 @@ import {
   UserCircleIcon,
   UserGroupIcon,
   CheckCircleIcon,
+  Bars2Icon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import Checkbox from "../common/components/Checkbox";
@@ -54,16 +55,13 @@ export default function ContentForm() {
               aria-current={item.current ? "page" : undefined}
             >
               <Checkbox />
-              {/* <item.icon
-                className={classNames(
-                  item.current
-                    ? "text-gray-500 group-hover:text-gray-500"
-                    : "text-gray-400 group-hover:text-gray-500",
-                  "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
-                )}
-                aria-hidden="true"
-              /> */}
+
               <span className="truncate">{item.name}</span>
+
+              <Bars2Icon
+                className="text-gray-400 flex-shrink-0 ml-auto mr-1 h-4 w-4"
+                aria-hidden="true"
+              />
             </a>
           ))}
         </nav>
