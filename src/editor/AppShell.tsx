@@ -39,7 +39,6 @@ export default function Example() {
             <>
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 justify-between">
-                  {/* <div className="flex"> */}
                   <div className="flex flex-shrink-0 items-center">
                     <img
                       className="block h-8 w-auto lg:hidden"
@@ -69,7 +68,6 @@ export default function Example() {
                       </a>
                     ))}
                   </div>
-                  {/* </div> */}
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     <button
                       type="button"
@@ -203,7 +201,7 @@ export default function Example() {
         </Disclosure>
 
         <div className="py-10">
-          <header>
+          <header className="sm:hidden">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
                 Content
