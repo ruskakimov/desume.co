@@ -24,8 +24,13 @@ import classNames from "classnames";
 import Checkbox from "../common/components/Checkbox";
 
 const navigation = [
-  { name: "Personal Details", href: "#", icon: CheckCircleIcon, current: true },
-  { name: "Work History", href: "#", icon: CheckCircleIcon, current: false },
+  {
+    name: "Personal Details",
+    href: "#",
+    icon: CheckCircleIcon,
+    current: false,
+  },
+  { name: "Work History", href: "#", icon: CheckCircleIcon, current: true },
   { name: "Education", href: "#", icon: CheckCircleIcon, current: false },
   { name: "Projects", href: "#", icon: CheckCircleIcon, current: false },
   { name: "Skills", href: "#", icon: CheckCircleIcon, current: false },
@@ -65,19 +70,24 @@ export default function ContentForm() {
       </aside>
 
       <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
+        <div className="shadow sm:overflow-hidden sm:rounded-md">
+          <div className="bg-white px-4 py-3 sm:px-6 flex justify-between items-center">
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              Work History
+            </h3>
+
+            <button
+              type="submit"
+              className="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            >
+              Add Experience
+            </button>
+          </div>
+        </div>
+
         <form action="#" method="POST">
           <div className="shadow sm:overflow-hidden sm:rounded-md">
             <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
-              <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                  Profile
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  This information will be displayed publicly so be careful what
-                  you share.
-                </p>
-              </div>
-
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3 sm:col-span-2">
                   <label
@@ -187,14 +197,6 @@ export default function ContentForm() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-              <button
-                type="submit"
-                className="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-              >
-                Save
-              </button>
             </div>
           </div>
         </form>
