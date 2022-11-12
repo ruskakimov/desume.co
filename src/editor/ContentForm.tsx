@@ -21,6 +21,7 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
+import Checkbox from "../common/components/Checkbox";
 
 const navigation = [
   { name: "Personal Details", href: "#", icon: CheckCircleIcon, current: true },
@@ -41,18 +42,13 @@ export default function ContentForm() {
               href={item.href}
               className={classNames(
                 item.current
-                  ? "bg-gray-50 text-gray-700 hover:text-gray-700 hover:bg-white"
-                  : "text-gray-900 hover:text-gray-900 hover:bg-gray-50",
+                  ? "bg-white text-gray-900"
+                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-50",
                 "group rounded-md px-3 py-2 flex items-center text-sm font-medium"
               )}
               aria-current={item.current ? "page" : undefined}
             >
-              <input
-                // id="comments"
-                // name="comments"
-                type="checkbox"
-                className="h-4 w-4 mr-3 rounded border-gray-300 text-gray-600 focus:ring-gray-500"
-              />
+              <Checkbox />
               {/* <item.icon
                 className={classNames(
                   item.current
