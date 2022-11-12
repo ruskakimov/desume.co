@@ -17,11 +17,11 @@ export default function Editor() {
             }
           }}
         >
-          Export PDF
+          Download PDF
         </PrimaryButton>
       </header>
       <main className="grow min-h-0 flex flex-row">
-        <section className="w-2/5 max-w-2xl bg-gray-1 border-r border-gray-3">
+        <section className="w-1/2 bg-gray-1 border-r border-gray-3">
           <ActionSidebar />
         </section>
         <section className="grow bg-gray-2">
