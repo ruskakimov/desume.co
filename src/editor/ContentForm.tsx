@@ -47,7 +47,13 @@ export default function ContentForm() {
               )}
               aria-current={item.current ? "page" : undefined}
             >
-              <item.icon
+              <input
+                // id="comments"
+                // name="comments"
+                type="checkbox"
+                className="h-4 w-4 mr-3 rounded border-gray-300 text-gray-600 focus:ring-gray-500"
+              />
+              {/* <item.icon
                 className={classNames(
                   item.current
                     ? "text-gray-500 group-hover:text-gray-500"
@@ -55,7 +61,7 @@ export default function ContentForm() {
                   "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
                 )}
                 aria-hidden="true"
-              />
+              /> */}
               <span className="truncate">{item.name}</span>
             </a>
           ))}
