@@ -44,7 +44,7 @@ export default function ContentPage() {
       <PageHeader title="Content" />
 
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-        <aside className="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
+        <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:col-span-3 lg:py-0 lg:px-0">
           <nav className="space-y-1">
             {navigation.map((item) => (
               <a
@@ -71,7 +71,7 @@ export default function ContentPage() {
           </nav>
         </aside>
 
-        <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
+        <div className="space-y-6 lg:col-span-9">
           <div className="shadow sm:overflow-hidden sm:rounded-md">
             <div className="bg-white px-4 py-3 sm:px-6 flex justify-between items-center">
               <h3 className="text-lg font-medium leading-6 text-gray-900">
