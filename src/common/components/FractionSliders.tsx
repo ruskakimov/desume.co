@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Coord } from "../common/types";
-import { clamp, cumulative } from "../common/functions/math";
+import { Coord } from "../interfaces/measure";
+import { clamp, cumulative } from "../functions/math";
 
 interface FractionSlidersProps {
   axis: "vertical" | "horizontal";

@@ -2,8 +2,8 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import logo from "../assets/logo.svg";
-import ContentForm from "./ContentForm";
+import logo from "./assets/logo.svg";
+import ContentPage from "./pages/content/ContentPage";
 
 const user = {
   name: "Tom Cook",
@@ -212,7 +212,7 @@ export default function Example() {
           </header>
           <main>
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-              <ContentForm />
+              <ContentPage />
             </div>
           </main>
         </div>

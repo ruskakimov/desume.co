@@ -1,4 +1,4 @@
-import { Size } from "../types";
+import { Size } from "../interfaces/measure";
 
 export const a4SizeInPoints: Size = {
   width: 595.28,

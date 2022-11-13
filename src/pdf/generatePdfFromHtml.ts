@@ -1,6 +1,6 @@
-import { Box } from "../common/box";
+import { Box } from "../common/classes/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
-import { Coord } from "../common/types";
+import { Coord } from "../common/interfaces/measure";
 import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
 import { textNodeByLines, textNodeLineRects } from "./text/textNodeUtils";

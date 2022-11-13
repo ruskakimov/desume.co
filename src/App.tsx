@@ -1,5 +1,4 @@
-import Editor from "./editor";
-import AppShell from "./editor/AppShell";
+import AppShell from "./AppShell";
 
 function App() {
   return <AppShell />;

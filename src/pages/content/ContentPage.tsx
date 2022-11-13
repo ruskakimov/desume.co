@@ -22,7 +22,7 @@ import {
   Bars2Icon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import Checkbox from "../common/components/Checkbox";
+import Checkbox from "../../common/components/Checkbox";
 
 const navigation = [
   {
@@ -37,7 +37,7 @@ const navigation = [
   { name: "Skills", href: "#", icon: CheckCircleIcon, current: false },
 ];
 
-export default function ContentForm() {
+export default function ContentPage() {
   return (
     <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
       <aside className="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
