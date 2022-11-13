@@ -189,14 +189,7 @@ export default function Example() {
 
       <div className="py-10 overflow-y-scroll">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <header className="sm:hidden px-4">
-            <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-              Content
-            </h1>
-          </header>
-          <main>
-            <ContentPage />
-          </main>
+          <ContentPage />
         </div>
       </div>
     </div>
