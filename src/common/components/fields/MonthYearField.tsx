@@ -24,7 +24,7 @@ const MonthYearField: React.FC<MonthYearFieldProps> = ({ label }) => {
           <select
             id={monthInputId}
             name="month"
-            className="relative block w-full rounded-none rounded-tl-md rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="relative block w-full rounded-none rounded-tl-md rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm"
             defaultValue="January"
           >
             <option>January</option>
@@ -49,7 +49,7 @@ const MonthYearField: React.FC<MonthYearFieldProps> = ({ label }) => {
             type="text"
             name="year"
             id={yearInputId}
-            className="relative block w-full rounded-none rounded-br-md rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className="relative block w-full rounded-none rounded-br-md rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm"
             placeholder="Year"
           />
         </div>
