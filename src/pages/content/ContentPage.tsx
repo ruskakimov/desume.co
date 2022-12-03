@@ -3,6 +3,7 @@ import classNames from "classnames";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import TextField from "../../common/components/fields/TextField";
+import WebsiteField from "../../common/components/fields/WebsiteField";
 
 const navigation = [
   {
@@ -75,23 +76,10 @@ export default function ContentPage() {
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
-                    <label
-                      htmlFor="company-website"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Company website
-                    </label>
-                    <div className="mt-1 flex rounded-md shadow-sm">
-                      <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
-                        https://
-                      </span>
-                      <input
-                        type="text"
-                        name="company-website"
-                        id="username"
-                        className="block w-full min-w-0 flex-grow rounded-none rounded-r-md border-gray-300 focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
-                      />
-                    </div>
+                    <WebsiteField
+                      name="company-website"
+                      label="Company website"
+                    />
                   </div>
 
                   <div className="col-span-6">
