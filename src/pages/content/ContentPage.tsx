@@ -2,7 +2,7 @@ import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
-import TextField from "../../common/components/TextField";
+import TextField from "../../common/components/fields/TextField";
 
 const navigation = [
   {
