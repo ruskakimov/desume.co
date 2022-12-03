@@ -5,6 +5,7 @@ import PageHeader from "../../common/components/PageHeader";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
 import MonthYearField from "../../common/components/fields/MonthYearField";
+import Card from "../../common/components/Card";
 
 const navigation = [
   {
@@ -53,8 +54,8 @@ export default function ContentPage() {
         </aside>
 
         <div className="space-y-6">
-          <div className="shadow sm:overflow-hidden sm:rounded-md">
-            <div className="bg-white px-4 py-3 sm:px-6 flex justify-between items-center">
+          <Card>
+            <div className="flex justify-between items-center">
               <h3 className="text-lg font-medium leading-6 text-gray-900">
                 Work History
               </h3>
@@ -66,37 +67,35 @@ export default function ContentPage() {
                 Add Experience
               </button>
             </div>
-          </div>
+          </Card>
 
           <form action="#" method="POST">
-            <div className="shadow sm:overflow-hidden sm:rounded-md">
-              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
-                <div className="grid grid-cols-6 gap-6">
-                  <div className="col-span-6 sm:col-span-3">
-                    <TextField name="company-name" label="Company name" />
-                  </div>
+            <Card>
+              <div className="grid grid-cols-6 gap-6">
+                <div className="col-span-6 sm:col-span-3">
+                  <TextField name="company-name" label="Company name" />
+                </div>
 
-                  <div className="col-span-6 sm:col-span-3">
-                    <WebsiteField
-                      name="company-website"
-                      label="Company website"
-                    />
-                  </div>
+                <div className="col-span-6 sm:col-span-3">
+                  <WebsiteField
+                    name="company-website"
+                    label="Company website"
+                  />
+                </div>
 
-                  <div className="col-span-6">
-                    <TextField name="job-title" label="Job title" />
-                  </div>
+                <div className="col-span-6">
+                  <TextField name="job-title" label="Job title" />
+                </div>
 
-                  <div className="col-span-6 sm:col-span-3">
-                    <MonthYearField label="Start" />
-                  </div>
+                <div className="col-span-6 sm:col-span-3">
+                  <MonthYearField label="Start" />
+                </div>
 
-                  <div className="col-span-6 sm:col-span-3">
-                    <MonthYearField label="End" />
-                  </div>
+                <div className="col-span-6 sm:col-span-3">
+                  <MonthYearField label="End" />
                 </div>
               </div>
-            </div>
+            </Card>
           </form>
         </div>
       </div>
