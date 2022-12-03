@@ -38,16 +38,14 @@ const navigation = [
   { name: "Skills", href: "#", icon: CheckCircleIcon, current: false },
 ];
 
-const sidebarWidth = "16rem";
-
 export default function ContentPage() {
   return (
     <>
       <PageHeader title="Content" />
 
-      <div className={`lg:grid lg:grid-cols-[${sidebarWidth}_1fr] lg:gap-x-5`}>
+      <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
         <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:py-0 lg:px-0">
-          <nav className={`space-y-1 lg:fixed lg:w-[${sidebarWidth}]`}>
+          <nav className="space-y-1 lg:fixed lg:w-[16rem]">
             {navigation.map((item) => (
               <a
                 key={item.name}
