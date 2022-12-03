@@ -4,6 +4,7 @@ import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
+import MonthYearField from "../../common/components/fields/MonthYearField";
 
 const navigation = [
   {
@@ -87,75 +88,11 @@ export default function ContentPage() {
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
-                    <label
-                      htmlFor="first-name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Start
-                    </label>
-                    <div className="mt-1 flex -space-x-px">
-                      <div className="w-1/2 min-w-0 flex-1">
-                        <label htmlFor="month" className="sr-only">
-                          Month
-                        </label>
-                        <select
-                          id="month"
-                          name="month"
-                          className="relative block w-full rounded-none rounded-tl-md rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        >
-                          <option>January</option>
-                          <option>February</option>
-                        </select>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <label htmlFor="card-cvc" className="sr-only">
-                          Year
-                        </label>
-                        <input
-                          type="text"
-                          name="card-cvc"
-                          id="card-cvc"
-                          className="relative block w-full rounded-none rounded-br-md rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder="Year"
-                        />
-                      </div>
-                    </div>
+                    <MonthYearField label="Start" />
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
-                    <label
-                      htmlFor="first-name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      End
-                    </label>
-                    <div className="mt-1 flex -space-x-px">
-                      <div className="w-1/2 min-w-0 flex-1">
-                        <label htmlFor="month" className="sr-only">
-                          Month
-                        </label>
-                        <select
-                          id="month"
-                          name="month"
-                          className="relative block w-full rounded-none rounded-tl-md rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        >
-                          <option>January</option>
-                          <option>February</option>
-                        </select>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <label htmlFor="card-cvc" className="sr-only">
-                          Year
-                        </label>
-                        <input
-                          type="text"
-                          name="card-cvc"
-                          id="card-cvc"
-                          className="relative block w-full rounded-none rounded-br-md rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder="Year"
-                        />
-                      </div>
-                    </div>
+                    <MonthYearField label="End" />
                   </div>
                 </div>
               </div>
