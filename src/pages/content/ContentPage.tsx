@@ -6,6 +6,7 @@ import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import Card from "../../common/components/Card";
+import PrimaryButton from "../../common/components/PrimaryButton";
 
 const navigation = [
   {
@@ -60,12 +61,7 @@ export default function ContentPage() {
                 Work History
               </h3>
 
-              <button
-                type="submit"
-                className="inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-              >
-                Add Experience
-              </button>
+              <PrimaryButton>Add Experience</PrimaryButton>
             </div>
           </Card>
 
