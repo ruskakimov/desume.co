@@ -2,6 +2,7 @@ import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
+import TextField from "../../common/components/TextField";
 
 const navigation = [
   {
@@ -70,19 +71,7 @@ export default function ContentPage() {
               <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
                 <div className="grid grid-cols-6 gap-6">
                   <div className="col-span-6 sm:col-span-3">
-                    <label
-                      htmlFor="first-name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Company name
-                    </label>
-                    <input
-                      type="text"
-                      name="first-name"
-                      id="first-name"
-                      autoComplete="given-name"
-                      className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm"
-                    />
+                    <TextField name="company-name" label="Company name" />
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -106,19 +95,7 @@ export default function ContentPage() {
                   </div>
 
                   <div className="col-span-6">
-                    <label
-                      htmlFor="first-name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Job title
-                    </label>
-                    <input
-                      type="text"
-                      name="first-name"
-                      id="first-name"
-                      autoComplete="given-name"
-                      className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm"
-                    />
+                    <TextField name="job-title" label="Job title" />
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
