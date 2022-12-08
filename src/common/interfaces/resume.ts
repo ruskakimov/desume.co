@@ -1,3 +1,5 @@
+import { MonthYear } from "./month-year";
+
 export interface Resume {
   personalDetails: {
     fullName: string;
@@ -17,21 +19,21 @@ export interface WorkExperience {
   companyName: string;
   companyWebsiteUrl: string;
   jobTitle: string;
-  startDate: string;
-  endDate: string;
+  startDate: MonthYear;
+  endDate: MonthYear;
 }
 
 export interface Education {
   schoolName: string;
   schoolWebsiteUrl: string;
   degree: string;
-  startDate: string;
-  endDate: string;
+  startDate: MonthYear;
+  endDate: MonthYear;
 }
 
 export interface Project {
   projectName: string;
-  startDate: string;
-  endDate: string;
   description: string;
+  startDate: MonthYear;
+  endDate: MonthYear;
 }
