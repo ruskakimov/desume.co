@@ -24,7 +24,9 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences }) => {
         {experiences.map((experience) => (
           <div className="border sm:overflow-hidden sm:rounded-md">
             <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
-              {experience.companyName}
+              <span className="font-medium text-gray-900">
+                {experience.companyName}
+              </span>
             </div>
           </div>
         ))}
