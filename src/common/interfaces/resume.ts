@@ -21,6 +21,7 @@ export interface WorkExperience {
   jobTitle: string;
   startDate: MonthYear;
   endDate: MonthYear;
+  bulletPoints: string[];
 }
 
 export interface Education {
