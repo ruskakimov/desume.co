@@ -26,6 +26,9 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences }) => {
             <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
               <span className="font-medium text-gray-900">
                 {experience.companyName}
+              </span>{" "}
+              <span className="font-light text-gray-900">
+                {experience.jobTitle}
               </span>
             </div>
           </div>
