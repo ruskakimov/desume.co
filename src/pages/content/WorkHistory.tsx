@@ -3,8 +3,13 @@ import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
 import PrimaryButton from "../../common/components/PrimaryButton";
+import { WorkExperience } from "../../common/interfaces/resume";
 
-const WorkHistory: React.FC = () => {
+interface WorkHistoryProps {
+  experiences: WorkExperience[];
+}
+
+const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences }) => {
   return (
     <>
       <Card>
@@ -15,6 +20,14 @@ const WorkHistory: React.FC = () => {
 
           <PrimaryButton>Add Experience</PrimaryButton>
         </div>
+
+        {experiences.map((experience) => (
+          <div className="border sm:overflow-hidden sm:rounded-md">
+            <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+              {experience.companyName}
+            </div>
+          </div>
+        ))}
       </Card>
 
       <form action="#" method="POST">

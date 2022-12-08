@@ -20,7 +20,7 @@ export interface WorkExperience {
   companyWebsiteUrl: string;
   jobTitle: string;
   startDate: MonthYear;
-  endDate: MonthYear;
+  endDate: MonthYear | null;
   bulletPoints: string[];
 }
 

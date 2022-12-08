@@ -51,7 +51,26 @@ export default function ContentPage() {
         </aside>
 
         <div className="space-y-6">
-          <WorkHistory />
+          <WorkHistory
+            experiences={[
+              {
+                companyName: "TechWings",
+                companyWebsiteUrl: "https://techwings.com/",
+                jobTitle: "Senior Frontend Engineer",
+                startDate: { month: 9, year: 2022 },
+                endDate: null,
+                bulletPoints: [],
+              },
+              {
+                companyName: "Deriv",
+                companyWebsiteUrl: "https://deriv.com/",
+                jobTitle: "Frontend Engineer",
+                startDate: { month: 2, year: 2018 },
+                endDate: { month: 6, year: 2021 },
+                bulletPoints: [],
+              },
+            ]}
+          />
         </div>
       </div>
     </>
