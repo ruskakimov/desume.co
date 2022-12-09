@@ -8,11 +8,11 @@ interface WorkHistoryCardProps {
 const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({ experience }) => {
   return (
     <div
-      className={classNames("border sm:overflow-hidden sm:rounded-md", {
+      className={classNames("border  sm:overflow-hidden sm:rounded-md", {
         "opacity-50": !experience.included,
       })}
     >
-      <div className="bg-white">
+      <div className="bg-gray-50">
         <div className="grid grid-cols-3">
           <div className="p-4 flex flex-col border-r">
             <span className="font-medium text-gray-900">
