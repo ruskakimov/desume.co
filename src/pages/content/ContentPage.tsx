@@ -58,15 +58,24 @@ export default function ContentPage() {
                 companyWebsiteUrl: "https://techwings.com/",
                 jobTitle: "Senior Frontend Engineer",
                 startDate: { month: 9, year: 2022 },
-                bulletPoints: [],
+                bulletPoints: [
+                  "Designed and built a cross-platform mobile animation app using Flutter with over 100k downloads on PlayStore and 11k monthly active users.",
+                  "Managed a large codebase with over 15,000 lines of code and 900 commits.",
+                  "Have grown and managed a Discord community with over 2000 members.",
+                ],
               },
               {
                 companyName: "Deriv",
                 companyWebsiteUrl: "https://deriv.com/",
                 jobTitle: "Frontend Engineer",
                 startDate: { month: 2, year: 2018 },
-                endDate: { month: 6, year: 2021 },
-                bulletPoints: [],
+                endDate: { month: 3, year: 2021 },
+                bulletPoints: [
+                  "Initiated and led a charting library project (with a team of 2 engineers) that replaced a third-party charting solution, saving the company 40k USD annually.",
+                  "Managed a focused team of one engineer and a designer, delivering a complete web app for P2P transactions within 3 months from the start of the project.",
+                  "Built a trading history explorer using React / Redux that is used by over 150k monthly users.",
+                  "Created a prototype of an improved interface for a “digits” contract that was later released to production and generated an 82% increase in the number of transactions for that contract in the next term.",
+                ],
               },
             ]}
           />
