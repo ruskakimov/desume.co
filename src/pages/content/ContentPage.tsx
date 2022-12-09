@@ -58,7 +58,6 @@ export default function ContentPage() {
                 companyWebsiteUrl: "https://techwings.com/",
                 jobTitle: "Senior Frontend Engineer",
                 startDate: { month: 9, year: 2022 },
-                endDate: null,
                 bulletPoints: [],
               },
               {
