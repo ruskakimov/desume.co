@@ -22,6 +22,7 @@ export interface WorkExperience {
   startDate: MonthYear;
   endDate?: MonthYear;
   bulletPoints: string[];
+  included: boolean;
 }
 
 export interface Education {
@@ -30,6 +31,7 @@ export interface Education {
   degree: string;
   startDate: MonthYear;
   endDate: MonthYear;
+  included: boolean;
 }
 
 export interface Project {
@@ -37,4 +39,5 @@ export interface Project {
   description: string;
   startDate: MonthYear;
   endDate: MonthYear;
+  included: boolean;
 }

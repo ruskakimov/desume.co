@@ -9,9 +9,10 @@ import WorkHistoryCard from "./WorkHistoryCard";
 
 interface WorkHistoryProps {
   experiences: WorkExperience[];
+  onChange: (experiences: WorkExperience[]) => void;
 }
 
-const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences }) => {
+const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
   return (
     <>
       <Card>
@@ -23,10 +24,17 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences }) => {
           <PrimaryButton>Add Experience</PrimaryButton>
         </div>
 
-        {experiences.map((experience) => (
+        {experiences.map((experience, index) => (
           <div className="flex">
             <div className="mt-4">
-              <Checkbox />
+              <Checkbox
+                checked={experience.included}
+                onChange={(e) => {
+                  const slice = experiences.slice();
+                  slice[index] = { ...experience, included: e.target.checked };
+                  onChange(slice);
+                }}
+              />
             </div>
 
             <WorkHistoryCard experience={experience} />
