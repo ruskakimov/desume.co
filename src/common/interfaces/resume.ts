@@ -1,4 +1,4 @@
-import { MonthYear } from "./month-year";
+import { MonthYear } from "../classes/MonthYear";
 
 export interface Resume {
   personalDetails: {

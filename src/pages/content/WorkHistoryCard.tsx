@@ -1,4 +1,3 @@
-import { getMonthYearDisplayString } from "../../common/functions/month-year-display";
 import { WorkExperience } from "../../common/interfaces/resume";
 
 interface WorkHistoryCardProps {
@@ -14,10 +13,14 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({ experience }) => {
             <span className="font-medium text-gray-900">
               {experience.companyName}
             </span>
-            <span className="font-light text-gray-900">
+
+            <span className="font-normal text-gray-700">
               {experience.jobTitle}
             </span>
-            <span>{getMonthYearDisplayString(experience.startDate)}</span>
+
+            <span className="mt-1 text-sm font-normal text-gray-500">{`${
+              experience.startDate
+            } – ${experience.endDate ?? "Current"}`}</span>
           </div>
 
           <div className="col-span-2 p-4 text-sm text-gray-500">

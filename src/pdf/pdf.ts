@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { Box } from "../common/classes/box";
+import { Box } from "../common/classes/Box";
 import { Coord } from "../common/interfaces/measure";
 
 export interface LineOptions {
