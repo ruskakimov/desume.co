@@ -4,6 +4,7 @@ import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
 import PrimaryButton from "../../common/components/PrimaryButton";
+import SlideOver from "../../common/components/SlideOver";
 import { WorkExperience } from "../../common/interfaces/resume";
 import WorkHistoryCard from "./WorkHistoryCard";
 
@@ -15,6 +16,8 @@ interface WorkHistoryProps {
 const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
   return (
     <>
+      <SlideOver />
+
       <Card>
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
