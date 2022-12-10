@@ -57,7 +57,7 @@ export default function ContentPage() {
       <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
         <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:py-0 lg:px-0">
           <nav className="space-y-1 lg:fixed lg:w-[16rem]">
-            {navigation.map((item) => (
+            {navigation.map((item, index) => (
               <a
                 key={item.name}
                 href={item.href}
@@ -69,14 +69,16 @@ export default function ContentPage() {
                 )}
                 aria-current={item.current ? "page" : undefined}
               >
-                <Checkbox />
+                <Checkbox checked={true} disabled={index === 0} />
 
                 <span className="truncate">{item.name}</span>
 
-                <Bars2Icon
-                  className="text-gray-400 flex-shrink-0 ml-auto mr-1 h-4 w-4"
-                  aria-hidden="true"
-                />
+                {index !== 0 ? (
+                  <Bars2Icon
+                    className="text-gray-400 flex-shrink-0 ml-auto mr-1 h-4 w-4"
+                    aria-hidden="true"
+                  />
+                ) : null}
               </a>
             ))}
           </nav>
