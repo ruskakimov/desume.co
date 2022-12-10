@@ -4,8 +4,11 @@ import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
 import SlideOver from "../../common/components/SlideOver";
+import { WorkExperience } from "../../common/interfaces/resume";
 
-export default function useAddExperiencePanel(): [() => void, React.ReactNode] {
+export default function useAddExperiencePanel(
+  onAdd: (experience: WorkExperience) => void
+): [() => void, React.ReactNode] {
   const [open, setOpen] = useState(false);
 
   const openPanel = () => {

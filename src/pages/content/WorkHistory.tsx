@@ -11,7 +11,11 @@ interface WorkHistoryProps {
 }
 
 const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
-  const [openAddExperiencePanel, addExperiencePanel] = useAddExperiencePanel();
+  const [openAddExperiencePanel, addExperiencePanel] = useAddExperiencePanel(
+    (newExperience) => {
+      onChange([newExperience, ...experiences]);
+    }
+  );
 
   return (
     <>
