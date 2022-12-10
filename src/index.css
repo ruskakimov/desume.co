@@ -8,3 +8,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.no-mouse-focus-ring:focus:not(:focus-visible) {
+  @apply focus:ring-0 focus:ring-offset-0;
+}
+
+.no-mouse-focus-ring:focus-visible {
+  @apply ring-2 ring-offset-2;
+}

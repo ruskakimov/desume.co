@@ -59,7 +59,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
-                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 no-mouse-focus-ring"
                               onClick={onClose}
                             >
                               <span className="sr-only">Close panel</span>
