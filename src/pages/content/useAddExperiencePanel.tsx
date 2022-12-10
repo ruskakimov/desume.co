@@ -10,9 +10,11 @@ import { WorkExperience } from "../../common/interfaces/resume";
 export default function useAddExperiencePanel(
   onAdd: (experience: WorkExperience) => void
 ): [() => void, React.ReactNode] {
-  const [open, setOpen] = useState(false);
-  const openPanel = () => setOpen(true);
-  const closePanel = () => setOpen(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const openPanel = () => setIsOpen(true);
+  const closePanel = () => setIsOpen(false);
+
+  const [isCurrentPosition, setIsCurrentPosition] = useState(false);
 
   const { register, handleSubmit } = useForm<WorkExperience>();
   const onSubmit: SubmitHandler<WorkExperience> = (experience) => {
@@ -26,7 +28,7 @@ export default function useAddExperiencePanel(
   return [
     openPanel,
     <SlideOver
-      isOpen={open}
+      isOpen={isOpen}
       title="Add Experience"
       onClose={closePanel}
       onSubmit={handleSubmit(onSubmit, onError)}
@@ -72,16 +74,22 @@ export default function useAddExperiencePanel(
             label="End"
             monthProps={register("endDate.month", {
               valueAsNumber: true,
+              disabled: isCurrentPosition,
             })}
             yearProps={register("endDate.year", {
               valueAsNumber: true,
+              disabled: isCurrentPosition,
             })}
           />
         </div>
 
         <div className="col-span-6 flex -mt-2">
           <div className="flex h-5 items-center">
-            <Checkbox id="current-position" />
+            <Checkbox
+              id="current-position"
+              checked={isCurrentPosition}
+              onChange={(e) => setIsCurrentPosition(e.target.checked)}
+            />
           </div>
           <label
             htmlFor="current-position"
