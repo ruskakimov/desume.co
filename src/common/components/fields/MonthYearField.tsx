@@ -41,6 +41,7 @@ const MonthYearField: React.FC<MonthYearFieldProps> = ({
             ))}
           </select>
         </div>
+        {/* TODO: Convert to a dropdown */}
         <div className="min-w-0 flex-1">
           <label htmlFor={yearInputId} className="sr-only">
             Year
