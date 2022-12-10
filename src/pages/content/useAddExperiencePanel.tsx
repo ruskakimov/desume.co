@@ -17,8 +17,8 @@ export default function useAddExperiencePanel(
   const { register, handleSubmit } = useForm<WorkExperience>();
   const onSubmit: SubmitHandler<WorkExperience> = (experience) => {
     console.log(experience);
-    // onAdd(experience);
-    // closePanel();
+    onAdd({ ...experience, bulletPoints: [], included: true });
+    closePanel();
   };
   const onError: SubmitErrorHandler<WorkExperience> = (error) =>
     console.error(error);
@@ -81,7 +81,7 @@ export default function useAddExperiencePanel(
 
         <div className="col-span-6 flex -mt-2">
           <div className="flex h-5 items-center">
-            <Checkbox id="current-position" {...register("included")} />
+            <Checkbox id="current-position" />
           </div>
           <label
             htmlFor="current-position"
