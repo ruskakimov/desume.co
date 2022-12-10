@@ -4,12 +4,24 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 import SecondaryButton from "./SecondaryButton";
 
-export default function SlideOver() {
-  const [open, setOpen] = useState(true);
+interface SlideOverProps {
+  isOpen: boolean;
+  title: string;
+  children: React.ReactNode;
+  onClose: () => void;
+  onSubmit: () => void;
+}
 
+const SlideOver: React.FC<SlideOverProps> = ({
+  isOpen,
+  title,
+  children,
+  onClose,
+  onSubmit,
+}) => {
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+    <Transition.Root show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -42,13 +54,13 @@ export default function SlideOver() {
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between">
                           <Dialog.Title className="text-lg font-medium text-gray-900">
-                            Add Experience
+                            {title}
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
-                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                              onClick={() => setOpen(false)}
+                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                              onClick={onClose}
                             >
                               <span className="sr-only">Close panel</span>
                               <XMarkIcon
@@ -60,17 +72,14 @@ export default function SlideOver() {
                         </div>
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                        {/* Replace with your content */}
-                        <div
-                          className="h-full border-2 border-dashed border-gray-200"
-                          aria-hidden="true"
-                        />
-                        {/* /End replace */}
+                        {children}
                       </div>
                     </div>
                     <div className="flex flex-shrink-0 justify-end gap-4 px-4 py-4">
-                      <SecondaryButton>Cancel</SecondaryButton>
-                      <PrimaryButton>Save</PrimaryButton>
+                      <SecondaryButton onClick={onClose}>
+                        Cancel
+                      </SecondaryButton>
+                      <PrimaryButton onClick={onSubmit}>Save</PrimaryButton>
                     </div>
                   </div>
                 </Dialog.Panel>
@@ -81,4 +90,6 @@ export default function SlideOver() {
       </Dialog>
     </Transition.Root>
   );
-}
+};
+
+export default SlideOver;

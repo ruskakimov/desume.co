@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Card from "../../common/components/Card";
 import Checkbox from "../../common/components/Checkbox";
 import MonthYearField from "../../common/components/fields/MonthYearField";
@@ -14,17 +15,19 @@ interface WorkHistoryProps {
 }
 
 const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
+  const [addWorkOpen, setAddWorkOpen] = useState<boolean>(false);
+
   return (
     <>
-      <SlideOver />
-
       <Card>
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             Work History
           </h3>
 
-          <PrimaryButton>Add Experience</PrimaryButton>
+          <PrimaryButton onClick={() => setAddWorkOpen(true)}>
+            Add Experience
+          </PrimaryButton>
         </div>
 
         {experiences.map((experience, index) => (
@@ -45,8 +48,13 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
         ))}
       </Card>
 
-      <form action="#" method="POST">
-        <Card>
+      <SlideOver
+        isOpen={addWorkOpen}
+        title="Add Experience"
+        onClose={() => setAddWorkOpen(false)}
+        onSubmit={() => console.log("save work")}
+      >
+        <form action="#" method="POST">
           <div className="grid grid-cols-6 gap-6">
             <div className="col-span-6 sm:col-span-3">
               <TextField name="company-name" label="Company name" />
@@ -68,8 +76,8 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
               <MonthYearField label="End" />
             </div>
           </div>
-        </Card>
-      </form>
+        </form>
+      </SlideOver>
     </>
   );
 };
