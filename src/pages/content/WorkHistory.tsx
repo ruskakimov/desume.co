@@ -1,12 +1,8 @@
-import { useState } from "react";
 import Card from "../../common/components/Card";
 import Checkbox from "../../common/components/Checkbox";
-import MonthYearField from "../../common/components/fields/MonthYearField";
-import TextField from "../../common/components/fields/TextField";
-import WebsiteField from "../../common/components/fields/WebsiteField";
 import PrimaryButton from "../../common/components/PrimaryButton";
-import SlideOver from "../../common/components/SlideOver";
 import { WorkExperience } from "../../common/interfaces/resume";
+import useAddExperiencePanel from "./useAddExperiencePanel";
 import WorkHistoryCard from "./WorkHistoryCard";
 
 interface WorkHistoryProps {
@@ -15,7 +11,7 @@ interface WorkHistoryProps {
 }
 
 const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
-  const [addWorkOpen, setAddWorkOpen] = useState<boolean>(false);
+  const [openAddExperiencePanel, addExperiencePanel] = useAddExperiencePanel();
 
   return (
     <>
@@ -25,7 +21,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
             Work History
           </h3>
 
-          <PrimaryButton onClick={() => setAddWorkOpen(true)}>
+          <PrimaryButton onClick={openAddExperiencePanel}>
             Add Experience
           </PrimaryButton>
         </div>
@@ -48,36 +44,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
         ))}
       </Card>
 
-      <SlideOver
-        isOpen={addWorkOpen}
-        title="Add Experience"
-        onClose={() => setAddWorkOpen(false)}
-        onSubmit={() => console.log("save work")}
-      >
-        <form action="#" method="POST">
-          <div className="grid grid-cols-6 gap-6">
-            <div className="col-span-6 sm:col-span-3">
-              <TextField name="company-name" label="Company name" />
-            </div>
-
-            <div className="col-span-6 sm:col-span-3">
-              <WebsiteField name="company-website" label="Company website" />
-            </div>
-
-            <div className="col-span-6">
-              <TextField name="job-title" label="Job title" />
-            </div>
-
-            <div className="col-span-6 sm:col-span-3">
-              <MonthYearField label="Start" />
-            </div>
-
-            <div className="col-span-6 sm:col-span-3">
-              <MonthYearField label="End" />
-            </div>
-          </div>
-        </form>
-      </SlideOver>
+      {addExperiencePanel}
     </>
   );
 };
