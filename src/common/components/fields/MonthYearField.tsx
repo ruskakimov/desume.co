@@ -3,9 +3,15 @@ import { months } from "../../constants/months";
 
 interface MonthYearFieldProps {
   label: string;
+  monthProps: React.InputHTMLAttributes<HTMLSelectElement>;
+  yearProps: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-const MonthYearField: React.FC<MonthYearFieldProps> = ({ label }) => {
+const MonthYearField: React.FC<MonthYearFieldProps> = ({
+  label,
+  monthProps,
+  yearProps,
+}) => {
   const monthInputId = useId();
   const yearInputId = useId();
 
@@ -23,10 +29,10 @@ const MonthYearField: React.FC<MonthYearFieldProps> = ({ label }) => {
             Month
           </label>
           <select
+            {...monthProps}
             id={monthInputId}
-            name="month"
             className="relative block w-full rounded-none rounded-tl-md rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm"
-            defaultValue="1"
+            defaultValue={1}
           >
             {months.map((month, index) => (
               <option key={index + 1} value={index + 1}>
@@ -40,9 +46,9 @@ const MonthYearField: React.FC<MonthYearFieldProps> = ({ label }) => {
             Year
           </label>
           <input
-            type="text"
-            name="year"
+            {...yearProps}
             id={yearInputId}
+            type="text"
             className="relative block w-full rounded-none rounded-br-md rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm"
             placeholder="Year"
           />

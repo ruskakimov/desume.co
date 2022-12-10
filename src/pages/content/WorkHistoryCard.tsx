@@ -1,11 +1,23 @@
 import classNames from "classnames";
-import { WorkExperience } from "../../common/interfaces/resume";
+import { months } from "../../common/constants/months";
+import { MonthYear, WorkExperience } from "../../common/interfaces/resume";
 
 interface WorkHistoryCardProps {
   experience: WorkExperience;
 }
 
+function makeDateDisplayString(date: MonthYear): string {
+  const monthIndex = date.month - 1;
+  const month = months[monthIndex];
+  return `${month} ${date.year}`;
+}
+
 const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({ experience }) => {
+  const startDate = makeDateDisplayString(experience.startDate);
+  const endDate = experience.endDate
+    ? makeDateDisplayString(experience.endDate)
+    : "Current";
+
   return (
     <div
       className={classNames("w-full border sm:overflow-hidden sm:rounded-md", {
@@ -22,9 +34,7 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({ experience }) => {
             {experience.jobTitle}
           </span>
 
-          <span className="mt-1 text-sm font-normal text-gray-500">{`${
-            experience.startDate
-          } – ${experience.endDate ?? "Current"}`}</span>
+          <span className="mt-1 text-sm font-normal text-gray-500">{`${startDate} – ${endDate}`}</span>
         </div>
 
         <div className="col-span-2 p-4 text-sm text-gray-500">

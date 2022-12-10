@@ -1,5 +1,3 @@
-import { MonthYear } from "../classes/MonthYear";
-
 export interface Resume {
   personalDetails: {
     fullName: string;
@@ -40,4 +38,9 @@ export interface Project {
   startDate: MonthYear;
   endDate: MonthYear;
   included: boolean;
+}
+
+export interface MonthYear {
+  month: number;
+  year: number;
 }

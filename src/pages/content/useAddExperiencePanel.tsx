@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import Checkbox from "../../common/components/Checkbox";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
@@ -20,7 +20,8 @@ export default function useAddExperiencePanel(
     // onAdd(experience);
     // closePanel();
   };
-  const onError = (error: any) => console.error(error);
+  const onError: SubmitErrorHandler<WorkExperience> = (error) =>
+    console.error(error);
 
   return [
     openPanel,
@@ -53,11 +54,29 @@ export default function useAddExperiencePanel(
         </div>
 
         <div className="col-span-6 sm:col-span-3">
-          <MonthYearField label="Start" />
+          <MonthYearField
+            label="Start"
+            monthProps={register("startDate.month", {
+              required: true,
+              valueAsNumber: true,
+            })}
+            yearProps={register("startDate.year", {
+              required: true,
+              valueAsNumber: true,
+            })}
+          />
         </div>
 
         <div className="col-span-6 sm:col-span-3">
-          <MonthYearField label="End" />
+          <MonthYearField
+            label="End"
+            monthProps={register("endDate.month", {
+              valueAsNumber: true,
+            })}
+            yearProps={register("endDate.year", {
+              valueAsNumber: true,
+            })}
+          />
         </div>
 
         <div className="col-span-6 flex -mt-2">
