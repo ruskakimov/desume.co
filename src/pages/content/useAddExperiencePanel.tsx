@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Checkbox from "../../common/components/Checkbox";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
@@ -39,6 +40,18 @@ export default function useAddExperiencePanel(): [() => void, React.ReactNode] {
 
           <div className="col-span-6 sm:col-span-3">
             <MonthYearField label="End" />
+          </div>
+
+          <div className="col-span-6 flex -mt-2">
+            <div className="flex h-5 items-center">
+              <Checkbox id="current-position" />
+            </div>
+            <label
+              htmlFor="current-position"
+              className="text-sm font-medium text-gray-500"
+            >
+              This is my current position
+            </label>
           </div>
         </div>
       </form>
