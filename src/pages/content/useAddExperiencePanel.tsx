@@ -59,7 +59,7 @@ export default function useAddExperiencePanel(
 
         <div className="col-span-6 flex -mt-2">
           <div className="flex h-5 items-center">
-            <Checkbox id="current-position" />
+            <Checkbox id="current-position" {...register("included")} />
           </div>
           <label
             htmlFor="current-position"
