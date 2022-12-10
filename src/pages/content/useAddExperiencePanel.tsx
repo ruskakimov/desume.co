@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { MonthYear } from "../../common/classes/MonthYear";
 import Checkbox from "../../common/components/Checkbox";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
@@ -11,17 +12,26 @@ export default function useAddExperiencePanel(
 ): [() => void, React.ReactNode] {
   const [open, setOpen] = useState(false);
 
-  const openPanel = () => {
-    setOpen(true);
-  };
+  const openPanel = () => setOpen(true);
+  const closePanel = () => setOpen(false);
 
   return [
     openPanel,
     <SlideOver
       isOpen={open}
       title="Add Experience"
-      onClose={() => setOpen(false)}
-      onSubmit={() => console.log("save work")}
+      onClose={closePanel}
+      onSubmit={() => {
+        onAdd({
+          companyName: "Test",
+          companyWebsiteUrl: "https://test.com",
+          jobTitle: "Tester",
+          startDate: new MonthYear(1, 2022),
+          bulletPoints: [],
+          included: true,
+        });
+        closePanel();
+      }}
     >
       <form action="#" method="POST">
         <div className="grid grid-cols-6 gap-6">
