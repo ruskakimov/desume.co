@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { MonthYear } from "../../common/classes/MonthYear";
 import Checkbox from "../../common/components/Checkbox";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
 import SlideOver from "../../common/components/SlideOver";
 import { WorkExperience } from "../../common/interfaces/resume";
+
+interface WorkExperienceForm {
+  companyName: string;
+  companyWebsiteUrl?: string;
+  jobTitle: string;
+  startDateMonth: number;
+  startDateYear: string;
+  endDateMonth?: number;
+  endDateYear?: string;
+}
 
 export default function useAddExperiencePanel(
   onAdd: (experience: WorkExperience) => void
@@ -16,13 +27,29 @@ export default function useAddExperiencePanel(
 
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
 
-  const { register, handleSubmit } = useForm<WorkExperience>();
-  const onSubmit: SubmitHandler<WorkExperience> = (experience) => {
+  const { register, handleSubmit } = useForm<WorkExperienceForm>();
+  const onSubmit: SubmitHandler<WorkExperienceForm> = (experience) => {
     console.log(experience);
-    onAdd({ ...experience, bulletPoints: [], included: true });
+    onAdd({
+      companyName: experience.companyName,
+      companyWebsiteUrl: experience.companyWebsiteUrl,
+      jobTitle: experience.jobTitle,
+      startDate: new MonthYear(
+        experience.startDateMonth,
+        parseInt(experience.startDateYear)
+      ),
+      endDate: isCurrentPosition
+        ? undefined
+        : new MonthYear(
+            experience.endDateMonth!,
+            parseInt(experience.endDateYear!)
+          ),
+      bulletPoints: [],
+      included: true,
+    });
     closePanel();
   };
-  const onError: SubmitErrorHandler<WorkExperience> = (error) =>
+  const onError: SubmitErrorHandler<WorkExperienceForm> = (error) =>
     console.error(error);
 
   return [
@@ -58,13 +85,12 @@ export default function useAddExperiencePanel(
         <div className="col-span-6 sm:col-span-3">
           <MonthYearField
             label="Start"
-            monthProps={register("startDate.month", {
-              required: true,
+            monthProps={register("startDateMonth", {
               valueAsNumber: true,
+              required: true,
             })}
-            yearProps={register("startDate.year", {
+            yearProps={register("startDateYear", {
               required: true,
-              valueAsNumber: true,
             })}
           />
         </div>
@@ -72,12 +98,13 @@ export default function useAddExperiencePanel(
         <div className="col-span-6 sm:col-span-3">
           <MonthYearField
             label="End"
-            monthProps={register("endDate.month", {
+            monthProps={register("endDateMonth", {
               valueAsNumber: true,
+              required: !isCurrentPosition,
               disabled: isCurrentPosition,
             })}
-            yearProps={register("endDate.year", {
-              valueAsNumber: true,
+            yearProps={register("endDateYear", {
+              required: !isCurrentPosition,
               disabled: isCurrentPosition,
             })}
           />

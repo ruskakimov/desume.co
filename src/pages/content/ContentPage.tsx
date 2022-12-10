@@ -1,6 +1,7 @@
 import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { useState } from "react";
+import { MonthYear } from "../../common/classes/MonthYear";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import { WorkExperience } from "../../common/interfaces/resume";
@@ -25,7 +26,7 @@ export default function ContentPage() {
       companyName: "TechWings",
       companyWebsiteUrl: "https://techwings.com/",
       jobTitle: "Senior Frontend Engineer",
-      startDate: { month: 9, year: 2022 },
+      startDate: new MonthYear(9, 2022),
       bulletPoints: [
         "Designed and built a cross-platform mobile animation app using Flutter with over 100k downloads on PlayStore and 11k monthly active users.",
         "Managed a large codebase with over 15,000 lines of code and 900 commits.",
@@ -37,8 +38,8 @@ export default function ContentPage() {
       companyName: "Deriv",
       companyWebsiteUrl: "https://deriv.com/",
       jobTitle: "Frontend Engineer",
-      startDate: { month: 2, year: 2018 },
-      endDate: { month: 3, year: 2021 },
+      startDate: new MonthYear(2, 2018),
+      endDate: new MonthYear(3, 2021),
       bulletPoints: [
         "Initiated and led a charting library project (with a team of 2 engineers) that replaced a third-party charting solution, saving the company 40k USD annually.",
         "Managed a focused team of one engineer and a designer, delivering a complete web app for P2P transactions within 3 months from the start of the project.",
