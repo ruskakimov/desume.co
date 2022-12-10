@@ -20,7 +20,7 @@ export default function useAddExperiencePanel(
     // onAdd(experience);
     // closePanel();
   };
-  const onError = (error: any) => console.log(error);
+  const onError = (error: any) => console.error(error);
 
   return [
     openPanel,
@@ -39,7 +39,10 @@ export default function useAddExperiencePanel(
         </div>
 
         <div className="col-span-6 sm:col-span-3">
-          <WebsiteField label="Company website" name="company-website" />
+          <WebsiteField
+            label="Company website"
+            {...register("companyWebsiteUrl")}
+          />
         </div>
 
         <div className="col-span-6">
