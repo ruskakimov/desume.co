@@ -3,17 +3,26 @@ import { months } from "../../constants/months";
 
 interface MonthYearFieldProps {
   label: string;
+  startYear?: number;
+  endYear?: number;
   monthProps: React.InputHTMLAttributes<HTMLSelectElement>;
-  yearProps: React.InputHTMLAttributes<HTMLInputElement>;
+  yearProps: React.InputHTMLAttributes<HTMLSelectElement>;
 }
 
 const MonthYearField: React.FC<MonthYearFieldProps> = ({
   label,
+  startYear = 1970,
+  endYear = 2030,
   monthProps,
   yearProps,
 }) => {
   const monthInputId = useId();
   const yearInputId = useId();
+
+  const years: number[] = [];
+  for (let year = endYear; year >= startYear; year--) {
+    years.push(year);
+  }
 
   return (
     <>
@@ -44,18 +53,26 @@ const MonthYearField: React.FC<MonthYearFieldProps> = ({
             ))}
           </select>
         </div>
-        {/* TODO: Convert to a dropdown */}
+
         <div className="min-w-0 flex-1">
           <label htmlFor={yearInputId} className="sr-only">
             Year
           </label>
-          <input
+          <select
             {...yearProps}
             id={yearInputId}
-            type="text"
-            className="relative block w-full rounded-none rounded-br-md rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500"
-            placeholder="Year"
-          />
+            className="relative block w-full rounded-none rounded-br-md rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:opacity-100"
+          >
+            <option key="year" value="">
+              Year
+            </option>
+
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </>

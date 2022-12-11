@@ -52,6 +52,8 @@ export default function useAddExperiencePanel(
   const onError: SubmitErrorHandler<WorkExperienceForm> = (error) =>
     console.error(error);
 
+  const currentYear = new Date().getFullYear();
+
   return [
     openPanel,
     <SlideOver
@@ -85,6 +87,7 @@ export default function useAddExperiencePanel(
         <div className="col-span-6 sm:col-span-3">
           <MonthYearField
             label="Start"
+            endYear={currentYear}
             monthProps={register("startDateMonth", {
               required: true,
             })}
@@ -97,6 +100,7 @@ export default function useAddExperiencePanel(
         <div className="col-span-6 sm:col-span-3">
           <MonthYearField
             label="End"
+            endYear={currentYear}
             monthProps={register("endDateMonth", {
               required: !isCurrentPosition,
               disabled: isCurrentPosition,
