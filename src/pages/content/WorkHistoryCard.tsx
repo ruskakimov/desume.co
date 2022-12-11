@@ -1,6 +1,9 @@
+import { Menu, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
+import { Fragment } from "react";
 import Checkbox from "../../common/components/Checkbox";
+import EllipsisMenu from "../../common/components/EllipsisMenu";
 import { WorkExperience } from "../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 
@@ -21,7 +24,6 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
   return (
     <>
       <div
-        // onClick={() => openEditExperiencePanel(experience)}
         className={classNames(
           "w-full border sm:overflow-hidden sm:rounded-md",
           {
@@ -51,13 +53,15 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
             experience.startDate
           } – ${experience.endDate ?? "Current"}`}</span>
 
-          <button
-            type="button"
-            className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
-          >
-            <span className="sr-only">Open options</span>
-            <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <EllipsisMenu
+            menuItems={[
+              {
+                label: "Edit",
+                onClick: () => openEditExperiencePanel(experience),
+              },
+              { label: "Delete", onClick: () => {} },
+            ]}
+          />
         </div>
 
         <div className="p-4 pl-8 overflow-hidden">
