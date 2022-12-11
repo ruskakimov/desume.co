@@ -30,25 +30,27 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
           </PrimaryButton>
         </div>
 
-        {experiences.map((experience, index) => (
-          <WorkHistoryCard
-            experience={experience}
-            onChange={(editedExperience) => {
-              if (editedExperience === null) {
-                // Deleted
-                onChange([
-                  ...experiences.slice(0, index),
-                  ...experiences.slice(index + 1),
-                ]);
-              } else {
-                // Edited
-                const slice = experiences.slice();
-                slice[index] = editedExperience;
-                onChange(slice);
-              }
-            }}
-          />
-        ))}
+        <div className="space-y-8">
+          {experiences.map((experience, index) => (
+            <WorkHistoryCard
+              experience={experience}
+              onChange={(editedExperience) => {
+                if (editedExperience === null) {
+                  // Deleted
+                  onChange([
+                    ...experiences.slice(0, index),
+                    ...experiences.slice(index + 1),
+                  ]);
+                } else {
+                  // Edited
+                  const slice = experiences.slice();
+                  slice[index] = editedExperience;
+                  onChange(slice);
+                }
+              }}
+            />
+          ))}
+        </div>
       </Card>
 
       {addExperiencePanel}
