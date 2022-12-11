@@ -18,14 +18,6 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
     }
   );
 
-  const [openEditExperiencePanel, editExperiencePanel] = useWorkExperiencePanel(
-    "Edit Experience",
-    (editedExperience) => {
-      // TODO: Find and replace by ID
-      // onChange([newExperience, ...experiences]);
-    }
-  );
-
   return (
     <>
       <Card>
@@ -52,7 +44,14 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
               />
             </div>
 
-            <WorkHistoryCard experience={experience} />
+            <WorkHistoryCard
+              experience={experience}
+              onChange={(editedExperience) => {
+                const slice = experiences.slice();
+                slice[index] = editedExperience;
+                onChange(slice);
+              }}
+            />
           </div>
         ))}
       </Card>

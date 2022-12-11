@@ -58,7 +58,7 @@ function convertExperienceToFormData(
 export default function useWorkExperiencePanel(
   title: string,
   onSubmitted: (experience: WorkExperience) => void
-): [() => void, React.ReactNode] {
+): [(experience?: WorkExperience) => void, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
   const { register, handleSubmit, reset } = useForm<WorkExperienceForm>();
