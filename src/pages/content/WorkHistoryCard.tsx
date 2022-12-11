@@ -19,8 +19,8 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
 
   return (
     <>
-      <div className="w-full border sm:overflow-hidden sm:rounded-md">
-        <div className="px-2 h-14 flex flex-row items-center gap-2 border-b bg-gray-50">
+      <div className="w-full border sm:rounded-md">
+        <div className="sm:rounded-t-md px-2 h-14 flex flex-row items-center gap-2 border-b bg-gray-50">
           <div className="mx-2 h-6 flex items-center">
             <Checkbox
               checked={experience.included}
