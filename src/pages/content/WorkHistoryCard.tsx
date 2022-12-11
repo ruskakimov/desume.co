@@ -21,7 +21,7 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
   return (
     <>
       <div
-        onClick={() => openEditExperiencePanel(experience)}
+        // onClick={() => openEditExperiencePanel(experience)}
         className={classNames(
           "w-full border sm:overflow-hidden sm:rounded-md",
           {
@@ -29,8 +29,8 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
           }
         )}
       >
-        <div className="p-4 flex flex-row gap-2 border-b bg-gray-50">
-          <div className="mr-2 h-6 flex items-center">
+        <div className="px-2 h-14 flex flex-row items-center gap-2 border-b bg-gray-50">
+          <div className="mx-2 h-6 flex items-center">
             <Checkbox
               checked={experience.included}
               onChange={(e) => {
@@ -51,13 +51,13 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
             experience.startDate
           } – ${experience.endDate ?? "Current"}`}</span>
 
-          {/* <button
-              type="button"
-              className="flex-shrink-0 m-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              <span className="sr-only">Open options</span>
-              <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
-            </button> */}
+          <button
+            type="button"
+            className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+          >
+            <span className="sr-only">Open options</span>
+            <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
         </div>
 
         <div className="p-4 pl-8 overflow-hidden">
