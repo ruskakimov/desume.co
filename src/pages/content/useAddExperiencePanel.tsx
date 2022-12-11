@@ -18,37 +18,48 @@ interface WorkExperienceForm {
   endDateYear?: string;
 }
 
+function convertFormDateToDomainObject(
+  formData: WorkExperienceForm,
+  isCurrentPosition: boolean
+): WorkExperience {
+  return {
+    companyName: formData.companyName,
+    companyWebsiteUrl: formData.companyWebsiteUrl,
+    jobTitle: formData.jobTitle,
+    startDate: new MonthYear(
+      parseInt(formData.startDateMonth),
+      parseInt(formData.startDateYear)
+    ),
+    endDate: isCurrentPosition
+      ? undefined
+      : new MonthYear(
+          parseInt(formData.endDateMonth!),
+          parseInt(formData.endDateYear!)
+        ),
+    bulletPoints: [],
+    included: true,
+  };
+}
+
 export default function useAddExperiencePanel(
   onAdd: (experience: WorkExperience) => void
 ): [() => void, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCurrentPosition, setIsCurrentPosition] = useState(false);
+  const { register, handleSubmit } = useForm<WorkExperienceForm>();
+
   const openPanel = () => setIsOpen(true);
   const closePanel = () => setIsOpen(false);
 
-  const [isCurrentPosition, setIsCurrentPosition] = useState(false);
-
-  const { register, handleSubmit } = useForm<WorkExperienceForm>();
-  const onSubmit: SubmitHandler<WorkExperienceForm> = (experience) => {
-    console.log(experience);
-    onAdd({
-      companyName: experience.companyName,
-      companyWebsiteUrl: experience.companyWebsiteUrl,
-      jobTitle: experience.jobTitle,
-      startDate: new MonthYear(
-        parseInt(experience.startDateMonth),
-        parseInt(experience.startDateYear)
-      ),
-      endDate: isCurrentPosition
-        ? undefined
-        : new MonthYear(
-            parseInt(experience.endDateMonth!),
-            parseInt(experience.endDateYear!)
-          ),
-      bulletPoints: [],
-      included: true,
-    });
+  const onSubmit: SubmitHandler<WorkExperienceForm> = (formData) => {
+    const newExperience = convertFormDateToDomainObject(
+      formData,
+      isCurrentPosition
+    );
+    onAdd(newExperience);
     closePanel();
   };
+
   const onError: SubmitErrorHandler<WorkExperienceForm> = (error) =>
     console.error(error);
 
