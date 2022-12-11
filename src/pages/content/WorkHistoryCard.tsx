@@ -1,3 +1,4 @@
+import { Bars2Icon } from "@heroicons/react/24/outline";
 import Checkbox from "../../common/components/Checkbox";
 import EllipsisMenu from "../../common/components/EllipsisMenu";
 import { WorkExperience } from "../../common/interfaces/resume";
@@ -53,13 +54,18 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
           />
         </div>
 
-        <div className="p-4 pl-8 overflow-hidden">
-          <ul className="list-disc list-outside flex flex-col gap-2">
-            {experience.bulletPoints.map((text) => (
-              <li className="text-sm text-gray-500">{text}</li>
-            ))}
-          </ul>
-        </div>
+        <ul className="flex flex-col divide-y">
+          {experience.bulletPoints.map((text) => (
+            <li className="p-4 flex gap-4 items-center hover:bg-gray-50 cursor-pointer">
+              <Checkbox />
+              <span className="text-sm text-gray-700">{text}</span>
+              <Bars2Icon
+                className="text-gray-400 flex-shrink-0 ml-auto h-4 w-8"
+                aria-hidden="true"
+              />
+            </li>
+          ))}
+        </ul>
       </div>
 
       {editExperiencePanel}
