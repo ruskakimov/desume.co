@@ -32,8 +32,11 @@ const MonthYearField: React.FC<MonthYearFieldProps> = ({
             {...monthProps}
             id={monthInputId}
             className="relative block w-full rounded-none rounded-tl-md rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:opacity-100"
-            defaultValue={1}
           >
+            <option key="month" value="">
+              Month
+            </option>
+
             {months.map((month, index) => (
               <option key={index + 1} value={index + 1}>
                 {month}

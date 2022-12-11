@@ -12,9 +12,9 @@ interface WorkExperienceForm {
   companyName: string;
   companyWebsiteUrl?: string;
   jobTitle: string;
-  startDateMonth: number;
+  startDateMonth: string;
   startDateYear: string;
-  endDateMonth?: number;
+  endDateMonth?: string;
   endDateYear?: string;
 }
 
@@ -35,13 +35,13 @@ export default function useAddExperiencePanel(
       companyWebsiteUrl: experience.companyWebsiteUrl,
       jobTitle: experience.jobTitle,
       startDate: new MonthYear(
-        experience.startDateMonth,
+        parseInt(experience.startDateMonth),
         parseInt(experience.startDateYear)
       ),
       endDate: isCurrentPosition
         ? undefined
         : new MonthYear(
-            experience.endDateMonth!,
+            parseInt(experience.endDateMonth!),
             parseInt(experience.endDateYear!)
           ),
       bulletPoints: [],
@@ -86,7 +86,6 @@ export default function useAddExperiencePanel(
           <MonthYearField
             label="Start"
             monthProps={register("startDateMonth", {
-              valueAsNumber: true,
               required: true,
             })}
             yearProps={register("startDateYear", {
@@ -99,7 +98,6 @@ export default function useAddExperiencePanel(
           <MonthYearField
             label="End"
             monthProps={register("endDateMonth", {
-              valueAsNumber: true,
               required: !isCurrentPosition,
               disabled: isCurrentPosition,
             })}
