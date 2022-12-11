@@ -1,7 +1,3 @@
-import { Menu, Transition } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
-import { Fragment } from "react";
 import Checkbox from "../../common/components/Checkbox";
 import EllipsisMenu from "../../common/components/EllipsisMenu";
 import { WorkExperience } from "../../common/interfaces/resume";
@@ -9,7 +5,7 @@ import useWorkExperiencePanel from "./useWorkExperiencePanel";
 
 interface WorkHistoryCardProps {
   experience: WorkExperience;
-  onChange: (experience: WorkExperience) => void;
+  onChange: (experience: WorkExperience | null) => void;
 }
 
 const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
@@ -52,7 +48,7 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
                 label: "Edit",
                 onClick: () => openEditExperiencePanel(experience),
               },
-              { label: "Delete", onClick: () => {} },
+              { label: "Delete", onClick: () => onChange(null) },
             ]}
           />
         </div>
