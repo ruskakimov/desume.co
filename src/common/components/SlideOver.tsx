@@ -83,7 +83,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
                         </div>
                       </div>
                       <div className="flex flex-shrink-0 justify-end gap-4 px-4 py-4">
-                        <SecondaryButton onClick={onClose}>
+                        <SecondaryButton type="button" onClick={onClose}>
                           Cancel
                         </SecondaryButton>
                         <PrimaryButton type="submit">Save</PrimaryButton>
