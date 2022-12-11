@@ -18,7 +18,7 @@ interface WorkExperienceForm {
   endDateYear?: string;
 }
 
-function convertFormDateToDomainObject(
+function convertFormDataToExperience(
   formData: WorkExperienceForm,
   isCurrentPosition: boolean
 ): WorkExperience {
@@ -41,22 +41,49 @@ function convertFormDateToDomainObject(
   };
 }
 
-export default function useAddExperiencePanel(
-  onAdd: (experience: WorkExperience) => void
+function convertExperienceToFormData(
+  experience: WorkExperience
+): WorkExperienceForm {
+  return {
+    companyName: experience.companyName,
+    companyWebsiteUrl: experience.companyWebsiteUrl,
+    jobTitle: experience.jobTitle,
+    startDateMonth: experience.startDate.month.toString(),
+    startDateYear: experience.startDate.year.toString(),
+    endDateMonth: experience.endDate?.month.toString(),
+    endDateYear: experience.endDate?.year.toString(),
+  };
+}
+
+export default function useWorkExperiencePanel(
+  title: string,
+  onSubmitted: (experience: WorkExperience) => void
 ): [() => void, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
-  const { register, handleSubmit } = useForm<WorkExperienceForm>();
+  const { register, handleSubmit, reset } = useForm<WorkExperienceForm>();
 
-  const openPanel = () => setIsOpen(true);
+  const openPanel = (experience?: WorkExperience) => {
+    if (experience) {
+      // Edit experience
+      const prefilledForm = convertExperienceToFormData(experience);
+      reset(prefilledForm);
+      setIsCurrentPosition(experience.endDate === undefined);
+    } else {
+      // Add experience
+      reset();
+      setIsCurrentPosition(false);
+    }
+    setIsOpen(true);
+  };
   const closePanel = () => setIsOpen(false);
 
   const onSubmit: SubmitHandler<WorkExperienceForm> = (formData) => {
-    const newExperience = convertFormDateToDomainObject(
+    const newExperience = convertFormDataToExperience(
       formData,
       isCurrentPosition
     );
-    onAdd(newExperience);
+    onSubmitted(newExperience);
     closePanel();
   };
 
@@ -69,7 +96,7 @@ export default function useAddExperiencePanel(
     openPanel,
     <SlideOver
       isOpen={isOpen}
-      title="Add Experience"
+      title={title}
       onClose={closePanel}
       onSubmit={handleSubmit(onSubmit, onError)}
     >

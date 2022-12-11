@@ -2,7 +2,7 @@ import Card from "../../common/components/Card";
 import Checkbox from "../../common/components/Checkbox";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { WorkExperience } from "../../common/interfaces/resume";
-import useAddExperiencePanel from "./useAddExperiencePanel";
+import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import WorkHistoryCard from "./WorkHistoryCard";
 
 interface WorkHistoryProps {
@@ -11,9 +11,18 @@ interface WorkHistoryProps {
 }
 
 const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
-  const [openAddExperiencePanel, addExperiencePanel] = useAddExperiencePanel(
+  const [openAddExperiencePanel, addExperiencePanel] = useWorkExperiencePanel(
+    "Add Experience",
     (newExperience) => {
       onChange([newExperience, ...experiences]);
+    }
+  );
+
+  const [openEditExperiencePanel, editExperiencePanel] = useWorkExperiencePanel(
+    "Edit Experience",
+    (editedExperience) => {
+      // TODO: Find and replace by ID
+      // onChange([newExperience, ...experiences]);
     }
   );
 
@@ -25,7 +34,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
             Work History
           </h3>
 
-          <PrimaryButton onClick={openAddExperiencePanel}>
+          <PrimaryButton onClick={() => openAddExperiencePanel()}>
             Add Experience
           </PrimaryButton>
         </div>
