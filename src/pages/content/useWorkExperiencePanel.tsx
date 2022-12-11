@@ -151,7 +151,7 @@ export default function useWorkExperiencePanel(
         </div>
 
         <div className="col-span-6 flex -mt-2">
-          <div className="flex h-5 items-center">
+          <div className="mr-3 flex h-5 items-center">
             <Checkbox
               id="current-position"
               checked={isCurrentPosition}

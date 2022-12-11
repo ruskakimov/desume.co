@@ -1,5 +1,4 @@
 import Card from "../../common/components/Card";
-import Checkbox from "../../common/components/Checkbox";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { WorkExperience } from "../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
@@ -32,27 +31,14 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
         </div>
 
         {experiences.map((experience, index) => (
-          <div className="flex">
-            <div className="mt-4">
-              <Checkbox
-                checked={experience.included}
-                onChange={(e) => {
-                  const slice = experiences.slice();
-                  slice[index] = { ...experience, included: e.target.checked };
-                  onChange(slice);
-                }}
-              />
-            </div>
-
-            <WorkHistoryCard
-              experience={experience}
-              onChange={(editedExperience) => {
-                const slice = experiences.slice();
-                slice[index] = editedExperience;
-                onChange(slice);
-              }}
-            />
-          </div>
+          <WorkHistoryCard
+            experience={experience}
+            onChange={(editedExperience) => {
+              const slice = experiences.slice();
+              slice[index] = editedExperience;
+              onChange(slice);
+            }}
+          />
         ))}
       </Card>
 

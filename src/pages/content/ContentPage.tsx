@@ -45,6 +45,10 @@ export default function ContentPage() {
         "Managed a focused team of one engineer and a designer, delivering a complete web app for P2P transactions within 3 months from the start of the project.",
         "Built a trading history explorer using React / Redux that is used by over 150k monthly users.",
         "Created a prototype of an improved interface for a “digits” contract that was later released to production and generated an 82% increase in the number of transactions for that contract in the next term.",
+        "Initiated and led a charting library project (with a team of 2 engineers) that replaced a third-party charting solution, saving the company 40k USD annually.",
+        "Managed a focused team of one engineer and a designer, delivering a complete web app for P2P transactions within 3 months from the start of the project.",
+        "Built a trading history explorer using React / Redux that is used by over 150k monthly users.",
+        "Created a prototype of an improved interface for a “digits” contract that was later released to production and generated an 82% increase in the number of transactions for that contract in the next term.",
       ],
       included: true,
     },
@@ -65,7 +69,7 @@ export default function ContentPage() {
                   item.current
                     ? "bg-white text-gray-900"
                     : "text-gray-500 hover:text-gray-900 hover:bg-gray-50",
-                  "group rounded-md px-3 py-2 flex items-center text-sm font-medium"
+                  "group rounded-md px-3 py-2 flex gap-3 items-center text-sm font-medium"
                 )}
                 aria-current={item.current ? "page" : undefined}
               >
