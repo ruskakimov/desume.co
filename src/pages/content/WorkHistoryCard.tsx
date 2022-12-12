@@ -1,5 +1,6 @@
 import { Bars2Icon } from "@heroicons/react/24/outline";
 import Checkbox from "../../common/components/Checkbox";
+import ConfirmationDialog from "../../common/components/ConfirmationDialog";
 import EllipsisMenu from "../../common/components/EllipsisMenu";
 import { WorkExperience } from "../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
@@ -69,6 +70,18 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
       </div>
 
       {editExperiencePanel}
+      <ConfirmationDialog
+        title="Delete experience"
+        body={
+          <p className="text-sm text-gray-500">
+            Delete <b>Senior Frontend Engineer at TechWings</b>? This action
+            cannot be undone.
+          </p>
+        }
+        action="Delete"
+        onCancel={() => console.log("cancel")}
+        onConfirm={() => console.log("confirm")}
+      />
     </>
   );
 };
