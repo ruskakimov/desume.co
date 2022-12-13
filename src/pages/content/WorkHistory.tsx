@@ -11,7 +11,7 @@ interface WorkHistoryProps {
 
 const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
   const [openAddExperiencePanel, addExperiencePanel] = useWorkExperiencePanel(
-    "Add Experience",
+    "Add experience",
     (newExperience) => {
       onChange([newExperience, ...experiences]);
     }
@@ -22,11 +22,11 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
       <Card>
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Work History
+            Work history
           </h3>
 
           <PrimaryButton onClick={() => openAddExperiencePanel()}>
-            Add Experience
+            Add experience
           </PrimaryButton>
         </div>
 

@@ -9,12 +9,12 @@ import WorkHistory from "./WorkHistory";
 
 const navigation = [
   {
-    name: "Personal Details",
+    name: "Personal details",
     href: "#",
     icon: CheckCircleIcon,
     current: false,
   },
-  { name: "Work History", href: "#", icon: CheckCircleIcon, current: true },
+  { name: "Work history", href: "#", icon: CheckCircleIcon, current: true },
   { name: "Education", href: "#", icon: CheckCircleIcon, current: false },
   { name: "Projects", href: "#", icon: CheckCircleIcon, current: false },
   { name: "Skills", href: "#", icon: CheckCircleIcon, current: false },

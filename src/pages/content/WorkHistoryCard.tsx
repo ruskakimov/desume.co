@@ -15,7 +15,7 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
   onChange,
 }) => {
   const [openEditExperiencePanel, editExperiencePanel] = useWorkExperiencePanel(
-    "Edit Experience",
+    "Edit experience",
     (editedExperience) => onChange(editedExperience)
   );
 
