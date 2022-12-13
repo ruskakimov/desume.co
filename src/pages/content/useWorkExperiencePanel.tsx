@@ -10,6 +10,7 @@ import Checkbox from "../../common/components/Checkbox";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
+import SecondaryButton from "../../common/components/SecondaryButton";
 import SlideOver from "../../common/components/SlideOver";
 import { WorkExperience } from "../../common/interfaces/resume";
 
@@ -176,16 +177,9 @@ export default function useWorkExperiencePanel(
       </div>
 
       <div className="mt-12">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-base font-medium text-gray-700">Highlights</h3>
-
-          <button
-            type="button"
-            className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
-          >
-            <PlusIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
-        </div>
+        <h3 className="mb-4 text-base font-medium text-gray-700">
+          Bullet points
+        </h3>
 
         <div className="flex flex-col gap-4">
           {bullets.map((bullet) => (
@@ -204,6 +198,10 @@ export default function useWorkExperiencePanel(
               </button>
             </div>
           ))}
+
+          <div>
+            <SecondaryButton>Add bullet point</SecondaryButton>
+          </div>
         </div>
       </div>
     </SlideOver>,
