@@ -92,6 +92,7 @@ export default function useWorkExperiencePanel(
       formData,
       isCurrentPosition
     );
+    newExperience.bulletPoints = bullets;
     onSubmitted(newExperience);
     closePanel();
   };
@@ -182,12 +183,17 @@ export default function useWorkExperiencePanel(
         </h3>
 
         <div className="flex flex-col gap-4">
-          {bullets.map((bullet) => (
+          {bullets.map((bullet, index) => (
             <div className="flex items-center gap-2">
               <textarea
-                value={bullet}
-                rows={2}
                 className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                rows={2}
+                value={bullet}
+                onChange={(e) => {
+                  const newBullets = bullets.slice();
+                  newBullets[index] = e.target.value;
+                  setBullets(newBullets);
+                }}
               />
 
               <button
