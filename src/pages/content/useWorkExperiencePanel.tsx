@@ -1,3 +1,8 @@
+import {
+  MinusCircleIcon,
+  MinusIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { MonthYear } from "../../common/classes/MonthYear";
@@ -62,6 +67,7 @@ export default function useWorkExperiencePanel(
   const [isOpen, setIsOpen] = useState(false);
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
   const { register, handleSubmit, reset } = useForm<WorkExperienceForm>();
+  const [bullets, setBullets] = useState<string[]>([]);
 
   const openPanel = (experience?: WorkExperience) => {
     if (experience) {
@@ -69,10 +75,12 @@ export default function useWorkExperiencePanel(
       const prefilledForm = convertExperienceToFormData(experience);
       reset(prefilledForm);
       setIsCurrentPosition(experience.endDate === undefined);
+      setBullets(experience.bulletPoints);
     } else {
       // Add experience
       reset();
       setIsCurrentPosition(false);
+      setBullets([]);
     }
     setIsOpen(true);
   };
@@ -164,6 +172,38 @@ export default function useWorkExperiencePanel(
           >
             This is my current position
           </label>
+        </div>
+      </div>
+
+      <div className="mt-12">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-base font-medium text-gray-700">Highlights</h3>
+
+          <button
+            type="button"
+            className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+          >
+            <PlusIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          {bullets.map((bullet) => (
+            <div className="flex items-center gap-2">
+              <textarea
+                value={bullet}
+                rows={2}
+                className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+              />
+
+              <button
+                type="button"
+                className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+              >
+                <MinusCircleIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </SlideOver>,
