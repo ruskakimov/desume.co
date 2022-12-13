@@ -1,8 +1,5 @@
-import {
-  MinusCircleIcon,
-  MinusIcon,
-  PlusIcon,
-} from "@heroicons/react/24/outline";
+import { MinusCircleIcon } from "@heroicons/react/24/outline";
+import classNames from "classnames";
 import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { MonthYear } from "../../common/classes/MonthYear";
@@ -61,6 +58,11 @@ function convertExperienceToFormData(
   };
 }
 
+interface UiBullet {
+  text: string;
+  shouldDelete: boolean;
+}
+
 export default function useWorkExperiencePanel(
   title: string,
   onSubmitted: (experience: WorkExperience) => void
@@ -68,7 +70,7 @@ export default function useWorkExperiencePanel(
   const [isOpen, setIsOpen] = useState(false);
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
   const { register, handleSubmit, reset } = useForm<WorkExperienceForm>();
-  const [bullets, setBullets] = useState<string[]>([]);
+  const [bullets, setBullets] = useState<UiBullet[]>([]);
 
   const openPanel = (experience?: WorkExperience) => {
     if (experience) {
@@ -76,7 +78,9 @@ export default function useWorkExperiencePanel(
       const prefilledForm = convertExperienceToFormData(experience);
       reset(prefilledForm);
       setIsCurrentPosition(experience.endDate === undefined);
-      setBullets(experience.bulletPoints);
+      setBullets(
+        experience.bulletPoints.map((text) => ({ text, shouldDelete: false }))
+      );
     } else {
       // Add experience
       reset();
@@ -92,7 +96,9 @@ export default function useWorkExperiencePanel(
       formData,
       isCurrentPosition
     );
-    newExperience.bulletPoints = bullets;
+    newExperience.bulletPoints = bullets
+      .filter((b) => !b.shouldDelete)
+      .map((b) => b.text);
     onSubmitted(newExperience);
     closePanel();
   };
@@ -186,12 +192,19 @@ export default function useWorkExperiencePanel(
           {bullets.map((bullet, index) => (
             <div className="flex items-center gap-2">
               <textarea
-                className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm"
+                className={classNames(
+                  "block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm",
+                  {
+                    "cursor-not-allowed border-red-200 bg-red-50 text-red-400":
+                      bullet.shouldDelete,
+                  }
+                )}
                 rows={2}
-                value={bullet}
+                disabled={bullet.shouldDelete}
+                value={bullet.text}
                 onChange={(e) => {
                   const newBullets = bullets.slice();
-                  newBullets[index] = e.target.value;
+                  newBullets[index] = { ...bullet, text: e.target.value };
                   setBullets(newBullets);
                 }}
                 autoFocus
@@ -199,7 +212,21 @@ export default function useWorkExperiencePanel(
 
               <button
                 type="button"
-                className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+                className={classNames(
+                  "flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring",
+                  {
+                    "text-gray-400 hover:text-gray-700": !bullet.shouldDelete,
+                    "text-red-400 hover:text-red-700": bullet.shouldDelete,
+                  }
+                )}
+                onClick={() => {
+                  const newBullets = bullets.slice();
+                  newBullets[index] = {
+                    ...bullet,
+                    shouldDelete: !bullet.shouldDelete,
+                  };
+                  setBullets(newBullets);
+                }}
               >
                 <MinusCircleIcon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -209,7 +236,7 @@ export default function useWorkExperiencePanel(
           <div>
             <SecondaryButton
               onClick={() => {
-                setBullets([...bullets, ""]);
+                setBullets([...bullets, { text: "", shouldDelete: false }]);
               }}
             >
               Add bullet point
