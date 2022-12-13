@@ -194,6 +194,7 @@ export default function useWorkExperiencePanel(
                   newBullets[index] = e.target.value;
                   setBullets(newBullets);
                 }}
+                autoFocus
               />
 
               <button
@@ -206,7 +207,13 @@ export default function useWorkExperiencePanel(
           ))}
 
           <div>
-            <SecondaryButton>Add bullet point</SecondaryButton>
+            <SecondaryButton
+              onClick={() => {
+                setBullets([...bullets, ""]);
+              }}
+            >
+              Add bullet point
+            </SecondaryButton>
           </div>
         </div>
       </div>
