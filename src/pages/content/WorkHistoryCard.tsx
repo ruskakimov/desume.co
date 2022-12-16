@@ -18,7 +18,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { SortableItem } from "./SortableItem";
+import SortableItem from "./SortableItem";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import classNames from "classnames";
 

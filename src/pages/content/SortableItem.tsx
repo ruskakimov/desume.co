@@ -1,8 +1,11 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import classNames from "classnames";
+import React from "react";
 
-export function SortableItem(props: any) {
+const SortableItem: React.FC<{ id: string; children: React.ReactNode }> = (
+  props
+) => {
   const {
     isDragging,
     attributes,
@@ -38,4 +41,6 @@ export function SortableItem(props: any) {
       {props.children}
     </div>
   );
-}
+};
+
+export default SortableItem;
