@@ -136,7 +136,6 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
                     <Checkbox
                       checked={bulletPoint.included}
                       onChange={(e) => {
-                        console.log(e);
                         const newBullets = experience.bulletPoints.slice();
                         newBullets[index] = {
                           ...newBullets[index],
