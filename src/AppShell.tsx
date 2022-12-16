@@ -4,6 +4,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import logo from "./assets/logo.svg";
 import ContentPage from "./pages/content/ContentPage";
+import { useSignOut } from "react-firebase-hooks/auth";
+import { firebaseAuth } from "./App";
 
 const user = {
   name: "Tom Cook",
@@ -23,7 +25,9 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-export default function Example() {
+export default function AppShell() {
+  const [signOut] = useSignOut(firebaseAuth);
+
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden">
       <Disclosure as="nav" className="bg-white shadow z-10">
@@ -102,6 +106,11 @@ export default function Example() {
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
+                                onClick={
+                                  item.name === "Sign out"
+                                    ? () => signOut()
+                                    : undefined
+                                }
                               >
                                 {item.name}
                               </a>
