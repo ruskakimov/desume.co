@@ -5,6 +5,7 @@ import { firebaseAuth } from "../../App";
 import logo from "../../assets/logo.svg";
 import TextField from "../../common/components/fields/TextField";
 import PrimaryButton from "../../common/components/PrimaryButton";
+import Spinner from "../../common/components/Spinner";
 
 interface LoginForm {
   email: string;
@@ -74,7 +75,7 @@ const LoginPage: React.FC = () => {
               </div> */}
 
               <PrimaryButton type="submit" className="w-full">
-                Sign in
+                {loading ? <Spinner /> : "Sign in"}
               </PrimaryButton>
             </form>
 
