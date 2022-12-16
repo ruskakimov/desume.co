@@ -1,8 +1,8 @@
-import AppShell from "./AppShell";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
+import AppShell from "./AppShell";
+import LoginPage from "./pages/login/LoginPage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB34gwQ0mKdYJEUg36TBjtaSbujmZSVjZw",
@@ -14,14 +14,12 @@ const firebaseConfig = {
   measurementId: "G-Y3QWR9FZKF",
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const analytics = getAnalytics(app);
+export const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseAuth = getAuth(firebaseApp);
 
 function App() {
-  const [user, loading, error] = useAuthState(auth);
-  console.log(user);
-  return <AppShell />;
+  const [user] = useAuthState(firebaseAuth);
+  return user ? <AppShell /> : <LoginPage />;
 }
 
 export default App;
