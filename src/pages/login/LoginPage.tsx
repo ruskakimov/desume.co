@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { AuthError, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { firebaseAuth } from "../../App";
 import logo from "../../assets/logo.svg";
 import TextField from "../../common/components/fields/TextField";
@@ -13,22 +13,47 @@ interface LoginForm {
 }
 
 const LoginPage: React.FC = () => {
-  const { register, handleSubmit } = useForm<LoginForm>();
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(firebaseAuth);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<LoginForm>();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (error) {
-      alert(error.message);
-    }
-  }, [error]);
-
-  const onSubmit: SubmitHandler<LoginForm> = async ({ email, password }) => {
-    await signInWithEmailAndPassword(email, password);
+  const onSubmit: SubmitHandler<LoginForm> = ({ email, password }) => {
+    setLoading(true);
+    signInWithEmailAndPassword(firebaseAuth, email, password)
+      .then(console.log)
+      .catch((e: AuthError) => {
+        switch (e.code) {
+          case "auth/invalid-email":
+            setError(
+              "email",
+              { message: "Invalid email address." },
+              { shouldFocus: true }
+            );
+            break;
+          case "auth/user-not-found":
+            setError(
+              "email",
+              { message: "Email not registered." },
+              { shouldFocus: true }
+            );
+            break;
+          case "auth/wrong-password":
+            setError(
+              "password",
+              { message: "Password is invalid." },
+              { shouldFocus: true }
+            );
+            break;
+          default:
+            alert(e.message);
+        }
+      })
+      .finally(() => setLoading(false));
   };
-
-  const onError: SubmitErrorHandler<LoginForm> = (error) =>
-    console.error(error);
 
   return (
     <>
@@ -39,16 +64,14 @@ const LoginPage: React.FC = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form
-              className="space-y-6"
-              onSubmit={handleSubmit(onSubmit, onError)}
-            >
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <TextField
                   label="Email address"
                   type="email"
                   autoComplete="email"
-                  {...register("email", { required: true })}
+                  error={errors.email?.message}
+                  {...register("email", { required: "Email is required." })}
                 />
               </div>
 
@@ -57,7 +80,10 @@ const LoginPage: React.FC = () => {
                   label="Password"
                   type="password"
                   autoComplete="current-password"
-                  {...register("password", { required: true })}
+                  error={errors.password?.message}
+                  {...register("password", {
+                    required: "Password is required.",
+                  })}
                 />
               </div>
 
