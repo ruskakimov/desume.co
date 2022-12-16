@@ -24,10 +24,10 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
         </label>
         <div className="relative mt-1 rounded-md shadow-sm">
           <input
+            type="text"
             {...props}
             ref={ref}
             id={inputId}
-            type="text"
             className={classNames(
               "block w-full rounded-md border border-gray-300 py-2 px-3 focus:border-gray-500 focus:outline-none focus:ring-gray-500 sm:text-sm",
               {
