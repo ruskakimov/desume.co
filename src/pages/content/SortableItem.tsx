@@ -27,9 +27,12 @@ export function SortableItem(props: any) {
       {...attributes}
     >
       <div
-        className={classNames("absolute inset-0 left-12 cursor-grab", {
-          "cursor-grabbing": isDragging,
-        })}
+        className={classNames(
+          "absolute inset-0 left-12 cursor-grab touch-none",
+          {
+            "cursor-grabbing": isDragging,
+          }
+        )}
         {...listeners}
       />
       {props.children}
