@@ -1,5 +1,8 @@
 import { MonthYear } from "../classes/MonthYear";
 
+/**
+ * A domain model of resume.
+ */
 export interface Resume {
   personalDetails: {
     fullName: string;
