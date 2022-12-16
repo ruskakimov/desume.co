@@ -9,7 +9,7 @@ import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
 import SecondaryButton from "../../common/components/SecondaryButton";
 import SlideOver from "../../common/components/SlideOver";
-import { WorkExperience } from "../../common/interfaces/resume";
+import { BulletPoint, WorkExperience } from "../../common/interfaces/resume";
 
 interface WorkExperienceForm {
   companyName: string;
@@ -58,8 +58,7 @@ function convertExperienceToFormData(
   };
 }
 
-interface UiBullet {
-  text: string;
+interface FormBullet extends BulletPoint {
   shouldDelete: boolean;
 }
 
@@ -70,7 +69,7 @@ export default function useWorkExperiencePanel(
   const [isOpen, setIsOpen] = useState(false);
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
   const { register, handleSubmit, reset } = useForm<WorkExperienceForm>();
-  const [bullets, setBullets] = useState<UiBullet[]>([]);
+  const [bullets, setBullets] = useState<FormBullet[]>([]);
 
   const openPanel = (experience?: WorkExperience) => {
     if (experience) {
@@ -79,7 +78,10 @@ export default function useWorkExperiencePanel(
       reset(prefilledForm);
       setIsCurrentPosition(experience.endDate === undefined);
       setBullets(
-        experience.bulletPoints.map((text) => ({ text, shouldDelete: false }))
+        experience.bulletPoints.map((bulletPoint) => ({
+          ...bulletPoint,
+          shouldDelete: false,
+        }))
       );
     } else {
       // Add experience
@@ -96,9 +98,8 @@ export default function useWorkExperiencePanel(
       formData,
       isCurrentPosition
     );
-    newExperience.bulletPoints = bullets
-      .filter((b) => !b.shouldDelete)
-      .map((b) => b.text);
+    // TODO: Solve the problem of receiving new bullet IDs
+    newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
     onSubmitted(newExperience);
     closePanel();
   };
@@ -236,7 +237,10 @@ export default function useWorkExperiencePanel(
           <div>
             <SecondaryButton
               onClick={() => {
-                setBullets([...bullets, { text: "", shouldDelete: false }]);
+                setBullets([
+                  ...bullets,
+                  { id: "", text: "", included: true, shouldDelete: false },
+                ]);
               }}
             >
               Add bullet point

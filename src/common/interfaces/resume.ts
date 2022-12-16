@@ -24,7 +24,7 @@ export interface WorkExperience {
   jobTitle: string;
   startDate: MonthYear;
   endDate?: MonthYear;
-  bulletPoints: string[];
+  bulletPoints: BulletPoint[];
   included: boolean;
 }
 
@@ -42,5 +42,11 @@ export interface Project {
   description: string;
   startDate: MonthYear;
   endDate: MonthYear;
+  included: boolean;
+}
+
+export interface BulletPoint {
+  id: string;
+  text: string;
   included: boolean;
 }

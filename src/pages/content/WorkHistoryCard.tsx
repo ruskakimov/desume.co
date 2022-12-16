@@ -79,10 +79,10 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
         </div>
 
         <ul className="flex flex-col divide-y">
-          {experience.bulletPoints.map((text) => (
+          {experience.bulletPoints.map((bulletPoint) => (
             <li className="p-4 flex gap-4 items-center hover:bg-gray-50 cursor-pointer">
-              <Checkbox />
-              <span className="text-sm text-gray-700">{text}</span>
+              <Checkbox checked={bulletPoint.included} />
+              <span className="text-sm text-gray-700">{bulletPoint.text}</span>
               <Bars2Icon
                 className="text-gray-400 flex-shrink-0 ml-auto h-4 w-8"
                 aria-hidden="true"
