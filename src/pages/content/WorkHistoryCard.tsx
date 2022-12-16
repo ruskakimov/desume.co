@@ -4,6 +4,21 @@ import EllipsisMenu from "../../common/components/EllipsisMenu";
 import useConfirmationDialog from "../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { SortableItem } from "./SortableItem";
 
 interface WorkHistoryCardProps {
   experience: WorkExperience;
@@ -20,6 +35,15 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
   );
 
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const bulletIds = experience.bulletPoints.map((b) => b.id);
 
   return (
     <>
@@ -78,18 +102,48 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
           />
         </div>
 
-        <ul className="flex flex-col divide-y">
-          {experience.bulletPoints.map((bulletPoint) => (
-            <li className="p-4 flex gap-4 items-center hover:bg-gray-50 cursor-pointer">
-              <Checkbox checked={bulletPoint.included} />
-              <span className="text-sm text-gray-700">{bulletPoint.text}</span>
-              <Bars2Icon
-                className="text-gray-400 flex-shrink-0 ml-auto h-4 w-8"
-                aria-hidden="true"
-              />
-            </li>
-          ))}
-        </ul>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(e) => {
+            const { active, over } = e;
+
+            if (active.id !== over?.id) {
+              const oldIndex = bulletIds.indexOf(active.id as string);
+              const newIndex = bulletIds.indexOf(over?.id as string);
+
+              const newBullets = arrayMove(
+                experience.bulletPoints,
+                oldIndex,
+                newIndex
+              );
+
+              onChange({ ...experience, bulletPoints: newBullets });
+            }
+          }}
+        >
+          <SortableContext
+            items={bulletIds}
+            strategy={verticalListSortingStrategy}
+          >
+            <ul className="flex flex-col divide-y">
+              {experience.bulletPoints.map((bulletPoint) => (
+                <SortableItem key={bulletPoint.id} id={bulletPoint.id}>
+                  <li className="p-4 flex gap-4 items-center bg-white">
+                    <Checkbox checked={bulletPoint.included} />
+                    <span className="text-sm text-gray-700">
+                      {bulletPoint.text}
+                    </span>
+                    <Bars2Icon
+                      className="text-gray-400 flex-shrink-0 ml-auto h-4 w-8"
+                      aria-hidden="true"
+                    />
+                  </li>
+                </SortableItem>
+              ))}
+            </ul>
+          </SortableContext>
+        </DndContext>
       </div>
 
       {editExperiencePanel}
