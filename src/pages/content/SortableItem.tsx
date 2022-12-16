@@ -20,13 +20,19 @@ export function SortableItem(props: any) {
   return (
     <div
       ref={setNodeRef}
-      className={classNames("transition-colors transition-shadow", {
+      className={classNames("transition-shadow relative", {
         "z-10 shadow-lg ring-inset ring-2 ring-gray-400 bg-white": isDragging,
       })}
       style={style}
       {...attributes}
-      {...listeners}
     >
+      <div
+        className={classNames(
+          "absolute top-0 right-0 bottom-0 w-16 cursor-grab",
+          { "cursor-grabbing": isDragging }
+        )}
+        {...listeners}
+      />
       {props.children}
     </div>
   );
