@@ -1,4 +1,4 @@
-import { Coord, Size } from "./types";
+import { Coord, Size } from "../interfaces/measure";
 
 export class Box {
   constructor(

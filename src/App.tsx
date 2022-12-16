@@ -1,7 +1,7 @@
-import Editor from "./editor";
+import AppShell from "./AppShell";
 
 function App() {
-  return <Editor />;
+  return <AppShell />;
 }
 
 export default App;
