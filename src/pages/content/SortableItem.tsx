@@ -20,8 +20,8 @@ export function SortableItem(props: any) {
   return (
     <div
       ref={setNodeRef}
-      className={classNames({
-        "z-10 shadow-md": isDragging,
+      className={classNames("transition-colors transition-shadow", {
+        "z-10 shadow-lg ring-inset ring-2 ring-gray-400 bg-white": isDragging,
       })}
       style={style}
       {...attributes}

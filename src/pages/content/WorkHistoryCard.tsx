@@ -19,6 +19,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableItem } from "./SortableItem";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
 interface WorkHistoryCardProps {
   experience: WorkExperience;
@@ -121,15 +122,16 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
               onChange({ ...experience, bulletPoints: newBullets });
             }
           }}
+          modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext
             items={bulletIds}
             strategy={verticalListSortingStrategy}
           >
-            <ul className="flex flex-col divide-y">
+            <ul className="flex flex-col py-2">
               {experience.bulletPoints.map((bulletPoint) => (
                 <SortableItem key={bulletPoint.id} id={bulletPoint.id}>
-                  <li className="p-4 flex gap-4 items-center bg-white">
+                  <li className="py-2 px-4 flex gap-4 items-center">
                     <Checkbox checked={bulletPoint.included} />
                     <span className="text-sm text-gray-700">
                       {bulletPoint.text}
