@@ -48,10 +48,7 @@ const OrSeparator: React.FC = () => {
 
 const SocialButton: React.FC = () => {
   return (
-    <a
-      href="#"
-      className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
-    >
+    <button className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50">
       <svg
         className="h-5 w-5"
         aria-hidden="true"
@@ -65,7 +62,7 @@ const SocialButton: React.FC = () => {
         />
       </svg>
       <span className="ml-2">Continue with Facebook</span>
-    </a>
+    </button>
   );
 };
 
