@@ -7,12 +7,9 @@ import logo from "../../assets/logo.svg";
 import googleLogo from "../../assets/google-logo.svg";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "../../App";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const LoginPage: React.FC = () => {
-  // TODO: Use /sign-in /sign-up routes instead
-  const [isSignup, setIsSignup] = useState(false);
-
+const LoginPage: React.FC<{ isSignup?: boolean }> = ({ isSignup = false }) => {
   const [signInWithGoogle, user, googleLoading, googleError] =
     useSignInWithGoogle(firebaseAuth);
 
@@ -54,21 +51,13 @@ const LoginPage: React.FC = () => {
 
             <div className="mt-4 text-center">
               {isSignup ? (
-                <a
-                  className="text-sm text-gray-600 underline"
-                  href="#"
-                  onClick={() => setIsSignup(false)}
-                >
+                <Link to="/sign-in" className="text-sm text-gray-600 underline">
                   Have an account? Sign in
-                </a>
+                </Link>
               ) : (
-                <a
-                  className="text-sm text-gray-600 underline"
-                  href="#"
-                  onClick={() => setIsSignup(true)}
-                >
+                <Link to="/sign-up" className="text-sm text-gray-600 underline">
                   Don't have an account? Sign up
-                </a>
+                </Link>
               )}
             </div>
           </div>
