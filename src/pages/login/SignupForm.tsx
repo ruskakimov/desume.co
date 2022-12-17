@@ -33,20 +33,13 @@ const SignupForm: React.FC = () => {
               { shouldFocus: true }
             );
             break;
-          // case "auth/user-not-found":
-          //   setError(
-          //     "email",
-          //     { message: "Email not registered." },
-          //     { shouldFocus: true }
-          //   );
-          //   break;
-          // case "auth/wrong-password":
-          //   setError(
-          //     "password",
-          //     { message: "Password is invalid." },
-          //     { shouldFocus: true }
-          //   );
-          //   break;
+          case "auth/email-already-in-use":
+            setError(
+              "email",
+              { message: "Email is already used." },
+              { shouldFocus: true }
+            );
+            break;
           default:
             toast.error(e.message);
         }
@@ -71,6 +64,10 @@ const SignupForm: React.FC = () => {
         error={errors.password?.message}
         {...register("password", {
           required: "Password is required.",
+          minLength: {
+            value: 8,
+            message: "Password should be at least 8 characters long.",
+          },
         })}
       />
 
