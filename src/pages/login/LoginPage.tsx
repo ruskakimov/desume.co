@@ -1,49 +1,7 @@
-import { AuthError, sendSignInLinkToEmail } from "firebase/auth";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
-import { firebaseAuth } from "../../App";
 import logo from "../../assets/logo.svg";
-import TextField from "../../common/components/fields/TextField";
-import PrimaryButton from "../../common/components/PrimaryButton";
-import Spinner from "../../common/components/Spinner";
-
-interface EmailForm {
-  email: string;
-}
+import LoginForm from "./LoginForm";
 
 const LoginPage: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<EmailForm>();
-  const [sendingEmail, setSendingEmail] = useState(false);
-
-  const onSubmit: SubmitHandler<EmailForm> = ({ email }) => {
-    setSendingEmail(true);
-    sendSignInLinkToEmail(firebaseAuth, email, {
-      url: window.location.href,
-      handleCodeInApp: true,
-    })
-      .then(() => toast.success("Access link was sent to your email."))
-      .catch((e: AuthError) => {
-        switch (e.code) {
-          case "auth/invalid-email":
-            setError(
-              "email",
-              { message: "Invalid email address." },
-              { shouldFocus: true }
-            );
-            break;
-          default:
-            toast.error(e.message);
-        }
-      })
-      .finally(() => setSendingEmail(false));
-  };
-
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -53,52 +11,15 @@ const LoginPage: React.FC = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-              <TextField
-                label="Email address"
-                type="email"
-                autoComplete="email"
-                error={errors.email?.message}
-                {...register("email", { required: "Email is required." })}
-              />
-
-              {/*
-                <TextField
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  error={errors.password?.message}
-                  {...register("password", {
-                    required: "Password is required.",
-                  })}
-                />
-              */}
-
-              {/* <div className="flex items-center justify-between">
-                <CheckboxField label="Remember me" />
-
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-              </div> */}
-
-              <PrimaryButton type="submit" className="w-full">
-                {sendingEmail ? <Spinner /> : "Continue with email"}
-              </PrimaryButton>
-            </form>
-
-            <OrSeparator />
-
             <div className="flex flex-col gap-3">
               <SocialButton />
               <SocialButton />
               <SocialButton />
             </div>
+
+            <OrSeparator />
+
+            <LoginForm />
           </div>
         </div>
       </div>
