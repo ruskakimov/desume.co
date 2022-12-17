@@ -1,6 +1,11 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  BellIcon,
+  UserCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import logo from "./assets/logo.svg";
 import ContentPage from "./pages/content/ContentPage";
@@ -72,11 +77,7 @@ export default function AppShell() {
                     <div>
                       <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring">
                         <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={user.imageUrl}
-                          alt=""
-                        />
+                        <UserCircleIcon className="h-8 w-8 text-gray-400" />
                       </Menu.Button>
                     </div>
                     <Transition
