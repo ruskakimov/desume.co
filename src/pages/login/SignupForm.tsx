@@ -1,4 +1,4 @@
-import { AuthError, signInWithEmailAndPassword } from "firebase/auth";
+import { AuthError, createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -12,18 +12,18 @@ interface FormData {
   password: string;
 }
 
-const LoginForm: React.FC = () => {
+const SignupForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm<FormData>();
-  const [signingIn, setSigningIn] = useState(false);
+  const [signingUp, setSigningUp] = useState(false);
 
   const onSubmit: SubmitHandler<FormData> = ({ email, password }) => {
-    setSigningIn(true);
-    signInWithEmailAndPassword(firebaseAuth, email, password)
+    setSigningUp(true);
+    createUserWithEmailAndPassword(firebaseAuth, email, password)
       .catch((e: AuthError) => {
         switch (e.code) {
           case "auth/invalid-email":
@@ -33,25 +33,25 @@ const LoginForm: React.FC = () => {
               { shouldFocus: true }
             );
             break;
-          case "auth/user-not-found":
-            setError(
-              "email",
-              { message: "Email not registered." },
-              { shouldFocus: true }
-            );
-            break;
-          case "auth/wrong-password":
-            setError(
-              "password",
-              { message: "Password is invalid." },
-              { shouldFocus: true }
-            );
-            break;
+          // case "auth/user-not-found":
+          //   setError(
+          //     "email",
+          //     { message: "Email not registered." },
+          //     { shouldFocus: true }
+          //   );
+          //   break;
+          // case "auth/wrong-password":
+          //   setError(
+          //     "password",
+          //     { message: "Password is invalid." },
+          //     { shouldFocus: true }
+          //   );
+          //   break;
           default:
             toast.error(e.message);
         }
       })
-      .finally(() => setSigningIn(false));
+      .finally(() => setSigningUp(false));
   };
 
   return (
@@ -75,10 +75,10 @@ const LoginForm: React.FC = () => {
       />
 
       <PrimaryButton type="submit" className="w-full">
-        {signingIn ? <Spinner /> : "Sign in"}
+        {signingUp ? <Spinner /> : "Sign up"}
       </PrimaryButton>
     </form>
   );
 };
 
-export default LoginForm;
+export default SignupForm;

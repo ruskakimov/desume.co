@@ -1,7 +1,12 @@
+import { useState } from "react";
 import logo from "../../assets/logo.svg";
 import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
 
 const LoginPage: React.FC = () => {
+  // TODO: Use /sign-in /sign-up routes instead
+  const [isSignup, setIsSignup] = useState(false);
+
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -19,12 +24,26 @@ const LoginPage: React.FC = () => {
 
             <OrSeparator />
 
-            <LoginForm />
+            {isSignup ? <SignupForm /> : <LoginForm />}
 
             <div className="mt-4 text-center">
-              <a className="text-sm text-gray-600 underline" href="#">
-                Don't have an account? Sign up
-              </a>
+              {isSignup ? (
+                <a
+                  className="text-sm text-gray-600 underline"
+                  href="#"
+                  onClick={() => setIsSignup(false)}
+                >
+                  Have an account? Sign in
+                </a>
+              ) : (
+                <a
+                  className="text-sm text-gray-600 underline"
+                  href="#"
+                  onClick={() => setIsSignup(true)}
+                >
+                  Don't have an account? Sign up
+                </a>
+              )}
             </div>
           </div>
         </div>
