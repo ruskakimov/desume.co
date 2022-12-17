@@ -7,6 +7,7 @@ import logo from "../../assets/logo.svg";
 import googleLogo from "../../assets/google-logo.svg";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "../../App";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
   // TODO: Use /sign-in /sign-up routes instead
@@ -14,6 +15,12 @@ const LoginPage: React.FC = () => {
 
   const [signInWithGoogle, user, googleLoading, googleError] =
     useSignInWithGoogle(firebaseAuth);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
+  const onLoggedIn = () => navigate(from, { replace: true });
 
   return (
     <>
@@ -34,12 +41,16 @@ const LoginPage: React.FC = () => {
             <SocialButton
               icon={googleLogo}
               label="Continue with Google"
-              onClick={() => signInWithGoogle()}
+              onClick={() => signInWithGoogle().then(onLoggedIn)}
             />
 
             <OrSeparator />
 
-            {isSignup ? <SignupForm /> : <LoginForm />}
+            {isSignup ? (
+              <SignupForm onSuccess={onLoggedIn} />
+            ) : (
+              <LoginForm onSuccess={onLoggedIn} />
+            )}
 
             <div className="mt-4 text-center">
               {isSignup ? (

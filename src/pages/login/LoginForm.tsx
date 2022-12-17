@@ -12,7 +12,7 @@ interface FormData {
   password: string;
 }
 
-const LoginForm: React.FC = () => {
+const LoginForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const {
     register,
     handleSubmit,
@@ -24,6 +24,7 @@ const LoginForm: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = ({ email, password }) => {
     setSigningIn(true);
     signInWithEmailAndPassword(firebaseAuth, email, password)
+      .then(onSuccess)
       .catch((e: AuthError) => {
         switch (e.code) {
           case "auth/invalid-email":
