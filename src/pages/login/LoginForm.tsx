@@ -36,14 +36,14 @@ const LoginForm: React.FC = () => {
           case "auth/user-not-found":
             setError(
               "email",
-              { message: "Email not registered." },
+              { message: "Email is not registered." },
               { shouldFocus: true }
             );
             break;
           case "auth/wrong-password":
             setError(
               "password",
-              { message: "Password is invalid." },
+              { message: "Wrong password." },
               { shouldFocus: true }
             );
             break;

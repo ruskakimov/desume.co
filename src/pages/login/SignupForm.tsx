@@ -36,7 +36,7 @@ const SignupForm: React.FC = () => {
           case "auth/email-already-in-use":
             setError(
               "email",
-              { message: "Email is already used." },
+              { message: "Email is already in use." },
               { shouldFocus: true }
             );
             break;
