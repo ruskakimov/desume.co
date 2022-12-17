@@ -1,4 +1,4 @@
-import { AuthError, signInWithEmailAndPassword } from "firebase/auth";
+import { AuthError, sendSignInLinkToEmail } from "firebase/auth";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { firebaseAuth } from "../../App";
@@ -7,9 +7,8 @@ import TextField from "../../common/components/fields/TextField";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import Spinner from "../../common/components/Spinner";
 
-interface LoginForm {
+interface EmailForm {
   email: string;
-  password: string;
 }
 
 const LoginPage: React.FC = () => {
@@ -18,12 +17,15 @@ const LoginPage: React.FC = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginForm>();
-  const [loading, setLoading] = useState(false);
+  } = useForm<EmailForm>();
+  const [sendingEmail, setSendingEmail] = useState(false);
 
-  const onSubmit: SubmitHandler<LoginForm> = ({ email, password }) => {
-    setLoading(true);
-    signInWithEmailAndPassword(firebaseAuth, email, password)
+  const onSubmit: SubmitHandler<EmailForm> = ({ email }) => {
+    setSendingEmail(true);
+    sendSignInLinkToEmail(firebaseAuth, email, {
+      url: window.location.href,
+      handleCodeInApp: true,
+    })
       .then(console.log)
       .catch((e: AuthError) => {
         switch (e.code) {
@@ -34,25 +36,11 @@ const LoginPage: React.FC = () => {
               { shouldFocus: true }
             );
             break;
-          case "auth/user-not-found":
-            setError(
-              "email",
-              { message: "Email not registered." },
-              { shouldFocus: true }
-            );
-            break;
-          case "auth/wrong-password":
-            setError(
-              "password",
-              { message: "Password is invalid." },
-              { shouldFocus: true }
-            );
-            break;
           default:
             alert(e.message);
         }
       })
-      .finally(() => setLoading(false));
+      .finally(() => setSendingEmail(false));
   };
 
   return (
@@ -99,7 +87,7 @@ const LoginPage: React.FC = () => {
               </div> */}
 
               <PrimaryButton type="submit" className="w-full">
-                {loading ? <Spinner /> : "Continue with email"}
+                {sendingEmail ? <Spinner /> : "Continue with email"}
               </PrimaryButton>
             </form>
 
