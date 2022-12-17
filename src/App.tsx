@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, useLocation } from "react-router-dom";
 import AppShell from "./AppShell";
+import logo from "./assets/logo.svg";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB34gwQ0mKdYJEUg36TBjtaSbujmZSVjZw",
@@ -18,8 +19,16 @@ export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(firebaseApp);
 
 function App() {
-  const [user] = useAuthState(firebaseAuth);
+  const [user, loadingAuth] = useAuthState(firebaseAuth);
   const location = useLocation();
+
+  if (loadingAuth) {
+    return (
+      <div className="absolute inset-0 flex justify-center items-center">
+        <img className="mx-auto h-12 w-auto" src={logo} alt="PDFEGG" />
+      </div>
+    );
+  }
 
   if (!user) {
     // Redirect them to the /login page, but save the current location they were
