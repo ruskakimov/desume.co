@@ -20,6 +20,12 @@ const LoginPage: React.FC = () => {
             <OrSeparator />
 
             <LoginForm />
+
+            <div className="mt-4 text-center">
+              <a className="text-sm text-gray-600 underline" href="#">
+                Don't have an account? Sign up
+              </a>
+            </div>
           </div>
         </div>
       </div>
