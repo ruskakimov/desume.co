@@ -10,6 +10,7 @@ import Spinner from "../../common/components/Spinner";
 interface FormData {
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 const SignupForm: React.FC = () => {
@@ -18,6 +19,7 @@ const SignupForm: React.FC = () => {
     handleSubmit,
     setError,
     formState: { errors },
+    watch,
   } = useForm<FormData>();
   const [signingUp, setSigningUp] = useState(false);
 
@@ -60,7 +62,6 @@ const SignupForm: React.FC = () => {
       <TextField
         label="Password"
         type="password"
-        autoComplete="current-password"
         error={errors.password?.message}
         {...register("password", {
           required: "Password is required.",
@@ -68,6 +69,16 @@ const SignupForm: React.FC = () => {
             value: 8,
             message: "Password should be at least 8 characters long.",
           },
+        })}
+      />
+
+      <TextField
+        label="Confirm password"
+        type="password"
+        error={errors.confirmPassword?.message}
+        {...register("confirmPassword", {
+          validate: (value) =>
+            value !== watch("password") ? "Passwords don't match." : undefined,
         })}
       />
 
