@@ -5,10 +5,15 @@ import SignupForm from "./SignupForm";
 
 import logo from "../../assets/logo.svg";
 import googleLogo from "../../assets/google-logo.svg";
+import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { firebaseAuth } from "../../App";
 
 const LoginPage: React.FC = () => {
   // TODO: Use /sign-in /sign-up routes instead
   const [isSignup, setIsSignup] = useState(false);
+
+  const [signInWithGoogle, user, googleLoading, googleError] =
+    useSignInWithGoogle(firebaseAuth);
 
   return (
     <>
@@ -22,7 +27,15 @@ const LoginPage: React.FC = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <SocialButton icon={googleLogo} label="Continue with Google" />
+            {googleError && (
+              <p className="mb-4 text-sm text-red-700">{googleError.message}</p>
+            )}
+
+            <SocialButton
+              icon={googleLogo}
+              label="Continue with Google"
+              onClick={() => signInWithGoogle()}
+            />
 
             <OrSeparator />
 
@@ -67,12 +80,13 @@ const OrSeparator: React.FC = () => {
   );
 };
 
-const SocialButton: React.FC<{ icon: string; label?: string }> = ({
-  icon,
-  label,
-}) => {
+const SocialButton: React.FC<{
+  icon: string;
+  label?: string;
+  onClick: () => void;
+}> = ({ icon, label, onClick }) => {
   return (
-    <SecondaryButton className="w-full text-gray-500">
+    <SecondaryButton className="w-full text-gray-500" onClick={onClick}>
       <img className="h-5 w-5" src={icon} />
       {label !== undefined && <span className="ml-2">{label}</span>}
     </SecondaryButton>
