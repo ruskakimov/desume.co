@@ -1,6 +1,7 @@
 import { AuthError, sendSignInLinkToEmail } from "firebase/auth";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { firebaseAuth } from "../../App";
 import logo from "../../assets/logo.svg";
 import TextField from "../../common/components/fields/TextField";
@@ -26,7 +27,7 @@ const LoginPage: React.FC = () => {
       url: window.location.href,
       handleCodeInApp: true,
     })
-      .then(console.log)
+      .then(() => toast.success("Access link was sent to your email."))
       .catch((e: AuthError) => {
         switch (e.code) {
           case "auth/invalid-email":
@@ -37,7 +38,7 @@ const LoginPage: React.FC = () => {
             );
             break;
           default:
-            alert(e.message);
+            toast.error(e.message);
         }
       })
       .finally(() => setSendingEmail(false));
