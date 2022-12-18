@@ -90,8 +90,7 @@ export default function ContentPage() {
 
         <div className="space-y-6">
           <WorkHistory
-            // TODO: Implement loading state
-            experiences={workHistory ?? []}
+            experiences={workHistory}
             onChange={(experiences) => setWorkHistory(experiences)}
           />
         </div>
