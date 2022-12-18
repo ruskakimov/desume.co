@@ -1,11 +1,14 @@
 import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import { useState } from "react";
-import { MonthYear } from "../../common/classes/MonthYear";
+import { useEffect, useState } from "react";
+import { MonthYear } from "../../common/interfaces/time";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import { WorkExperience } from "../../common/interfaces/resume";
 import WorkHistory from "./WorkHistory";
+import { doc, setDoc } from "firebase/firestore";
+import { firebaseAuth, firestore } from "../../App";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const navigation = [
   {
@@ -26,7 +29,7 @@ export default function ContentPage() {
       companyName: "TechWings",
       companyWebsiteUrl: "https://techwings.com/",
       jobTitle: "Senior Frontend Engineer",
-      startDate: new MonthYear(9, 2022),
+      startDate: { month: 9, year: 2022 },
       bulletPoints: [
         {
           id: "1",
@@ -50,8 +53,8 @@ export default function ContentPage() {
       companyName: "Deriv",
       companyWebsiteUrl: "https://deriv.com/",
       jobTitle: "Frontend Engineer",
-      startDate: new MonthYear(2, 2018),
-      endDate: new MonthYear(3, 2021),
+      startDate: { month: 2, year: 2018 },
+      endDate: { month: 3, year: 2021 },
       bulletPoints: [
         {
           id: "1",
@@ -72,6 +75,16 @@ export default function ContentPage() {
       included: true,
     },
   ]);
+
+  // const [user] = useAuthState(firebaseAuth);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setDoc(doc(firestore, "resumes", user.uid), {
+  //       workHistory,
+  //     });
+  //   }
+  // }, []);
 
   return (
     <>

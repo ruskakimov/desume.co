@@ -2,7 +2,6 @@ import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import { MonthYear } from "../../common/classes/MonthYear";
 import Checkbox from "../../common/components/Checkbox";
 import CheckboxField from "../../common/components/fields/CheckboxField";
 import MonthYearField from "../../common/components/fields/MonthYearField";
@@ -30,16 +29,16 @@ function convertFormDataToExperience(
     companyName: formData.companyName,
     companyWebsiteUrl: formData.companyWebsiteUrl,
     jobTitle: formData.jobTitle,
-    startDate: new MonthYear(
-      parseInt(formData.startDateMonth),
-      parseInt(formData.startDateYear)
-    ),
+    startDate: {
+      month: parseInt(formData.startDateMonth),
+      year: parseInt(formData.startDateYear),
+    },
     endDate: isCurrentPosition
       ? undefined
-      : new MonthYear(
-          parseInt(formData.endDateMonth!),
-          parseInt(formData.endDateYear!)
-        ),
+      : {
+          month: parseInt(formData.endDateMonth!),
+          year: parseInt(formData.endDateYear!),
+        },
     bulletPoints: [],
     included: true,
   };

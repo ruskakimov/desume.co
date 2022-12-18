@@ -1,4 +1,4 @@
-import { MonthYear } from "../classes/MonthYear";
+import { MonthYear } from "../interfaces/time";
 
 /**
  * A domain model of resume.
