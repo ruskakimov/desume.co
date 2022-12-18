@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { MonthYear } from "../../common/classes/MonthYear";
 import Checkbox from "../../common/components/Checkbox";
+import CheckboxField from "../../common/components/fields/CheckboxField";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
 import WebsiteField from "../../common/components/fields/WebsiteField";
@@ -168,6 +169,7 @@ export default function useWorkExperiencePanel(
         </div>
 
         <div className="col-span-6 flex -mt-2">
+          {/* // TODO: Refactor with a CheckboxField */}
           <div className="mr-3 flex h-5 items-center">
             <Checkbox
               id="current-position"

@@ -1,9 +1,16 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  BellIcon,
+  UserCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import logo from "./assets/logo.svg";
 import ContentPage from "./pages/content/ContentPage";
+import { useSignOut } from "react-firebase-hooks/auth";
+import { firebaseAuth } from "./App";
 
 const user = {
   name: "Tom Cook",
@@ -23,7 +30,9 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-export default function Example() {
+export default function AppShell() {
+  const [signOut] = useSignOut(firebaseAuth);
+
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden">
       <Disclosure as="nav" className="bg-white shadow z-10">
@@ -63,24 +72,12 @@ export default function Example() {
                   </div>
                 </div>
                 <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                  <button
-                    type="button"
-                    className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                  >
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-
                   {/* Profile dropdown */}
                   <Menu as="div" className="relative ml-3">
                     <div>
-                      <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                      <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring">
                         <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={user.imageUrl}
-                          alt=""
-                        />
+                        <UserCircleIcon className="h-8 w-8 text-gray-400" />
                       </Menu.Button>
                     </div>
                     <Transition
@@ -102,6 +99,12 @@ export default function Example() {
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
+                                // TODO: Prevent adding hash to URL on logout
+                                onClick={
+                                  item.name === "Sign out"
+                                    ? () => signOut()
+                                    : undefined
+                                }
                               >
                                 {item.name}
                               </a>
