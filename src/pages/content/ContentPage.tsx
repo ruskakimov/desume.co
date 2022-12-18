@@ -1,14 +1,13 @@
 import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
-import { MonthYear } from "../../common/interfaces/time";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import { WorkExperience } from "../../common/interfaces/resume";
 import WorkHistory from "./WorkHistory";
 import { doc, setDoc } from "firebase/firestore";
 import { firebaseAuth, firestore } from "../../App";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "react-hot-toast";
 
 const navigation = [
   {
@@ -76,15 +75,19 @@ export default function ContentPage() {
     },
   ]);
 
-  // const [user] = useAuthState(firebaseAuth);
-
-  // useEffect(() => {
-  //   if (user) {
-  //     setDoc(doc(firestore, "resumes", user.uid), {
-  //       workHistory,
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    const uid = firebaseAuth.currentUser?.uid;
+    if (uid) {
+      const resumeDoc = doc(firestore, "resumes", uid);
+      setDoc(resumeDoc, { workHistory }).catch((reason) => {
+        console.error(reason);
+        toast.error("Failed to sync data.");
+      });
+    } else {
+      console.error("Missing uid when writing to firestore.");
+      toast.error("Failed to sync data.");
+    }
+  }, [workHistory]);
 
   return (
     <>
