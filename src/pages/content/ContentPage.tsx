@@ -79,6 +79,7 @@ export default function ContentPage() {
     const uid = firebaseAuth.currentUser?.uid;
     if (uid) {
       const resumeDoc = doc(firestore, "resumes", uid);
+      // Warning: Writes are queued when offline, which can potentially send a lot of redundant writes at once.
       setDoc(resumeDoc, { workHistory }).catch((reason) => {
         console.error(reason);
         toast.error("Failed to sync data.");
