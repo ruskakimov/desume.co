@@ -1,4 +1,5 @@
 import Card from "../../common/components/Card";
+import EmptyStateAddButton from "../../common/components/EmptyStateAddButton";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { WorkExperience } from "../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
@@ -17,6 +18,40 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
     }
   );
 
+  function buildContent(): React.ReactNode {
+    // Loading
+    if (experiences === null) return <ShimmerCards count={3} />;
+
+    // Empty
+    if (experiences.length === 0)
+      return (
+        <EmptyStateAddButton
+          label="Add work experience"
+          onClick={() => openAddExperiencePanel()}
+        />
+      );
+
+    return experiences.map((experience, index) => (
+      <WorkHistoryCard
+        experience={experience}
+        onChange={(editedExperience) => {
+          if (editedExperience === null) {
+            // Deleted
+            onChange([
+              ...experiences.slice(0, index),
+              ...experiences.slice(index + 1),
+            ]);
+          } else {
+            // Edited
+            const slice = experiences.slice();
+            slice[index] = editedExperience;
+            onChange(slice);
+          }
+        }}
+      />
+    ));
+  }
+
   return (
     <>
       <Card>
@@ -30,27 +65,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
           </PrimaryButton>
         </div>
 
-        <div className="space-y-8">
-          {experiences?.map((experience, index) => (
-            <WorkHistoryCard
-              experience={experience}
-              onChange={(editedExperience) => {
-                if (editedExperience === null) {
-                  // Deleted
-                  onChange([
-                    ...experiences.slice(0, index),
-                    ...experiences.slice(index + 1),
-                  ]);
-                } else {
-                  // Edited
-                  const slice = experiences.slice();
-                  slice[index] = editedExperience;
-                  onChange(slice);
-                }
-              }}
-            />
-          )) ?? <ShimmerCards count={3} />}
-        </div>
+        <div className="space-y-8">{buildContent()}</div>
       </Card>
 
       {addExperiencePanel}
