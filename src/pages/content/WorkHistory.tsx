@@ -1,3 +1,4 @@
+import React from "react";
 import Card from "../../common/components/Card";
 import EmptyStateAddButton from "../../common/components/EmptyStateAddButton";
 import PrimaryButton from "../../common/components/PrimaryButton";
@@ -18,11 +19,11 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
     }
   );
 
-  function buildContent(): React.ReactNode {
-    // Loading
-    if (experiences === null) return <ShimmerCards count={3} />;
+  const isLoading = experiences === null;
 
-    // Empty
+  function buildContent(): React.ReactNode {
+    if (isLoading) return <ShimmerCards count={3} />;
+
     if (experiences.length === 0)
       return (
         <EmptyStateAddButton
@@ -52,6 +53,17 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
     ));
   }
 
+  function buildTopAddButton(): React.ReactNode {
+    const button = (
+      <PrimaryButton onClick={() => openAddExperiencePanel()}>
+        Add experience
+      </PrimaryButton>
+    );
+
+    if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
+    return experiences.length === 0 ? null : button;
+  }
+
   return (
     <>
       <Card>
@@ -60,9 +72,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
             Work history
           </h3>
 
-          <PrimaryButton onClick={() => openAddExperiencePanel()}>
-            Add experience
-          </PrimaryButton>
+          {buildTopAddButton()}
         </div>
 
         <div className="space-y-8">{buildContent()}</div>
@@ -73,13 +83,24 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
   );
 };
 
+const ShimmerOverlay: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <div className="relative">
+      <div className="opacity-0">{children}</div>
+      <div className="absolute inset-0 shimmer bg-gray-200 rounded-md animate-pulse"></div>
+    </div>
+  );
+};
+
 const ShimmerCards: React.FC<{ count: number }> = ({ count }) => {
   return (
     <>
       {Array(count)
         .fill(null)
         .map((_, index) => (
-          <div className="h-40 shimmer bg-gray-200 sm:rounded-md animate-pulse" />
+          <div className="h-40 shimmer bg-gray-200 rounded-md animate-pulse" />
         ))}
     </>
   );
