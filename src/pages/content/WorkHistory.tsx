@@ -61,13 +61,14 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
-    return experiences.length === 0 ? null : button;
+    if (experiences.length === 0) return null;
+    return button;
   }
 
   return (
     <>
       <Card>
-        <div className="flex justify-between items-center">
+        <div className="h-10 flex justify-between items-center">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             Work history
           </h3>
@@ -75,7 +76,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
           {buildTopAddButton()}
         </div>
 
-        <div className="space-y-8">{buildContent()}</div>
+        <div className="space-y-8 pb-4">{buildContent()}</div>
       </Card>
 
       {addExperiencePanel}
