@@ -27,14 +27,14 @@ function convertFormDataToExperience(
 ): WorkExperience {
   return {
     companyName: formData.companyName,
-    companyWebsiteUrl: formData.companyWebsiteUrl,
+    companyWebsiteUrl: formData.companyWebsiteUrl ?? null,
     jobTitle: formData.jobTitle,
     startDate: {
       month: parseInt(formData.startDateMonth),
       year: parseInt(formData.startDateYear),
     },
     endDate: isCurrentPosition
-      ? undefined
+      ? null
       : {
           month: parseInt(formData.endDateMonth!),
           year: parseInt(formData.endDateYear!),
@@ -49,7 +49,7 @@ function convertExperienceToFormData(
 ): WorkExperienceForm {
   return {
     companyName: experience.companyName,
-    companyWebsiteUrl: experience.companyWebsiteUrl,
+    companyWebsiteUrl: experience.companyWebsiteUrl ?? undefined,
     jobTitle: experience.jobTitle,
     startDateMonth: experience.startDate.month.toString(),
     startDateYear: experience.startDate.year.toString(),
