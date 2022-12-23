@@ -2,7 +2,6 @@ import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import Checkbox from "../../common/components/Checkbox";
 import CheckboxField from "../../common/components/fields/CheckboxField";
 import MonthYearField from "../../common/components/fields/MonthYearField";
 import TextField from "../../common/components/fields/TextField";
@@ -55,7 +54,7 @@ function convertExperienceToFormData(
     startDateYear: experience.startDate.year.toString(),
     endDateMonth: experience.endDate?.month.toString(),
     endDateYear: experience.endDate?.year.toString(),
-    isCurrentPosition: experience.endDate === null,
+    isCurrentPosition: !experience.endDate,
   };
 }
 
@@ -178,7 +177,7 @@ export default function useWorkExperiencePanel(
 
         <div className="flex flex-col gap-4">
           {bullets.map((bullet, index) => (
-            <div className="flex items-center gap-2">
+            <div key={bullet.id} className="flex items-center gap-2">
               <textarea
                 className={classNames(
                   "block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500 sm:text-sm",
@@ -226,7 +225,12 @@ export default function useWorkExperiencePanel(
               onClick={() => {
                 setBullets([
                   ...bullets,
-                  { id: "", text: "", included: true, shouldDelete: false },
+                  {
+                    id: generateId(),
+                    text: "",
+                    included: true,
+                    shouldDelete: false,
+                  },
                 ]);
               }}
             >
@@ -237,4 +241,8 @@ export default function useWorkExperiencePanel(
       </div>
     </SlideOver>,
   ];
+}
+
+function generateId(): string {
+  return new Date().getTime().toString();
 }
