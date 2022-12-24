@@ -32,20 +32,34 @@ const ExportPage: React.FC = () => {
         className="bg-white shadow p-8"
         style={{ width, height, fontFamily: "Times" }}
       >
-        {resume?.workHistory.map((experience) => {
-          const start = monthYearToString(experience.startDate);
-          const end = experience.endDate
-            ? monthYearToString(experience.endDate)
-            : "Current";
+        {resume?.workHistory
+          .filter((experience) => experience.included)
+          .map((experience) => {
+            const start = monthYearToString(experience.startDate);
+            const end = experience.endDate
+              ? monthYearToString(experience.endDate)
+              : "Current";
 
-          return (
-            <div className="flex gap-1 text-sm m-4">
-              <label className="font-bold">{experience.companyName}</label>
-              <label>{experience.jobTitle}</label>
-              <label className="ml-auto">{`${start} – ${end}`}</label>
-            </div>
-          );
-        })}
+            return (
+              <div className="my-8">
+                <div className="flex gap-1 text-sm">
+                  <label className="font-bold">{experience.companyName}</label>
+                  <label>{experience.jobTitle}</label>
+                  <label className="ml-auto">{`${start} – ${end}`}</label>
+                </div>
+
+                <ul className="text-xs">
+                  {experience.bulletPoints
+                    .filter((bullet) => bullet.included)
+                    .map((bullet) => (
+                      <li key={bullet.id} className="my-1">
+                        {bullet.text}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
