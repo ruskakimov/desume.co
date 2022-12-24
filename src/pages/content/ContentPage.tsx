@@ -1,6 +1,6 @@
 import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import { Resume, WorkExperience } from "../../common/interfaces/resume";
@@ -8,6 +8,8 @@ import WorkHistory from "./WorkHistory";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { firebaseAuth, firestore } from "../../App";
 import { toast } from "react-hot-toast";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { setResume, setWorkHistory } from "../../redux/slices/contentSlice";
 
 const navigation = [
   {
@@ -23,8 +25,12 @@ const navigation = [
 ];
 
 export default function ContentPage() {
-  const [workHistory, setWorkHistory] = useState<WorkExperience[] | null>(null);
+  const workHistory =
+    useAppSelector((state) => state.content.resume?.workHistory) ?? null;
 
+  const dispatch = useAppDispatch();
+
+  // TODO: Move to loader
   useEffect(() => {
     const uid = firebaseAuth.currentUser!.uid;
     const resumeDoc = doc(firestore, "resumes", uid);
@@ -33,7 +39,17 @@ export default function ContentPage() {
       .then((snapshot) => {
         // TODO: Defensive programming
         const resume = snapshot.data() as Resume | undefined;
-        setWorkHistory(resume?.workHistory || []);
+        dispatch(
+          setResume(
+            resume ?? {
+              personalDetails: null,
+              workHistory: [],
+              educationHistory: [],
+              projectHistory: [],
+              skills: [],
+            }
+          )
+        );
       })
       .catch((reason) => {
         console.error(reason);
@@ -41,6 +57,7 @@ export default function ContentPage() {
       });
   }, []);
 
+  // TODO: Move to redux store
   useEffect(() => {
     if (workHistory !== null) {
       const uid = firebaseAuth.currentUser!.uid;
@@ -91,7 +108,7 @@ export default function ContentPage() {
         <div className="space-y-6">
           <WorkHistory
             experiences={workHistory}
-            onChange={(experiences) => setWorkHistory(experiences)}
+            onChange={(experiences) => dispatch(setWorkHistory(experiences))}
           />
         </div>
       </div>
