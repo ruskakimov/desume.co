@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
 import ContentPage from "./pages/content/ContentPage";
+import ExportPage from "./pages/export/ExportPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: "export",
-        element: <h1>Export</h1>,
+        element: <ExportPage />,
       },
     ],
   },
