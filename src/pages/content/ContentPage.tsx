@@ -1,11 +1,13 @@
 import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import { useState } from "react";
-import { MonthYear } from "../../common/classes/MonthYear";
+import { useEffect, useState } from "react";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
-import { WorkExperience } from "../../common/interfaces/resume";
+import { Resume, WorkExperience } from "../../common/interfaces/resume";
 import WorkHistory from "./WorkHistory";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { firebaseAuth, firestore } from "../../App";
+import { toast } from "react-hot-toast";
 
 const navigation = [
   {
@@ -21,57 +23,36 @@ const navigation = [
 ];
 
 export default function ContentPage() {
-  const [workHistory, setWorkHistory] = useState<WorkExperience[]>([
-    {
-      companyName: "TechWings",
-      companyWebsiteUrl: "https://techwings.com/",
-      jobTitle: "Senior Frontend Engineer",
-      startDate: new MonthYear(9, 2022),
-      bulletPoints: [
-        {
-          id: "1",
-          text: "Designed and built a cross-platform mobile animation app using Flutter with over 100k downloads on PlayStore and 11k monthly active users.",
-          included: true,
-        },
-        {
-          id: "2",
-          text: "Managed a large codebase with over 15,000 lines of code and 900 commits.",
-          included: true,
-        },
-        {
-          id: "3",
-          text: "Have grown and managed a Discord community with over 2000 members.",
-          included: false,
-        },
-      ],
-      included: true,
-    },
-    {
-      companyName: "Deriv",
-      companyWebsiteUrl: "https://deriv.com/",
-      jobTitle: "Frontend Engineer",
-      startDate: new MonthYear(2, 2018),
-      endDate: new MonthYear(3, 2021),
-      bulletPoints: [
-        {
-          id: "1",
-          text: "Initiated and led a charting library project (with a team of 2 engineers) that replaced a third-party charting solution, saving the company 40k USD annually.",
-          included: true,
-        },
-        {
-          id: "2",
-          text: "Managed a focused team of one engineer and a designer, delivering a complete web app for P2P transactions within 3 months from the start of the project.",
-          included: true,
-        },
-        {
-          id: "3",
-          text: "Built a trading history explorer using React / Redux that is used by over 150k monthly users.",
-          included: true,
-        },
-      ],
-      included: true,
-    },
-  ]);
+  const [workHistory, setWorkHistory] = useState<WorkExperience[] | null>(null);
+
+  useEffect(() => {
+    const uid = firebaseAuth.currentUser!.uid;
+    const resumeDoc = doc(firestore, "resumes", uid);
+
+    getDoc(resumeDoc)
+      .then((snapshot) => {
+        // TODO: Defensive programming
+        const resume = snapshot.data() as Resume | undefined;
+        setWorkHistory(resume?.workHistory || []);
+      })
+      .catch((reason) => {
+        console.error(reason);
+        toast.error("Failed to load data.");
+      });
+  }, []);
+
+  useEffect(() => {
+    if (workHistory !== null) {
+      const uid = firebaseAuth.currentUser!.uid;
+      const resumeDoc = doc(firestore, "resumes", uid);
+
+      // Warning: Writes are queued when offline, which can potentially send a lot of redundant writes at once.
+      setDoc(resumeDoc, { workHistory }).catch((reason) => {
+        console.error(reason);
+        toast.error("Failed to sync data.");
+      });
+    }
+  }, [workHistory]);
 
   return (
     <>

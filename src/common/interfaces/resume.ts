@@ -1,8 +1,5 @@
-import { MonthYear } from "../classes/MonthYear";
+import { MonthYear } from "../interfaces/time";
 
-/**
- * A domain model of resume.
- */
 export interface Resume {
   personalDetails: {
     fullName: string;
@@ -20,10 +17,10 @@ export interface Resume {
 
 export interface WorkExperience {
   companyName: string;
-  companyWebsiteUrl?: string;
+  companyWebsiteUrl: string | null;
   jobTitle: string;
   startDate: MonthYear;
-  endDate?: MonthYear;
+  endDate: MonthYear | null;
   bulletPoints: BulletPoint[];
   included: boolean;
 }

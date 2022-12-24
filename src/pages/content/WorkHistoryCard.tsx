@@ -21,6 +21,7 @@ import {
 import SortableItem from "./SortableItem";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import classNames from "classnames";
+import { monthYearToString } from "../../common/functions/time";
 
 interface WorkHistoryCardProps {
   experience: WorkExperience;
@@ -47,6 +48,11 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
 
   const bulletIds = experience.bulletPoints.map((b) => b.id);
 
+  const start = monthYearToString(experience.startDate);
+  const end = experience.endDate
+    ? monthYearToString(experience.endDate)
+    : "Current";
+
   return (
     <>
       <div className="w-full border sm:rounded-md">
@@ -68,9 +74,7 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
             {experience.jobTitle}
           </span>
 
-          <span className="ml-auto font-normal text-gray-500">{`${
-            experience.startDate
-          } – ${experience.endDate ?? "Current"}`}</span>
+          <span className="ml-auto font-normal text-gray-500">{`${start} – ${end}`}</span>
 
           <EllipsisMenu
             menuItems={[
