@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import resumeReducer from "./slices/contentSlice";
+import contentReducer from "./slices/contentSlice";
 
 export const store = configureStore({
   reducer: {
-    content: resumeReducer,
+    content: contentReducer,
   },
 });
 
