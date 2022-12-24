@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import documentReducer from "./slices/document/documentSlice";
+import resumeReducer from "./slices/resumeSlice";
 
 export const store = configureStore({
   reducer: {
-    document: documentReducer,
+    resume: resumeReducer,
   },
 });
 

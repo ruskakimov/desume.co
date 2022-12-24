@@ -8,7 +8,7 @@ export interface Resume {
     phoneNumber: string;
     email: string;
     location: string;
-  };
+  } | null;
   workHistory: WorkExperience[];
   educationHistory: Education[];
   projectHistory: Project[];
