@@ -30,7 +30,12 @@ const ExportPage: React.FC = () => {
       <div
         ref={docPreview}
         className="bg-white shadow p-8"
-        style={{ width, height, fontFamily: "Times" }}
+        style={{
+          width,
+          height,
+          fontFamily: "Times",
+          WebkitFontSmoothing: "auto",
+        }}
       >
         {resume?.workHistory
           .filter((experience) => experience.included)
