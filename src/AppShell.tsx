@@ -10,7 +10,7 @@ import classNames from "classnames";
 import logo from "./assets/logo.svg";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 const user = {
   name: "Tom Cook",
@@ -19,9 +19,8 @@ const user = {
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 };
 const navigation = [
-  { name: "Edit", href: "#", current: true },
-  { name: "Export", href: "#", current: false },
-  { name: "History", href: "#", current: false },
+  { name: "Edit", to: "/edit" },
+  { name: "Export", to: "/export" },
 ];
 
 const userNavigation = [
@@ -54,21 +53,21 @@ export default function AppShell() {
                     />
                   </div>
                   <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">
-                    {/* TODO: Highlight current https://reactrouter.com/en/main/start/overview#active-links */}
                     {navigation.map((item) => (
-                      <a
+                      <NavLink
                         key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "border-gray-800 text-gray-900"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                          "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        )}
-                        aria-current={item.current ? "page" : undefined}
+                        to={item.to}
+                        className={({ isActive }) =>
+                          classNames(
+                            isActive
+                              ? "border-gray-800 text-gray-900"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                            "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                          )
+                        }
                       >
                         {item.name}
-                      </a>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
@@ -136,14 +135,14 @@ export default function AppShell() {
                   <Disclosure.Button
                     key={item.name}
                     as="a"
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-50 border-gray-800 text-gray-700"
-                        : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
-                      "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                    )}
-                    aria-current={item.current ? "page" : undefined}
+                    href={item.to}
+                    // className={classNames(
+                    //   item.current
+                    //     ? "bg-gray-50 border-gray-800 text-gray-700"
+                    //     : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
+                    //   "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    // )}
+                    // aria-current={item.current ? "page" : undefined}
                   >
                     {item.name}
                   </Disclosure.Button>
