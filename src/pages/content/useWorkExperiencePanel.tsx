@@ -93,7 +93,6 @@ export default function useWorkExperiencePanel(
 
   const onSubmit: SubmitHandler<WorkExperienceForm> = (formData) => {
     const newExperience = convertFormDataToExperience(formData);
-    // TODO: Solve the problem of receiving new bullet IDs
     newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
     onSubmitted(newExperience);
     closePanel();
