@@ -8,9 +8,9 @@ import {
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import logo from "./assets/logo.svg";
-import ContentPage from "./pages/content/ContentPage";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
+import { Outlet } from "react-router-dom";
 
 const user = {
   name: "Tom Cook",
@@ -54,6 +54,7 @@ export default function AppShell() {
                     />
                   </div>
                   <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">
+                    {/* TODO: Highlight current https://reactrouter.com/en/main/start/overview#active-links */}
                     {navigation.map((item) => (
                       <a
                         key={item.name}
@@ -193,7 +194,7 @@ export default function AppShell() {
 
       <div className="py-10 overflow-y-scroll">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <ContentPage />
+          <Outlet />
         </div>
       </div>
     </div>

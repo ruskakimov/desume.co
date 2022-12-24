@@ -6,8 +6,13 @@ import reportWebVitals from "./reportWebVitals";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
+import ContentPage from "./pages/content/ContentPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -17,6 +22,20 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    children: [
+      {
+        index: true,
+        loader: () => redirect("edit"),
+      },
+      {
+        path: "edit",
+        element: <ContentPage />,
+      },
+      {
+        path: "export",
+        element: <h1>Export</h1>,
+      },
+    ],
   },
   {
     path: "sign-in",
