@@ -58,7 +58,7 @@ const ExportPage: React.FC = () => {
                     .filter((bullet) => bullet.included)
                     .map((bullet) => (
                       <li key={bullet.id} className="my-1">
-                        {bullet.text}
+                        &bull; {bullet.text}
                       </li>
                     ))}
                 </ul>
