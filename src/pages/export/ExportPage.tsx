@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { firebaseAuth } from "../../App";
+import { useOutletContext } from "react-router-dom";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { monthYearToString } from "../../common/functions/time";
 import useResume from "../../common/hooks/useResume";
@@ -7,7 +7,7 @@ import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import { a4SizeInPoints } from "../../pdf/render-tests/build/common/constants/sizes";
 
 const ExportPage: React.FC = () => {
-  const [resume] = useResume(firebaseAuth.currentUser!.uid);
+  const [resume] = useOutletContext<ReturnType<typeof useResume>>();
   const { width, height } = a4SizeInPoints;
 
   const docPreviewRef = useRef<HTMLDivElement>(null);

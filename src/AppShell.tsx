@@ -10,6 +10,7 @@ import logo from "./assets/logo.svg";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
 import { NavLink, Outlet } from "react-router-dom";
+import useResume from "./common/hooks/useResume";
 
 const navigation = [
   { name: "Edit", to: "/edit" },
@@ -23,6 +24,9 @@ const userNavigation = [
 ];
 
 export default function AppShell() {
+  // Note: can assume currentUser to be available when inside AppShell
+  const resumeContext = useResume(firebaseAuth.currentUser!.uid);
+
   const [signOut] = useSignOut(firebaseAuth);
 
   return (
@@ -163,7 +167,7 @@ export default function AppShell() {
 
       <div className="py-10 overflow-y-scroll">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <Outlet />
+          <Outlet context={resumeContext} />
         </div>
       </div>
     </div>

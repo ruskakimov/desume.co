@@ -3,8 +3,8 @@ import classNames from "classnames";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import WorkHistory from "./WorkHistory";
-import { firebaseAuth } from "../../App";
 import useResume from "../../common/hooks/useResume";
+import { useOutletContext } from "react-router-dom";
 
 const navigation = [
   {
@@ -20,8 +20,7 @@ const navigation = [
 ];
 
 export default function ContentPage() {
-  // Note: can assume currentUser to be available when inside AppShell
-  const [resume, setResume] = useResume(firebaseAuth.currentUser!.uid);
+  const [resume, setResume] = useOutletContext<ReturnType<typeof useResume>>();
 
   return (
     <>
