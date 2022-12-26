@@ -36,9 +36,9 @@ export default function useResume(
 
     // Warning: Doesn't resolve when offline.
     // Warning: Writes are queued when offline, which can potentially send a lot of redundant writes at once.
-    setDoc(resumeDocRef, resume).catch((reason) => {
+    setDoc(resumeDocRef, updatedResume).catch((reason) => {
       console.error(reason);
-      toast.error("Failed to sync data.");
+      toast.error("Failed to save data.");
     });
   };
 
