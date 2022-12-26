@@ -3,8 +3,7 @@ import classNames from "classnames";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
 import WorkHistory from "./WorkHistory";
-import useResume from "../../common/hooks/useResume";
-import { useOutletContext } from "react-router-dom";
+import { useContextResume } from "../../AppShell";
 
 const navigation = [
   {
@@ -20,7 +19,7 @@ const navigation = [
 ];
 
 export default function ContentPage() {
-  const [resume, setResume] = useOutletContext<ReturnType<typeof useResume>>();
+  const [resume, setResume] = useContextResume();
 
   return (
     <>

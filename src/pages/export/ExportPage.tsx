@@ -1,13 +1,12 @@
 import { useRef } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useContextResume } from "../../AppShell";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { monthYearToString } from "../../common/functions/time";
-import useResume from "../../common/hooks/useResume";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import { a4SizeInPoints } from "../../pdf/render-tests/build/common/constants/sizes";
 
 const ExportPage: React.FC = () => {
-  const [resume] = useOutletContext<ReturnType<typeof useResume>>();
+  const [resume] = useContextResume();
   const { width, height } = a4SizeInPoints;
 
   const docPreviewRef = useRef<HTMLDivElement>(null);

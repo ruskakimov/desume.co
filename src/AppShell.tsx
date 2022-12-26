@@ -9,7 +9,7 @@ import classNames from "classnames";
 import logo from "./assets/logo.svg";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 import useResume from "./common/hooks/useResume";
 
 const navigation = [
@@ -172,4 +172,8 @@ export default function AppShell() {
       </div>
     </div>
   );
+}
+
+export function useContextResume() {
+  return useOutletContext<ReturnType<typeof useResume>>();
 }
