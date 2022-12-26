@@ -1,15 +1,16 @@
 import { useRef } from "react";
+import { firebaseAuth } from "../../App";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { monthYearToString } from "../../common/functions/time";
+import useResume from "../../common/hooks/useResume";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import { a4SizeInPoints } from "../../pdf/render-tests/build/common/constants/sizes";
-import { useAppSelector } from "../../redux/store";
 
 const ExportPage: React.FC = () => {
-  const resume = useAppSelector((state) => state.content.resume);
+  const [resume] = useResume(firebaseAuth.currentUser!.uid);
   const { width, height } = a4SizeInPoints;
 
-  const docPreview = useRef<HTMLDivElement>(null);
+  const docPreviewRef = useRef<HTMLDivElement>(null);
 
   return (
     <div>
@@ -18,7 +19,7 @@ const ExportPage: React.FC = () => {
       <PrimaryButton
         className="my-4"
         onClick={() => {
-          const el = docPreview.current;
+          const el = docPreviewRef.current;
           if (el) {
             generatePdfFromHtml(el).save();
           }
@@ -28,7 +29,7 @@ const ExportPage: React.FC = () => {
       </PrimaryButton>
 
       <div
-        ref={docPreview}
+        ref={docPreviewRef}
         className="bg-white shadow p-8"
         style={{
           width,
