@@ -1,6 +1,5 @@
 import PageHeader from "../../common/components/PageHeader";
 import WorkHistory from "./WorkHistory";
-import { useContextResume } from "../../AppShell";
 import NavItem from "./NavItem";
 
 const navigation = [
@@ -15,8 +14,6 @@ const navigation = [
 ];
 
 export default function ContentPage() {
-  const [resume, setResume] = useContextResume();
-
   return (
     <>
       <PageHeader title="Content" />
@@ -37,12 +34,7 @@ export default function ContentPage() {
         </aside>
 
         <div className="space-y-6">
-          <WorkHistory
-            experiences={resume?.workHistory ?? null}
-            onChange={(experiences) =>
-              setResume({ ...resume!, workHistory: experiences })
-            }
-          />
+          <WorkHistory />
         </div>
       </div>
     </>

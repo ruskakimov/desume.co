@@ -1,4 +1,5 @@
 import React from "react";
+import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
 import EmptyStateAddButton from "../../common/components/EmptyStateAddButton";
 import PrimaryButton from "../../common/components/PrimaryButton";
@@ -6,16 +7,24 @@ import { WorkExperience } from "../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import WorkHistoryCard from "./WorkHistoryCard";
 
-interface WorkHistoryProps {
-  experiences: WorkExperience[] | null;
-  onChange: (experiences: WorkExperience[]) => void;
+function useWorkHistory(): [
+  WorkExperience[] | null,
+  (experiences: WorkExperience[]) => void
+] {
+  const [resume, setResume] = useContextResume();
+  return [
+    resume?.workHistory ?? null,
+    (experiences) => setResume({ ...resume!, workHistory: experiences }),
+  ];
 }
 
-const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
+const WorkHistory: React.FC = () => {
+  const [experiences, setExperiences] = useWorkHistory();
+
   const [openAddExperiencePanel, addExperiencePanel] = useWorkExperiencePanel(
     "Add experience",
     (newExperience) => {
-      onChange([newExperience, ...experiences!]);
+      setExperiences([newExperience, ...experiences!]);
     }
   );
 
@@ -38,7 +47,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
         onChange={(editedExperience) => {
           if (editedExperience === null) {
             // Deleted
-            onChange([
+            setExperiences([
               ...experiences.slice(0, index),
               ...experiences.slice(index + 1),
             ]);
@@ -46,7 +55,7 @@ const WorkHistory: React.FC<WorkHistoryProps> = ({ experiences, onChange }) => {
             // Edited
             const slice = experiences.slice();
             slice[index] = editedExperience;
-            onChange(slice);
+            setExperiences(slice);
           }
         }}
       />
