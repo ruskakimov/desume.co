@@ -8,6 +8,7 @@ interface NavItemProps {
   isChecked: boolean;
   isCheckboxDisabled?: boolean;
   isHandleShown?: boolean;
+  onClick: () => void;
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -16,20 +17,22 @@ const NavItem: React.FC<NavItemProps> = ({
   isChecked,
   isCheckboxDisabled = false,
   isHandleShown = true,
+  onClick,
 }) => {
   return (
-    <a
+    <button
       className={classNames(
         isSelected
-          ? "bg-white text-gray-900"
+          ? "bg-white text-gray-900 shadow"
           : "text-gray-500 hover:text-gray-900 hover:bg-gray-50",
-        "group rounded-md px-3 py-2 flex gap-3 items-center text-sm font-medium"
+        "w-full group rounded-md px-3 py-2 flex gap-3 items-center text-sm font-medium cursor-pointer"
       )}
       aria-current={isSelected ? "page" : undefined}
+      onClick={onClick}
     >
       <Checkbox checked={isChecked} disabled={isCheckboxDisabled} />
 
-      <span className="truncate">{label}</span>
+      <span className="truncate select-none">{label}</span>
 
       {isHandleShown ? (
         <Bars2Icon
@@ -37,7 +40,7 @@ const NavItem: React.FC<NavItemProps> = ({
           aria-hidden="true"
         />
       ) : null}
-    </a>
+    </button>
   );
 };
 
