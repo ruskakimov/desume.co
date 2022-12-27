@@ -3,15 +3,38 @@ import WorkHistory from "./WorkHistory";
 import NavItem from "./NavItem";
 import { useState } from "react";
 
-const navigation = [
+interface TabItem {
+  key: string;
+  name: string;
+  element: JSX.Element | null;
+}
+
+const navigation: TabItem[] = [
   {
     key: "personal-details",
     name: "Personal details",
+    element: null,
   },
-  { key: "work-history", name: "Work history" },
-  { key: "education", name: "Education" },
-  { key: "projects", name: "Projects" },
-  { key: "skills", name: "Skills" },
+  {
+    key: "work-history",
+    name: "Work history",
+    element: <WorkHistory />,
+  },
+  {
+    key: "education",
+    name: "Education",
+    element: null,
+  },
+  {
+    key: "projects",
+    name: "Projects",
+    element: null,
+  },
+  {
+    key: "skills",
+    name: "Skills",
+    element: null,
+  },
 ];
 
 export default function ContentPage() {
@@ -37,7 +60,7 @@ export default function ContentPage() {
         </aside>
 
         <div className="space-y-6">
-          <WorkHistory />
+          {navigation.find((item) => item.key === selectedNavKey)?.element}
         </div>
       </div>
     </>
