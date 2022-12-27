@@ -1,4 +1,3 @@
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import PageHeader from "../../common/components/PageHeader";
 import WorkHistory from "./WorkHistory";
 import { useContextResume } from "../../AppShell";
@@ -7,14 +6,12 @@ import NavItem from "./NavItem";
 const navigation = [
   {
     name: "Personal details",
-    href: "#",
-    icon: CheckCircleIcon,
     current: false,
   },
-  { name: "Work history", href: "#", icon: CheckCircleIcon, current: true },
-  { name: "Education", href: "#", icon: CheckCircleIcon, current: false },
-  { name: "Projects", href: "#", icon: CheckCircleIcon, current: false },
-  { name: "Skills", href: "#", icon: CheckCircleIcon, current: false },
+  { name: "Work history", current: true },
+  { name: "Education", current: false },
+  { name: "Projects", current: false },
+  { name: "Skills", current: false },
 ];
 
 export default function ContentPage() {
