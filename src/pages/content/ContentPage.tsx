@@ -2,6 +2,7 @@ import PageHeader from "../../common/components/PageHeader";
 import WorkHistory from "./WorkHistory";
 import NavItem from "./NavItem";
 import { useState } from "react";
+import Card from "../../common/components/Card";
 
 interface TabItem {
   key: string;
@@ -13,7 +14,7 @@ const navigation: TabItem[] = [
   {
     key: "personal-details",
     name: "Personal details",
-    element: null,
+    element: <h1>Personal details</h1>,
   },
   {
     key: "work-history",
@@ -23,17 +24,17 @@ const navigation: TabItem[] = [
   {
     key: "education",
     name: "Education",
-    element: null,
+    element: <h1>Education</h1>,
   },
   {
     key: "projects",
     name: "Projects",
-    element: null,
+    element: <h1>Projects</h1>,
   },
   {
     key: "skills",
     name: "Skills",
-    element: null,
+    element: <h1>Skills</h1>,
   },
 ];
 
@@ -60,7 +61,9 @@ export default function ContentPage() {
         </aside>
 
         <div className="space-y-6">
-          {navigation.find((item) => item.key === selectedNavKey)?.element}
+          <Card>
+            {navigation.find((item) => item.key === selectedNavKey)?.element}
+          </Card>
         </div>
       </div>
     </>

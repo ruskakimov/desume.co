@@ -1,6 +1,5 @@
 import React from "react";
 import { useContextResume } from "../../AppShell";
-import Card from "../../common/components/Card";
 import EmptyStateAddButton from "../../common/components/EmptyStateAddButton";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { WorkExperience } from "../../common/interfaces/resume";
@@ -76,17 +75,15 @@ const WorkHistory: React.FC = () => {
 
   return (
     <>
-      <Card>
-        <div className="h-10 flex justify-between items-center">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Work history
-          </h3>
+      <div className="h-10 flex justify-between items-center">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Work history
+        </h3>
 
-          {buildTopAddButton()}
-        </div>
+        {buildTopAddButton()}
+      </div>
 
-        <div className="space-y-8 pb-4">{buildContent()}</div>
-      </Card>
+      <div className="space-y-8 pb-4">{buildContent()}</div>
 
       {addExperiencePanel}
     </>
