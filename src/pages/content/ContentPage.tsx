@@ -39,7 +39,7 @@ const navigation: TabItem[] = [
 ];
 
 export default function ContentPage() {
-  const [selectedNavKey, setSelectedNavKey] = useState("personal-details");
+  const [selectedNavKey, setSelectedNavKey] = useState(navigation[0].key);
 
   return (
     <>
