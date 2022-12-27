@@ -1,13 +1,9 @@
 import { CheckCircleIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
 import Checkbox from "../../common/components/Checkbox";
 import PageHeader from "../../common/components/PageHeader";
-import { Resume, WorkExperience } from "../../common/interfaces/resume";
 import WorkHistory from "./WorkHistory";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { firebaseAuth, firestore } from "../../App";
-import { toast } from "react-hot-toast";
+import { useContextResume } from "../../AppShell";
 
 const navigation = [
   {
@@ -23,36 +19,7 @@ const navigation = [
 ];
 
 export default function ContentPage() {
-  const [workHistory, setWorkHistory] = useState<WorkExperience[] | null>(null);
-
-  useEffect(() => {
-    const uid = firebaseAuth.currentUser!.uid;
-    const resumeDoc = doc(firestore, "resumes", uid);
-
-    getDoc(resumeDoc)
-      .then((snapshot) => {
-        // TODO: Defensive programming
-        const resume = snapshot.data() as Resume | undefined;
-        setWorkHistory(resume?.workHistory || []);
-      })
-      .catch((reason) => {
-        console.error(reason);
-        toast.error("Failed to load data.");
-      });
-  }, []);
-
-  useEffect(() => {
-    if (workHistory !== null) {
-      const uid = firebaseAuth.currentUser!.uid;
-      const resumeDoc = doc(firestore, "resumes", uid);
-
-      // Warning: Writes are queued when offline, which can potentially send a lot of redundant writes at once.
-      setDoc(resumeDoc, { workHistory }).catch((reason) => {
-        console.error(reason);
-        toast.error("Failed to sync data.");
-      });
-    }
-  }, [workHistory]);
+  const [resume, setResume] = useContextResume();
 
   return (
     <>
@@ -90,8 +57,10 @@ export default function ContentPage() {
 
         <div className="space-y-6">
           <WorkHistory
-            experiences={workHistory}
-            onChange={(experiences) => setWorkHistory(experiences)}
+            experiences={resume?.workHistory ?? null}
+            onChange={(experiences) =>
+              setResume({ ...resume!, workHistory: experiences })
+            }
           />
         </div>
       </div>

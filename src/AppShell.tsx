@@ -2,26 +2,19 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
-  BellIcon,
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import logo from "./assets/logo.svg";
-import ContentPage from "./pages/content/ContentPage";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
+import { NavLink, Outlet, useOutletContext } from "react-router-dom";
+import useResume from "./common/hooks/useResume";
 
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
 const navigation = [
-  { name: "Edit", href: "#", current: true },
-  { name: "Export", href: "#", current: false },
-  { name: "History", href: "#", current: false },
+  { name: "Edit", to: "/edit" },
+  { name: "Export", to: "/export" },
 ];
 
 const userNavigation = [
@@ -31,6 +24,9 @@ const userNavigation = [
 ];
 
 export default function AppShell() {
+  // Note: can assume currentUser to be available when inside AppShell
+  const resumeContext = useResume(firebaseAuth.currentUser!.uid);
+
   const [signOut] = useSignOut(firebaseAuth);
 
   return (
@@ -55,19 +51,20 @@ export default function AppShell() {
                   </div>
                   <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">
                     {navigation.map((item) => (
-                      <a
+                      <NavLink
                         key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? "border-gray-800 text-gray-900"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                          "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        )}
-                        aria-current={item.current ? "page" : undefined}
+                        to={item.to}
+                        className={({ isActive }) =>
+                          classNames(
+                            isActive
+                              ? "border-gray-800 text-gray-900"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                            "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                          )
+                        }
                       >
                         {item.name}
-                      </a>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
@@ -132,48 +129,25 @@ export default function AppShell() {
             <Disclosure.Panel className="sm:hidden">
               <div className="space-y-1 pt-2 pb-3">
                 {navigation.map((item) => (
-                  <Disclosure.Button
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-50 border-gray-800 text-gray-700"
-                        : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
-                      "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                    )}
-                    aria-current={item.current ? "page" : undefined}
-                  >
-                    {item.name}
+                  <Disclosure.Button key={item.name} className="block w-full">
+                    <NavLink
+                      to={item.to}
+                      className={({ isActive }) =>
+                        classNames(
+                          isActive
+                            ? "bg-gray-50 border-gray-800 text-gray-700"
+                            : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
+                          "block text-left pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                        )
+                      }
+                    >
+                      {item.name}
+                    </NavLink>
                   </Disclosure.Button>
                 ))}
               </div>
               <div className="border-t border-gray-200 pt-4 pb-3">
-                <div className="flex items-center px-4">
-                  <div className="flex-shrink-0">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={user.imageUrl}
-                      alt=""
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">
-                      {user.name}
-                    </div>
-                    <div className="text-sm font-medium text-gray-500">
-                      {user.email}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                  >
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
-                <div className="mt-3 space-y-1">
+                <div className="space-y-1">
                   {userNavigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
@@ -193,9 +167,13 @@ export default function AppShell() {
 
       <div className="py-10 overflow-y-scroll">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <ContentPage />
+          <Outlet context={resumeContext} />
         </div>
       </div>
     </div>
   );
+}
+
+export function useContextResume() {
+  return useOutletContext<ReturnType<typeof useResume>>();
 }

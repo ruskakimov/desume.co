@@ -3,11 +3,15 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { store } from "./redux/store";
-import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
+import ContentPage from "./pages/content/ContentPage";
+import ExportPage from "./pages/export/ExportPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -17,6 +21,20 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    children: [
+      {
+        index: true,
+        loader: () => redirect("edit"),
+      },
+      {
+        path: "edit",
+        element: <ContentPage />,
+      },
+      {
+        path: "export",
+        element: <ExportPage />,
+      },
+    ],
   },
   {
     path: "sign-in",
@@ -30,14 +48,12 @@ const router = createBrowserRouter([
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        toastOptions={{ duration: 5000 }}
-      />
-    </Provider>
+    <RouterProvider router={router} />
+    <Toaster
+      position="top-center"
+      reverseOrder={false}
+      toastOptions={{ duration: 5000 }}
+    />
   </React.StrictMode>
 );
 
