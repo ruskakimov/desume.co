@@ -1,8 +1,8 @@
 import PageHeader from "../../common/components/PageHeader";
 import WorkHistory from "./WorkHistory";
 import NavItem from "./NavItem";
-import { useState } from "react";
 import Card from "../../common/components/Card";
+import useLocalState from "../../common/hooks/useLocalState";
 
 interface TabItem {
   key: string;
@@ -39,7 +39,10 @@ const navigation: TabItem[] = [
 ];
 
 export default function ContentPage() {
-  const [selectedNavKey, setSelectedNavKey] = useState(navigation[0].key);
+  const [selectedNavKey, setSelectedNavKey] = useLocalState<string>(
+    "selected-content-tab",
+    navigation[0].key
+  );
 
   return (
     <>
