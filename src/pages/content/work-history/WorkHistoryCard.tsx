@@ -1,8 +1,8 @@
 import { Bars2Icon } from "@heroicons/react/24/outline";
-import Checkbox from "../../common/components/Checkbox";
-import EllipsisMenu from "../../common/components/EllipsisMenu";
-import useConfirmationDialog from "../../common/hooks/useConfirmationDialog";
-import { WorkExperience } from "../../common/interfaces/resume";
+import Checkbox from "../../../common/components/Checkbox";
+import EllipsisMenu from "../../../common/components/EllipsisMenu";
+import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
+import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import {
   closestCenter,
@@ -18,10 +18,10 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import SortableItem from "./SortableItem";
+import SortableItem from "../SortableItem";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import classNames from "classnames";
-import { monthYearToString } from "../../common/functions/time";
+import { monthYearToString } from "../../../common/functions/time";
 
 interface WorkHistoryCardProps {
   experience: WorkExperience;

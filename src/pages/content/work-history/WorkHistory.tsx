@@ -1,8 +1,8 @@
 import React from "react";
-import { useContextResume } from "../../AppShell";
-import EmptyStateAddButton from "../../common/components/EmptyStateAddButton";
-import PrimaryButton from "../../common/components/PrimaryButton";
-import { WorkExperience } from "../../common/interfaces/resume";
+import { useContextResume } from "../../../AppShell";
+import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton";
+import PrimaryButton from "../../../common/components/PrimaryButton";
+import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import WorkHistoryCard from "./WorkHistoryCard";
 

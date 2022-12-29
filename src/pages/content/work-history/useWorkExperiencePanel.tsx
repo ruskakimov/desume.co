@@ -2,13 +2,13 @@ import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import CheckboxField from "../../common/components/fields/CheckboxField";
-import MonthYearField from "../../common/components/fields/MonthYearField";
-import TextField from "../../common/components/fields/TextField";
-import WebsiteField from "../../common/components/fields/WebsiteField";
-import SecondaryButton from "../../common/components/SecondaryButton";
-import SlideOver from "../../common/components/SlideOver";
-import { BulletPoint, WorkExperience } from "../../common/interfaces/resume";
+import CheckboxField from "../../../common/components/fields/CheckboxField";
+import MonthYearField from "../../../common/components/fields/MonthYearField";
+import TextField from "../../../common/components/fields/TextField";
+import WebsiteField from "../../../common/components/fields/WebsiteField";
+import SecondaryButton from "../../../common/components/SecondaryButton";
+import SlideOver from "../../../common/components/SlideOver";
+import { BulletPoint, WorkExperience } from "../../../common/interfaces/resume";
 
 interface WorkExperienceForm {
   companyName: string;

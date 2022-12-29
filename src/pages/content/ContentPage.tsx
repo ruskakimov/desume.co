@@ -1,5 +1,5 @@
 import PageHeader from "../../common/components/PageHeader";
-import WorkHistory from "./WorkHistory";
+import WorkHistory from "./work-history/WorkHistory";
 import NavItem from "./NavItem";
 import Card from "../../common/components/Card";
 import useLocalState from "../../common/hooks/useLocalState";
