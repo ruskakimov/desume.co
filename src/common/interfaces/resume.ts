@@ -15,30 +15,26 @@ export interface Resume {
   skills: string[];
 }
 
-export interface WorkExperience {
+export interface WorkExperience extends Experience {
   companyName: string;
   companyWebsiteUrl: string | null;
   jobTitle: string;
-  startDate: MonthYear;
-  endDate: MonthYear | null;
-  bulletPoints: BulletPoint[];
-  included: boolean;
 }
 
-export interface Education {
+export interface Education extends Experience {
   schoolName: string;
   schoolWebsiteUrl: string;
   degree: string;
-  startDate: MonthYear;
-  endDate: MonthYear;
-  included: boolean;
 }
 
-export interface Project {
+export interface Project extends Experience {
   projectName: string;
-  description: string;
+}
+
+export interface Experience {
   startDate: MonthYear;
-  endDate: MonthYear;
+  endDate: MonthYear | null;
+  bulletPoints: BulletPoint[];
   included: boolean;
 }
 
