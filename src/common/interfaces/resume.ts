@@ -10,8 +10,8 @@ export interface Resume {
     location: string;
   } | null;
   workHistory: WorkExperience[];
-  educationHistory: Education[];
-  projectHistory: Project[];
+  educationHistory: EducationExperience[];
+  projectHistory: ProjectExperience[];
   skills: string[];
 }
 
@@ -21,13 +21,13 @@ export interface WorkExperience extends Experience {
   jobTitle: string;
 }
 
-export interface Education extends Experience {
+export interface EducationExperience extends Experience {
   schoolName: string;
   schoolWebsiteUrl: string;
   degree: string;
 }
 
-export interface Project extends Experience {
+export interface ProjectExperience extends Experience {
   projectName: string;
 }
 

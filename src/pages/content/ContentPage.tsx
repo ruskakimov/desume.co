@@ -3,6 +3,7 @@ import WorkHistory from "./work-history/WorkHistory";
 import NavItem from "./NavItem";
 import Card from "../../common/components/Card";
 import useLocalState from "../../common/hooks/useLocalState";
+import Education from "./education/Education";
 
 interface TabItem {
   key: string;
@@ -24,7 +25,7 @@ const navigation: TabItem[] = [
   {
     key: "education",
     name: "Education",
-    element: <h1>Education</h1>,
+    element: <Education />,
   },
   {
     key: "projects",
