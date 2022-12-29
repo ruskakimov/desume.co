@@ -7,7 +7,7 @@ import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
-import WorkHistoryCard from "./WorkHistoryCard";
+import ExperienceCard from "../ExperienceCard";
 
 function useWorkHistory(): [
   WorkExperience[] | null,
@@ -72,10 +72,12 @@ const WorkHistory: React.FC = () => {
       );
 
     return experiences.map((experience, index) => (
-      <WorkHistoryCard
+      <ExperienceCard
+        title={experience.companyName}
+        subtitle={experience.jobTitle}
         experience={experience}
         onChange={(editedExperience) => {
-          replaceExperienceAt(index, editedExperience);
+          replaceExperienceAt(index, editedExperience as WorkExperience);
         }}
         onEdit={async () => {
           const editedExperience = await openEditExperiencePanel(experience);

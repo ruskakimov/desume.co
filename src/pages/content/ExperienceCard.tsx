@@ -1,7 +1,7 @@
 import { Bars2Icon } from "@heroicons/react/24/outline";
-import Checkbox from "../../../common/components/Checkbox";
-import EllipsisMenu from "../../../common/components/EllipsisMenu";
-import { WorkExperience } from "../../../common/interfaces/resume";
+import Checkbox from "../../common/components/Checkbox";
+import EllipsisMenu from "../../common/components/EllipsisMenu";
+import { Experience } from "../../common/interfaces/resume";
 import {
   closestCenter,
   DndContext,
@@ -16,19 +16,23 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import SortableItem from "../SortableItem";
+import SortableItem from "./SortableItem";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import classNames from "classnames";
-import { monthYearToString } from "../../../common/functions/time";
+import { monthYearToString } from "../../common/functions/time";
 
-interface WorkHistoryCardProps {
-  experience: WorkExperience;
-  onChange: (experience: WorkExperience) => void;
+interface ExperienceCardProps {
+  title: string;
+  subtitle: string;
+  experience: Experience;
+  onChange: (experience: Experience) => void;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
+const ExperienceCard: React.FC<ExperienceCardProps> = ({
+  title,
+  subtitle,
   experience,
   onChange,
   onEdit,
@@ -61,13 +65,9 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
             />
           </div>
 
-          <span className="font-medium text-gray-900">
-            {experience.companyName}
-          </span>
+          <span className="font-medium text-gray-900">{title}</span>
 
-          <span className="font-normal text-gray-700">
-            {experience.jobTitle}
-          </span>
+          <span className="font-normal text-gray-700">{subtitle}</span>
 
           <span className="ml-auto font-normal text-gray-500">{`${start} – ${end}`}</span>
 
@@ -148,4 +148,4 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
   );
 };
 
-export default WorkHistoryCard;
+export default ExperienceCard;
