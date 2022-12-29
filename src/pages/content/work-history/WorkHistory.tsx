@@ -2,6 +2,8 @@ import React from "react";
 import { useContextResume } from "../../../AppShell";
 import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton";
 import PrimaryButton from "../../../common/components/PrimaryButton";
+import ShimmerCards from "../../../common/components/ShimmerCards";
+import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import WorkHistoryCard from "./WorkHistoryCard";
@@ -86,29 +88,6 @@ const WorkHistory: React.FC = () => {
       <div className="space-y-8 pb-4">{buildContent()}</div>
 
       {addExperiencePanel}
-    </>
-  );
-};
-
-const ShimmerOverlay: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  return (
-    <div className="relative">
-      <div className="opacity-0">{children}</div>
-      <div className="absolute inset-0 shimmer bg-gray-200 rounded-md animate-pulse"></div>
-    </div>
-  );
-};
-
-const ShimmerCards: React.FC<{ count: number }> = ({ count }) => {
-  return (
-    <>
-      {Array(count)
-        .fill(null)
-        .map((_, index) => (
-          <div className="h-40 shimmer bg-gray-200 rounded-md animate-pulse" />
-        ))}
     </>
   );
 };
