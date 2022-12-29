@@ -1,7 +1,6 @@
 import { Bars2Icon } from "@heroicons/react/24/outline";
 import Checkbox from "../../../common/components/Checkbox";
 import EllipsisMenu from "../../../common/components/EllipsisMenu";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import {
   closestCenter,
@@ -24,17 +23,17 @@ import { monthYearToString } from "../../../common/functions/time";
 
 interface WorkHistoryCardProps {
   experience: WorkExperience;
-  onChange: (experience: WorkExperience | null) => void;
+  onChange: (experience: WorkExperience) => void;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
   experience,
   onChange,
   onEdit,
+  onDelete,
 }) => {
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -80,25 +79,7 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
               },
               {
                 label: "Delete",
-                onClick: async () => {
-                  if (
-                    await openConfirmationDialog({
-                      title: "Delete experience",
-                      body: (
-                        <p className="text-sm text-gray-500">
-                          Delete{" "}
-                          <b>
-                            {experience.jobTitle} at {experience.companyName}
-                          </b>
-                          ? This action cannot be undone.
-                        </p>
-                      ),
-                      action: "Delete",
-                    })
-                  ) {
-                    onChange(null);
-                  }
-                },
+                onClick: onDelete,
               },
             ]}
           />
@@ -163,8 +144,6 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
           </SortableContext>
         </DndContext>
       </div>
-
-      {confirmationDialog}
     </>
   );
 };

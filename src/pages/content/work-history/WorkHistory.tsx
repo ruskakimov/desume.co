@@ -4,6 +4,7 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
+import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import WorkHistoryCard from "./WorkHistoryCard";
@@ -28,9 +29,33 @@ const WorkHistory: React.FC = () => {
   const [openEditExperiencePanel, editExperiencePanel] =
     useWorkExperiencePanel("Edit experience");
 
+  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
+
   const addExperience = async () => {
     const newExperience = await openAddExperiencePanel(null);
-    if (newExperience) setExperiences([newExperience, ...(experiences ?? [])]);
+    if (newExperience && experiences) {
+      setExperiences([newExperience, ...experiences]);
+    }
+  };
+
+  const replaceExperienceAt = (
+    index: number,
+    editedExperience: WorkExperience
+  ) => {
+    if (experiences) {
+      const slice = experiences.slice();
+      slice[index] = editedExperience;
+      setExperiences(slice);
+    }
+  };
+
+  const deleteExperienceAt = (index: number) => {
+    if (experiences) {
+      setExperiences([
+        ...experiences.slice(0, index),
+        ...experiences.slice(index + 1),
+      ]);
+    }
   };
 
   const isLoading = experiences === null;
@@ -50,26 +75,29 @@ const WorkHistory: React.FC = () => {
       <WorkHistoryCard
         experience={experience}
         onChange={(editedExperience) => {
-          if (editedExperience === null) {
-            // Deleted
-            setExperiences([
-              ...experiences.slice(0, index),
-              ...experiences.slice(index + 1),
-            ]);
-          } else {
-            // Edited
-            const slice = experiences.slice();
-            slice[index] = editedExperience;
-            setExperiences(slice);
-          }
+          replaceExperienceAt(index, editedExperience);
         }}
         onEdit={async () => {
           const editedExperience = await openEditExperiencePanel(experience);
           if (editedExperience) {
-            const slice = experiences.slice();
-            slice[index] = editedExperience;
-            setExperiences(slice);
+            replaceExperienceAt(index, editedExperience);
           }
+        }}
+        onDelete={async () => {
+          const confirmed = await openConfirmationDialog({
+            title: "Delete experience",
+            body: (
+              <p className="text-sm text-gray-500">
+                Delete{" "}
+                <b>
+                  {experience.jobTitle} at {experience.companyName}
+                </b>
+                ? This action cannot be undone.
+              </p>
+            ),
+            action: "Delete",
+          });
+          if (confirmed) deleteExperienceAt(index);
         }}
       />
     ));
@@ -99,6 +127,7 @@ const WorkHistory: React.FC = () => {
 
       {addExperiencePanel}
       {editExperiencePanel}
+      {confirmationDialog}
     </>
   );
 };
