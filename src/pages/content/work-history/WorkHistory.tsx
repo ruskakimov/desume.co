@@ -8,6 +8,7 @@ import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import ExperienceCard from "../ExperienceCard";
+import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 
 function useWorkHistory(): [
   WorkExperience[] | null,
@@ -38,26 +39,6 @@ const WorkHistory: React.FC = () => {
     }
   };
 
-  const replaceExperienceAt = (
-    index: number,
-    editedExperience: WorkExperience
-  ) => {
-    if (experiences) {
-      const slice = experiences.slice();
-      slice[index] = editedExperience;
-      setExperiences(slice);
-    }
-  };
-
-  const deleteExperienceAt = (index: number) => {
-    if (experiences) {
-      setExperiences([
-        ...experiences.slice(0, index),
-        ...experiences.slice(index + 1),
-      ]);
-    }
-  };
-
   const isLoading = experiences === null;
 
   function buildContent(): React.ReactNode {
@@ -77,12 +58,20 @@ const WorkHistory: React.FC = () => {
         subtitle={experience.jobTitle}
         experience={experience}
         onChange={(editedExperience) => {
-          replaceExperienceAt(index, editedExperience as WorkExperience);
+          setExperiences(
+            withReplacedAt(
+              experiences,
+              index,
+              editedExperience as WorkExperience
+            )
+          );
         }}
         onEdit={async () => {
           const editedExperience = await openEditExperiencePanel(experience);
           if (editedExperience) {
-            replaceExperienceAt(index, editedExperience);
+            setExperiences(
+              withReplacedAt(experiences, index, editedExperience)
+            );
           }
         }}
         onDelete={async () => {
@@ -99,7 +88,7 @@ const WorkHistory: React.FC = () => {
             ),
             action: "Delete",
           });
-          if (confirmed) deleteExperienceAt(index);
+          if (confirmed) setExperiences(withRemovedAt(experiences, index));
         }}
       />
     ));

@@ -15,3 +15,12 @@ export function withRemovedAt<T>(array: T[], index: number): T[] {
   copy.splice(index, 1);
   return copy;
 }
+
+/**
+ * Returns a new array with a [value] replacing the element at [index].
+ */
+export function withReplacedAt<T>(array: T[], index: number, value: T): T[] {
+  const copy = array.slice();
+  copy[index] = value;
+  return copy;
+}
