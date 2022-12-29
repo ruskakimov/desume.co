@@ -3,7 +3,6 @@ import Checkbox from "../../../common/components/Checkbox";
 import EllipsisMenu from "../../../common/components/EllipsisMenu";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
-import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import {
   closestCenter,
   DndContext,
@@ -26,17 +25,14 @@ import { monthYearToString } from "../../../common/functions/time";
 interface WorkHistoryCardProps {
   experience: WorkExperience;
   onChange: (experience: WorkExperience | null) => void;
+  onEdit: () => void;
 }
 
 const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
   experience,
   onChange,
+  onEdit,
 }) => {
-  const [openEditExperiencePanel, editExperiencePanel] = useWorkExperiencePanel(
-    "Edit experience",
-    (editedExperience) => onChange(editedExperience)
-  );
-
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
 
   const sensors = useSensors(
@@ -80,7 +76,7 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
             menuItems={[
               {
                 label: "Edit",
-                onClick: () => openEditExperiencePanel(experience),
+                onClick: onEdit,
               },
               {
                 label: "Delete",
@@ -168,7 +164,6 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
         </DndContext>
       </div>
 
-      {editExperiencePanel}
       {confirmationDialog}
     </>
   );

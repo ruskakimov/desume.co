@@ -1,6 +1,6 @@
 import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
@@ -62,16 +62,32 @@ interface FormBullet extends BulletPoint {
   shouldDelete: boolean;
 }
 
+/**
+ * @param experience experience for edit or `null` for a new one.
+ * @returns a promise of edited experience or `null` if user cancels.
+ */
+type OpenWorkExperiencePanel = (
+  experience: WorkExperience | null
+) => Promise<WorkExperience | null>;
+
+/**
+ * @returns edited experience or `null` if user cancels.
+ */
+type ResolveCallback = (experience: WorkExperience | null) => void;
+
 export default function useWorkExperiencePanel(
-  title: string,
-  onSubmitted: (experience: WorkExperience) => void
-): [(experience?: WorkExperience) => void, React.ReactNode] {
+  title: string
+): [OpenWorkExperiencePanel, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
   const { register, handleSubmit, reset, watch } =
     useForm<WorkExperienceForm>();
   const [bullets, setBullets] = useState<FormBullet[]>([]);
+  const resolveCallbackRef = useRef<ResolveCallback | null>(null);
 
-  const openPanel = (experience?: WorkExperience) => {
+  const openPanel = (
+    experience: WorkExperience | null,
+    onResolve: ResolveCallback
+  ) => {
     if (experience) {
       // Edit experience
       const prefilledForm = convertExperienceToFormData(experience);
@@ -87,14 +103,21 @@ export default function useWorkExperiencePanel(
       reset();
       setBullets([]);
     }
+    resolveCallbackRef.current = onResolve;
     setIsOpen(true);
   };
+
   const closePanel = () => setIsOpen(false);
 
   const onSubmit: SubmitHandler<WorkExperienceForm> = (formData) => {
     const newExperience = convertFormDataToExperience(formData);
     newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
-    onSubmitted(newExperience);
+    resolveCallbackRef.current?.(newExperience);
+    closePanel();
+  };
+
+  const onCancel = () => {
+    resolveCallbackRef.current?.(null);
     closePanel();
   };
 
@@ -104,11 +127,14 @@ export default function useWorkExperiencePanel(
   const currentYear = new Date().getFullYear();
 
   return [
-    openPanel,
+    (experience) =>
+      new Promise((resolve) => {
+        openPanel(experience, resolve);
+      }),
     <SlideOver
       isOpen={isOpen}
       title={title}
-      onClose={closePanel}
+      onClose={onCancel}
       onSubmit={handleSubmit(onSubmit, onError)}
     >
       <div className="grid grid-cols-6 gap-6">

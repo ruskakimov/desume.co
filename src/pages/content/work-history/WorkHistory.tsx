@@ -22,12 +22,16 @@ function useWorkHistory(): [
 const WorkHistory: React.FC = () => {
   const [experiences, setExperiences] = useWorkHistory();
 
-  const [openAddExperiencePanel, addExperiencePanel] = useWorkExperiencePanel(
-    "Add experience",
-    (newExperience) => {
-      setExperiences([newExperience, ...experiences!]);
-    }
-  );
+  const [openAddExperiencePanel, addExperiencePanel] =
+    useWorkExperiencePanel("Add experience");
+
+  const [openEditExperiencePanel, editExperiencePanel] =
+    useWorkExperiencePanel("Edit experience");
+
+  const addExperience = async () => {
+    const newExperience = await openAddExperiencePanel(null);
+    if (newExperience) setExperiences([newExperience, ...(experiences ?? [])]);
+  };
 
   const isLoading = experiences === null;
 
@@ -38,7 +42,7 @@ const WorkHistory: React.FC = () => {
       return (
         <EmptyStateAddButton
           label="Add work experience"
-          onClick={() => openAddExperiencePanel()}
+          onClick={addExperience}
         />
       );
 
@@ -59,15 +63,21 @@ const WorkHistory: React.FC = () => {
             setExperiences(slice);
           }
         }}
+        onEdit={async () => {
+          const editedExperience = await openEditExperiencePanel(experience);
+          if (editedExperience) {
+            const slice = experiences.slice();
+            slice[index] = editedExperience;
+            setExperiences(slice);
+          }
+        }}
       />
     ));
   }
 
   function buildTopAddButton(): React.ReactNode {
     const button = (
-      <PrimaryButton onClick={() => openAddExperiencePanel()}>
-        Add experience
-      </PrimaryButton>
+      <PrimaryButton onClick={addExperience}>Add experience</PrimaryButton>
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
@@ -88,6 +98,7 @@ const WorkHistory: React.FC = () => {
       <div className="space-y-8 pb-4">{buildContent()}</div>
 
       {addExperiencePanel}
+      {editExperiencePanel}
     </>
   );
 };
