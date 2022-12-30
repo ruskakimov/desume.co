@@ -34,6 +34,7 @@ export interface EducationExperience extends Experience {
 
 export interface ProjectExperience extends Experience {
   projectName: string;
+  projectWebsiteUrl: string | null;
 }
 
 export interface Experience {

@@ -4,6 +4,7 @@ import NavItem from "./components/NavItem";
 import Card from "../../common/components/Card";
 import useLocalState from "../../common/hooks/useLocalState";
 import Education from "./education/Education";
+import Projects from "./projects/Projects";
 
 interface TabItem {
   key: string;
@@ -30,7 +31,7 @@ const navigation: TabItem[] = [
   {
     key: "projects",
     name: "Projects",
-    element: <h1>Projects</h1>,
+    element: <Projects />,
   },
   {
     key: "skills",
