@@ -22,7 +22,7 @@ function useProjects(): [
   ];
 }
 
-const Projects: React.FC = () => {
+const ProjectsSection: React.FC = () => {
   const [experiences, setExperiences] = useProjects();
 
   const [openAddExperiencePanel, addExperiencePanel] =
@@ -122,4 +122,4 @@ const Projects: React.FC = () => {
   );
 };
 
-export default Projects;
+export default ProjectsSection;

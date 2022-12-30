@@ -1,10 +1,10 @@
 import PageHeader from "../../common/components/PageHeader";
-import WorkHistory from "./work-history/WorkHistory";
+import WorkHistorySection from "./work-history/WorkHistorySection";
 import NavItem from "./components/NavItem";
 import Card from "../../common/components/Card";
 import useLocalState from "../../common/hooks/useLocalState";
-import Education from "./education/Education";
-import Projects from "./projects/Projects";
+import EducationSection from "./education/EducationSection";
+import ProjectsSection from "./projects/ProjectsSection";
 import PersonalDetailsSection from "./personal-details/PersonalDetailsSection";
 
 interface TabItem {
@@ -22,17 +22,17 @@ const navigation: TabItem[] = [
   {
     key: "work-history",
     name: "Work history",
-    element: <WorkHistory />,
+    element: <WorkHistorySection />,
   },
   {
     key: "education",
     name: "Education",
-    element: <Education />,
+    element: <EducationSection />,
   },
   {
     key: "projects",
     name: "Projects",
-    element: <Projects />,
+    element: <ProjectsSection />,
   },
   {
     key: "skills",

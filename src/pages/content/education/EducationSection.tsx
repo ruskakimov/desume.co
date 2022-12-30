@@ -5,31 +5,31 @@ import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
-import { WorkExperience } from "../../../common/interfaces/resume";
-import useWorkExperiencePanel from "./useWorkExperiencePanel";
+import { EducationExperience } from "../../../common/interfaces/resume";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
-import { BriefcaseIcon } from "@heroicons/react/24/outline";
+import useEducationPanel from "./useEducationPanel";
+import { AcademicCapIcon } from "@heroicons/react/24/outline";
 
-function useWorkHistory(): [
-  WorkExperience[] | null,
-  (experiences: WorkExperience[]) => void
+function useEducation(): [
+  EducationExperience[] | null,
+  (experiences: EducationExperience[]) => void
 ] {
   const [resume, setResume] = useContextResume();
   return [
-    resume?.workHistory ?? null,
-    (experiences) => setResume({ ...resume!, workHistory: experiences }),
+    resume?.educationHistory ?? null,
+    (experiences) => setResume({ ...resume!, educationHistory: experiences }),
   ];
 }
 
-const WorkHistory: React.FC = () => {
-  const [experiences, setExperiences] = useWorkHistory();
+const EducationSection: React.FC = () => {
+  const [experiences, setExperiences] = useEducation();
 
   const [openAddExperiencePanel, addExperiencePanel] =
-    useWorkExperiencePanel("Add experience");
+    useEducationPanel("Add education");
 
   const [openEditExperiencePanel, editExperiencePanel] =
-    useWorkExperiencePanel("Edit experience");
+    useEducationPanel("Edit education");
 
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
 
@@ -48,23 +48,23 @@ const WorkHistory: React.FC = () => {
     if (experiences.length === 0)
       return (
         <EmptyStateAddButton
-          Icon={BriefcaseIcon}
-          label="Add work experience"
+          Icon={AcademicCapIcon}
+          label="Add education"
           onClick={addExperience}
         />
       );
 
     return experiences.map((experience, index) => (
       <ExperienceCard
-        title={experience.companyName}
-        subtitle={experience.jobTitle}
+        title={experience.schoolName}
+        subtitle={experience.degree}
         experience={experience}
         onChange={(editedExperience) => {
           setExperiences(
             withReplacedAt(
               experiences,
               index,
-              editedExperience as WorkExperience
+              editedExperience as EducationExperience
             )
           );
         }}
@@ -78,12 +78,12 @@ const WorkHistory: React.FC = () => {
         }}
         onDelete={async () => {
           const confirmed = await openConfirmationDialog({
-            title: "Delete experience",
+            title: "Delete education",
             body: (
               <p className="text-sm text-gray-500">
                 Delete{" "}
                 <b>
-                  {experience.jobTitle} at {experience.companyName}
+                  {experience.degree} at {experience.schoolName}
                 </b>
                 ? This action cannot be undone.
               </p>
@@ -98,7 +98,7 @@ const WorkHistory: React.FC = () => {
 
   function buildTopAddButton(): React.ReactNode {
     const button = (
-      <PrimaryButton onClick={addExperience}>Add experience</PrimaryButton>
+      <PrimaryButton onClick={addExperience}>Add education</PrimaryButton>
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
@@ -110,7 +110,7 @@ const WorkHistory: React.FC = () => {
     <>
       <div className="h-10 flex justify-between items-center">
         <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Work history
+          Education
         </h3>
 
         {buildTopAddButton()}
@@ -125,4 +125,4 @@ const WorkHistory: React.FC = () => {
   );
 };
 
-export default WorkHistory;
+export default EducationSection;
