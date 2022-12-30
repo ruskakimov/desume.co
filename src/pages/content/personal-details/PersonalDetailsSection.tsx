@@ -55,7 +55,12 @@ function convertFormDataToDetails(
 
 const PersonalDetailsSection: React.FC = () => {
   const [details, setDetails] = usePersonalDetails();
-  const { register, handleSubmit, reset } = useForm<PersonalDetailsForm>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = useForm<PersonalDetailsForm>();
 
   const isLoading = details === null;
 
@@ -138,7 +143,9 @@ const PersonalDetailsSection: React.FC = () => {
 
         <div className="flex justify-end">
           <ShimmerOverlay loading={isLoading}>
-            <PrimaryButton type="submit">Save details</PrimaryButton>
+            <PrimaryButton type="submit" disabled={!isDirty}>
+              Save changes
+            </PrimaryButton>
           </ShimmerOverlay>
         </div>
       </form>
