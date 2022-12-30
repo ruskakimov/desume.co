@@ -23,8 +23,13 @@ export interface WorkExperience extends Experience {
 
 export interface EducationExperience extends Experience {
   schoolName: string;
-  schoolWebsiteUrl: string;
+  schoolWebsiteUrl: string | null;
   degree: string;
+
+  /**
+   * Expected end date if ongoing.
+   */
+  endDate: MonthYear;
 }
 
 export interface ProjectExperience extends Experience {

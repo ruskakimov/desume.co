@@ -8,6 +8,7 @@ import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { EducationExperience } from "../../../common/interfaces/resume";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
+import useEducationPanel from "./useEducationPanel";
 
 function useEducation(): [
   EducationExperience[] | null,
@@ -23,19 +24,19 @@ function useEducation(): [
 const Education: React.FC = () => {
   const [experiences, setExperiences] = useEducation();
 
-  // const [openAddExperiencePanel, addExperiencePanel] =
-  //   useWorkExperiencePanel("Add experience");
+  const [openAddExperiencePanel, addExperiencePanel] =
+    useEducationPanel("Add education");
 
-  // const [openEditExperiencePanel, editExperiencePanel] =
-  //   useWorkExperiencePanel("Edit experience");
+  const [openEditExperiencePanel, editExperiencePanel] =
+    useEducationPanel("Edit education");
 
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
 
   const addExperience = async () => {
-    //   const newExperience = await openAddExperiencePanel(null);
-    //   if (newExperience && experiences) {
-    //     setExperiences([newExperience, ...experiences]);
-    //   }
+    const newExperience = await openAddExperiencePanel(null);
+    if (newExperience && experiences) {
+      setExperiences([newExperience, ...experiences]);
+    }
   };
 
   const isLoading = experiences === null;
@@ -63,12 +64,12 @@ const Education: React.FC = () => {
           );
         }}
         onEdit={async () => {
-          // const editedExperience = await openEditExperiencePanel(experience);
-          // if (editedExperience) {
-          //   setExperiences(
-          //     withReplacedAt(experiences, index, editedExperience)
-          //   );
-          // }
+          const editedExperience = await openEditExperiencePanel(experience);
+          if (editedExperience) {
+            setExperiences(
+              withReplacedAt(experiences, index, editedExperience)
+            );
+          }
         }}
         onDelete={async () => {
           const confirmed = await openConfirmationDialog({
@@ -112,8 +113,8 @@ const Education: React.FC = () => {
 
       <div className="space-y-8 pb-4">{buildContent()}</div>
 
-      {/* {addExperiencePanel} */}
-      {/* {editExperiencePanel} */}
+      {addExperiencePanel}
+      {editExperiencePanel}
       {confirmationDialog}
     </>
   );

@@ -1,58 +1,53 @@
 import React, { useRef, useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
 import SlideOver from "../../../common/components/SlideOver";
-import { WorkExperience } from "../../../common/interfaces/resume";
+import { EducationExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
 
-interface WorkExperienceForm {
-  companyName: string;
-  companyWebsiteUrl?: string;
-  jobTitle: string;
+interface EducationForm {
+  schoolName: string;
+  schoolWebsiteUrl?: string;
+  degree: string;
   startDateMonth: string;
   startDateYear: string;
-  endDateMonth?: string;
-  endDateYear?: string;
-  isCurrentPosition: boolean;
+  endDateMonth: string;
+  endDateYear: string;
 }
 
 function convertFormDataToExperience(
-  formData: WorkExperienceForm
-): WorkExperience {
+  formData: EducationForm
+): EducationExperience {
   return {
-    companyName: formData.companyName,
-    companyWebsiteUrl: formData.companyWebsiteUrl ?? null,
-    jobTitle: formData.jobTitle,
+    schoolName: formData.schoolName,
+    schoolWebsiteUrl: formData.schoolWebsiteUrl ?? null,
+    degree: formData.degree,
     startDate: {
       month: parseInt(formData.startDateMonth),
       year: parseInt(formData.startDateYear),
     },
-    endDate: formData.isCurrentPosition
-      ? null
-      : {
-          month: parseInt(formData.endDateMonth!),
-          year: parseInt(formData.endDateYear!),
-        },
+    endDate: {
+      month: parseInt(formData.endDateMonth!),
+      year: parseInt(formData.endDateYear!),
+    },
     bulletPoints: [],
     included: true,
   };
 }
 
 function convertExperienceToFormData(
-  experience: WorkExperience
-): WorkExperienceForm {
+  experience: EducationExperience
+): EducationForm {
   return {
-    companyName: experience.companyName,
-    companyWebsiteUrl: experience.companyWebsiteUrl ?? undefined,
-    jobTitle: experience.jobTitle,
+    schoolName: experience.schoolName,
+    schoolWebsiteUrl: experience.schoolWebsiteUrl ?? undefined,
+    degree: experience.degree,
     startDateMonth: experience.startDate.month.toString(),
     startDateYear: experience.startDate.year.toString(),
-    endDateMonth: experience.endDate?.month.toString(),
-    endDateYear: experience.endDate?.year.toString(),
-    isCurrentPosition: !experience.endDate,
+    endDateMonth: experience.endDate.month.toString(),
+    endDateYear: experience.endDate.year.toString(),
   };
 }
 
@@ -60,26 +55,25 @@ function convertExperienceToFormData(
  * @param experience experience for edit or `null` for a new one.
  * @returns a promise of edited experience or `null` if user cancels.
  */
-type OpenWorkExperiencePanel = (
-  experience: WorkExperience | null
-) => Promise<WorkExperience | null>;
+type OpenEducationPanel = (
+  experience: EducationExperience | null
+) => Promise<EducationExperience | null>;
 
 /**
  * @returns edited experience or `null` if user cancels.
  */
-type ResolveCallback = (experience: WorkExperience | null) => void;
+type ResolveCallback = (experience: EducationExperience | null) => void;
 
-export default function useWorkExperiencePanel(
+export default function useEducationPanel(
   title: string
-): [OpenWorkExperiencePanel, React.ReactNode] {
+): [OpenEducationPanel, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, reset, watch } =
-    useForm<WorkExperienceForm>();
+  const { register, handleSubmit, reset } = useForm<EducationForm>();
   const [bullets, setBullets] = useState<FormBullet[]>([]);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
 
   const openPanel = (
-    experience: WorkExperience | null,
+    experience: EducationExperience | null,
     onResolve: ResolveCallback
   ) => {
     if (experience) {
@@ -103,7 +97,7 @@ export default function useWorkExperiencePanel(
 
   const closePanel = () => setIsOpen(false);
 
-  const onSubmit: SubmitHandler<WorkExperienceForm> = (formData) => {
+  const onSubmit: SubmitHandler<EducationForm> = (formData) => {
     const newExperience = convertFormDataToExperience(formData);
     newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
     resolveCallbackRef.current?.(newExperience);
@@ -115,7 +109,7 @@ export default function useWorkExperiencePanel(
     closePanel();
   };
 
-  const onError: SubmitErrorHandler<WorkExperienceForm> = (error) =>
+  const onError: SubmitErrorHandler<EducationForm> = (error) =>
     console.error(error);
 
   const currentYear = new Date().getFullYear();
@@ -134,22 +128,22 @@ export default function useWorkExperiencePanel(
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-6 sm:col-span-3">
           <TextField
-            label="Company name"
-            {...register("companyName", { required: true })}
+            label="School name"
+            {...register("schoolName", { required: true })}
           />
         </div>
 
         <div className="col-span-6 sm:col-span-3">
           <WebsiteField
-            label="Company website"
-            {...register("companyWebsiteUrl")}
+            label="School website"
+            {...register("schoolWebsiteUrl")}
           />
         </div>
 
         <div className="col-span-6">
           <TextField
-            label="Job title"
-            {...register("jobTitle", { required: true })}
+            label="Degree and field of study"
+            {...register("degree", { required: true })}
           />
         </div>
 
@@ -168,23 +162,14 @@ export default function useWorkExperiencePanel(
 
         <div className="col-span-6 sm:col-span-3">
           <MonthYearField
-            label="End date"
-            endYear={currentYear}
+            label="End date (or expected)"
+            endYear={currentYear + 8}
             monthProps={register("endDateMonth", {
-              required: !watch("isCurrentPosition"),
-              disabled: watch("isCurrentPosition"),
+              required: true,
             })}
             yearProps={register("endDateYear", {
-              required: !watch("isCurrentPosition"),
-              disabled: watch("isCurrentPosition"),
+              required: true,
             })}
-          />
-        </div>
-
-        <div className="col-span-6 flex -mt-2">
-          <CheckboxField
-            label="This is my current position"
-            {...register("isCurrentPosition")}
           />
         </div>
       </div>
