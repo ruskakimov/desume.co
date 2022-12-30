@@ -136,11 +136,11 @@ const PersonalDetailsSection: React.FC = () => {
           </div>
         </div>
 
-        <ShimmerOverlay loading={isLoading}>
-          <PrimaryButton type="submit" className="ml-auto block">
-            Save details
-          </PrimaryButton>
-        </ShimmerOverlay>
+        <div className="flex justify-end">
+          <ShimmerOverlay loading={isLoading}>
+            <PrimaryButton type="submit">Save details</PrimaryButton>
+          </ShimmerOverlay>
+        </div>
       </form>
     </>
   );
