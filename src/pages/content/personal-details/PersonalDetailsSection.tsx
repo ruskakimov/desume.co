@@ -144,7 +144,7 @@ const PersonalDetailsSection: React.FC = () => {
         <div className="flex justify-end">
           <ShimmerOverlay loading={isLoading}>
             <PrimaryButton type="submit" disabled={!isDirty}>
-              Save changes
+              Save details
             </PrimaryButton>
           </ShimmerOverlay>
         </div>
