@@ -1,7 +1,7 @@
 import { MonthYear } from "../interfaces/time";
 
 export interface Resume {
-  personalDetails: PersonalDetails | null;
+  personalDetails: PersonalDetails;
   workHistory: WorkExperience[];
   educationHistory: EducationExperience[];
   projectHistory: ProjectExperience[];
@@ -9,8 +9,8 @@ export interface Resume {
 }
 
 export interface PersonalDetails {
-  fullName: string | null;
-  headline: string | null;
+  fullName: string;
+  title: string;
   email: string | null;
   phoneNumber: string | null;
   websiteUrl: string | null;

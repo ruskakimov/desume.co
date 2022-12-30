@@ -16,7 +16,14 @@ export default function useResume(
         // TODO: Defensive programming
         const resume = snapshot.data() as Resume | undefined;
         setResume({
-          personalDetails: null,
+          personalDetails: resume?.personalDetails ?? {
+            fullName: "",
+            title: "",
+            email: null,
+            phoneNumber: null,
+            websiteUrl: null,
+            location: null,
+          },
           workHistory: resume?.workHistory ?? [],
           educationHistory: resume?.educationHistory ?? [],
           projectHistory: resume?.projectHistory ?? [],
