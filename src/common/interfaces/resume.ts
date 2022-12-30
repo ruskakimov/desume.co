@@ -11,10 +11,10 @@ export interface Resume {
 export interface PersonalDetails {
   fullName: string;
   headline: string;
-  email: string;
-  phoneNumber: string;
-  websiteUrl: string;
-  location: string;
+  email: string | null;
+  phoneNumber: string | null;
+  websiteUrl: string | null;
+  location: string | null;
 }
 
 export interface WorkExperience extends Experience {
