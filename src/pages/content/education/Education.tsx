@@ -9,6 +9,7 @@ import { EducationExperience } from "../../../common/interfaces/resume";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import useEducationPanel from "./useEducationPanel";
+import { AcademicCapIcon } from "@heroicons/react/24/outline";
 
 function useEducation(): [
   EducationExperience[] | null,
@@ -46,7 +47,11 @@ const Education: React.FC = () => {
 
     if (experiences.length === 0)
       return (
-        <EmptyStateAddButton label="Add education" onClick={addExperience} />
+        <EmptyStateAddButton
+          Icon={AcademicCapIcon}
+          label="Add education"
+          onClick={addExperience}
+        />
       );
 
     return experiences.map((experience, index) => (

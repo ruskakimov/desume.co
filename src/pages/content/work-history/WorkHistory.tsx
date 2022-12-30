@@ -9,6 +9,7 @@ import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
+import { BriefcaseIcon } from "@heroicons/react/24/outline";
 
 function useWorkHistory(): [
   WorkExperience[] | null,
@@ -47,6 +48,7 @@ const WorkHistory: React.FC = () => {
     if (experiences.length === 0)
       return (
         <EmptyStateAddButton
+          Icon={BriefcaseIcon}
           label="Add work experience"
           onClick={addExperience}
         />
