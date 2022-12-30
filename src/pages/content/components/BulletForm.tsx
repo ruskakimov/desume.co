@@ -1,6 +1,7 @@
 import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import SecondaryButton from "../../../common/components/SecondaryButton";
+import { withReplacedAt } from "../../../common/functions/array";
 import { BulletPoint } from "../../../common/interfaces/resume";
 
 export interface FormBullet extends BulletPoint {
@@ -34,9 +35,12 @@ const BulletForm: React.FC<BulletFormProps> = ({ bullets, onChange }) => {
               disabled={bullet.shouldDelete}
               value={bullet.text}
               onChange={(e) => {
-                const newBullets = bullets.slice();
-                newBullets[index] = { ...bullet, text: e.target.value };
-                onChange(newBullets);
+                onChange(
+                  withReplacedAt(bullets, index, {
+                    ...bullet,
+                    text: e.target.value,
+                  })
+                );
               }}
               autoFocus
             />
@@ -51,12 +55,12 @@ const BulletForm: React.FC<BulletFormProps> = ({ bullets, onChange }) => {
                 }
               )}
               onClick={() => {
-                const newBullets = bullets.slice();
-                newBullets[index] = {
-                  ...bullet,
-                  shouldDelete: !bullet.shouldDelete,
-                };
-                onChange(newBullets);
+                onChange(
+                  withReplacedAt(bullets, index, {
+                    ...bullet,
+                    shouldDelete: !bullet.shouldDelete,
+                  })
+                );
               }}
             >
               <MinusCircleIcon className="h-5 w-5" aria-hidden="true" />
