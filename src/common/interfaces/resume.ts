@@ -9,8 +9,8 @@ export interface Resume {
 }
 
 export interface PersonalDetails {
-  fullName: string;
-  headline: string;
+  fullName: string | null;
+  headline: string | null;
   email: string | null;
   phoneNumber: string | null;
   websiteUrl: string | null;

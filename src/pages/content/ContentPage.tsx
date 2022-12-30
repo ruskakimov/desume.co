@@ -5,7 +5,7 @@ import Card from "../../common/components/Card";
 import useLocalState from "../../common/hooks/useLocalState";
 import Education from "./education/Education";
 import Projects from "./projects/Projects";
-import PersonalDetails from "./personal-details/PersonalDetails";
+import PersonalDetailsSection from "./personal-details/PersonalDetailsSection";
 
 interface TabItem {
   key: string;
@@ -17,7 +17,7 @@ const navigation: TabItem[] = [
   {
     key: "personal-details",
     name: "Personal details",
-    element: <PersonalDetails />,
+    element: <PersonalDetailsSection />,
   },
   {
     key: "work-history",

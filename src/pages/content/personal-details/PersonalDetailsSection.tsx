@@ -2,21 +2,21 @@ import React from "react";
 import { useContextResume } from "../../../AppShell";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
-import { WorkExperience } from "../../../common/interfaces/resume";
+import { PersonalDetails } from "../../../common/interfaces/resume";
 
-function useWorkHistory(): [
-  WorkExperience[] | null,
-  (experiences: WorkExperience[]) => void
+function usePersonalDetails(): [
+  PersonalDetails | null,
+  (details: PersonalDetails) => void
 ] {
   const [resume, setResume] = useContextResume();
   return [
-    resume?.workHistory ?? null,
-    (experiences) => setResume({ ...resume!, workHistory: experiences }),
+    resume?.personalDetails ?? null,
+    (details) => setResume({ ...resume!, personalDetails: details }),
   ];
 }
 
-const PersonalDetails: React.FC = () => {
-  const [experiences, setExperiences] = useWorkHistory();
+const PersonalDetailsSection: React.FC = () => {
+  const [details, setDetails] = usePersonalDetails();
 
   return (
     <>
@@ -76,4 +76,4 @@ const PersonalDetails: React.FC = () => {
   );
 };
 
-export default PersonalDetails;
+export default PersonalDetailsSection;
