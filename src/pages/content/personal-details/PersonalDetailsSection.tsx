@@ -4,6 +4,7 @@ import { useContextResume } from "../../../AppShell";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
 import PrimaryButton from "../../../common/components/PrimaryButton";
+import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import { PersonalDetails } from "../../../common/interfaces/resume";
 
 function usePersonalDetails(): [
@@ -56,6 +57,8 @@ const PersonalDetailsSection: React.FC = () => {
   const [details, setDetails] = usePersonalDetails();
   const { register, handleSubmit, reset } = useForm<PersonalDetailsForm>();
 
+  const isLoading = details === null;
+
   useEffect(() => {
     if (details) reset(convertDetailsToFormData(details));
   }, [details]);
@@ -79,51 +82,65 @@ const PersonalDetailsSection: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit, onError)}>
         <div className="mb-10 grid grid-cols-2 gap-6">
           <div className="col-span-full sm:col-span-1">
-            <TextField
-              label="Full name"
-              {...register("fullName", { required: true })}
-            />
+            <ShimmerOverlay loading={isLoading}>
+              <TextField
+                label="Full name"
+                {...register("fullName", { required: true })}
+              />
+            </ShimmerOverlay>
           </div>
 
           <div className="col-span-full sm:col-span-1">
-            <TextField
-              label="Title"
-              placeholder="Ex: Software Engineer"
-              {...register("title", { required: true })}
-            />
+            <ShimmerOverlay loading={isLoading}>
+              <TextField
+                label="Title"
+                placeholder="Ex: Software Engineer"
+                {...register("title", { required: true })}
+              />
+            </ShimmerOverlay>
           </div>
 
           <div className="col-span-full sm:col-span-1">
-            <TextField label="Email" {...register("email")} />
+            <ShimmerOverlay loading={isLoading}>
+              <TextField label="Email" {...register("email")} />
+            </ShimmerOverlay>
           </div>
 
           <div className="col-span-full sm:col-span-1">
-            <WebsiteField
-              label="Portfolio website"
-              {...register("websiteUrl")}
-            />
+            <ShimmerOverlay loading={isLoading}>
+              <WebsiteField
+                label="Portfolio website"
+                {...register("websiteUrl")}
+              />
+            </ShimmerOverlay>
           </div>
 
           <div className="col-span-full sm:col-span-1">
-            <TextField
-              label="Phone number"
-              placeholder="Ex: +1 250-555-0199"
-              {...register("phoneNumber")}
-            />
+            <ShimmerOverlay loading={isLoading}>
+              <TextField
+                label="Phone number"
+                placeholder="Ex: +1 250-555-0199"
+                {...register("phoneNumber")}
+              />
+            </ShimmerOverlay>
           </div>
 
           <div className="col-span-full sm:col-span-1">
-            <TextField
-              label="Location"
-              placeholder="Ex: Vancouver, Canada"
-              {...register("location")}
-            />
+            <ShimmerOverlay loading={isLoading}>
+              <TextField
+                label="Location"
+                placeholder="Ex: Vancouver, Canada"
+                {...register("location")}
+              />
+            </ShimmerOverlay>
           </div>
         </div>
 
-        <PrimaryButton type="submit" className="ml-auto block">
-          Save details
-        </PrimaryButton>
+        <ShimmerOverlay loading={isLoading}>
+          <PrimaryButton type="submit" className="ml-auto block">
+            Save details
+          </PrimaryButton>
+        </ShimmerOverlay>
       </form>
     </>
   );
