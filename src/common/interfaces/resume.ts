@@ -1,18 +1,20 @@
 import { MonthYear } from "../interfaces/time";
 
 export interface Resume {
-  personalDetails: {
-    fullName: string;
-    headline: string;
-    websiteUrl: string;
-    phoneNumber: string;
-    email: string;
-    location: string;
-  } | null;
+  personalDetails: PersonalDetails | null;
   workHistory: WorkExperience[];
   educationHistory: EducationExperience[];
   projectHistory: ProjectExperience[];
   skills: string[];
+}
+
+export interface PersonalDetails {
+  fullName: string;
+  headline: string;
+  email: string;
+  phoneNumber: string;
+  websiteUrl: string;
+  location: string;
 }
 
 export interface WorkExperience extends Experience {
