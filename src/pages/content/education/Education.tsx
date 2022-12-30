@@ -6,7 +6,7 @@ import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { EducationExperience } from "../../../common/interfaces/resume";
-import ExperienceCard from "../ExperienceCard";
+import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 
 function useEducation(): [

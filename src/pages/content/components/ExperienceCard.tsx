@@ -1,7 +1,7 @@
 import { Bars2Icon } from "@heroicons/react/24/outline";
-import Checkbox from "../../common/components/Checkbox";
-import EllipsisMenu from "../../common/components/EllipsisMenu";
-import { Experience } from "../../common/interfaces/resume";
+import Checkbox from "../../../common/components/Checkbox";
+import EllipsisMenu from "../../../common/components/EllipsisMenu";
+import { Experience } from "../../../common/interfaces/resume";
 import {
   closestCenter,
   DndContext,
@@ -19,7 +19,7 @@ import {
 import SortableItem from "./SortableItem";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import classNames from "classnames";
-import { monthYearToString } from "../../common/functions/time";
+import { monthYearToString } from "../../../common/functions/time";
 
 interface ExperienceCardProps {
   title: string;

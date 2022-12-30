@@ -1,6 +1,6 @@
 import PageHeader from "../../common/components/PageHeader";
 import WorkHistory from "./work-history/WorkHistory";
-import NavItem from "./NavItem";
+import NavItem from "./components/NavItem";
 import Card from "../../common/components/Card";
 import useLocalState from "../../common/hooks/useLocalState";
 import Education from "./education/Education";

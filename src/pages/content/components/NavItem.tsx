@@ -1,6 +1,6 @@
 import { Bars2Icon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import Checkbox from "../../common/components/Checkbox";
+import Checkbox from "../../../common/components/Checkbox";
 
 interface NavItemProps {
   label: string;
