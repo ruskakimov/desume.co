@@ -10,35 +10,36 @@ export interface Resume {
     location: string;
   } | null;
   workHistory: WorkExperience[];
-  educationHistory: Education[];
-  projectHistory: Project[];
+  educationHistory: EducationExperience[];
+  projectHistory: ProjectExperience[];
   skills: string[];
 }
 
-export interface WorkExperience {
+export interface WorkExperience extends Experience {
   companyName: string;
   companyWebsiteUrl: string | null;
   jobTitle: string;
+}
+
+export interface EducationExperience extends Experience {
+  schoolName: string;
+  schoolWebsiteUrl: string | null;
+  degree: string;
+
+  /**
+   * Expected end date if ongoing.
+   */
+  endDate: MonthYear;
+}
+
+export interface ProjectExperience extends Experience {
+  projectName: string;
+}
+
+export interface Experience {
   startDate: MonthYear;
   endDate: MonthYear | null;
   bulletPoints: BulletPoint[];
-  included: boolean;
-}
-
-export interface Education {
-  schoolName: string;
-  schoolWebsiteUrl: string;
-  degree: string;
-  startDate: MonthYear;
-  endDate: MonthYear;
-  included: boolean;
-}
-
-export interface Project {
-  projectName: string;
-  description: string;
-  startDate: MonthYear;
-  endDate: MonthYear;
   included: boolean;
 }
 

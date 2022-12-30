@@ -1,9 +1,7 @@
 import { Bars2Icon } from "@heroicons/react/24/outline";
-import Checkbox from "../../common/components/Checkbox";
-import EllipsisMenu from "../../common/components/EllipsisMenu";
-import useConfirmationDialog from "../../common/hooks/useConfirmationDialog";
-import { WorkExperience } from "../../common/interfaces/resume";
-import useWorkExperiencePanel from "./useWorkExperiencePanel";
+import Checkbox from "../../../common/components/Checkbox";
+import EllipsisMenu from "../../../common/components/EllipsisMenu";
+import { Experience } from "../../../common/interfaces/resume";
 import {
   closestCenter,
   DndContext,
@@ -21,24 +19,25 @@ import {
 import SortableItem from "./SortableItem";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import classNames from "classnames";
-import { monthYearToString } from "../../common/functions/time";
+import { monthYearToString } from "../../../common/functions/time";
 
-interface WorkHistoryCardProps {
-  experience: WorkExperience;
-  onChange: (experience: WorkExperience | null) => void;
+interface ExperienceCardProps {
+  title: string;
+  subtitle: string;
+  experience: Experience;
+  onChange: (experience: Experience) => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
+const ExperienceCard: React.FC<ExperienceCardProps> = ({
+  title,
+  subtitle,
   experience,
   onChange,
+  onEdit,
+  onDelete,
 }) => {
-  const [openEditExperiencePanel, editExperiencePanel] = useWorkExperiencePanel(
-    "Edit experience",
-    (editedExperience) => onChange(editedExperience)
-  );
-
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -66,13 +65,9 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
             />
           </div>
 
-          <span className="font-medium text-gray-900">
-            {experience.companyName}
-          </span>
+          <span className="font-medium text-gray-900">{title}</span>
 
-          <span className="font-normal text-gray-700">
-            {experience.jobTitle}
-          </span>
+          <span className="font-normal text-gray-700">{subtitle}</span>
 
           <span className="ml-auto font-normal text-gray-500">{`${start} – ${end}`}</span>
 
@@ -80,29 +75,11 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
             menuItems={[
               {
                 label: "Edit",
-                onClick: () => openEditExperiencePanel(experience),
+                onClick: onEdit,
               },
               {
                 label: "Delete",
-                onClick: async () => {
-                  if (
-                    await openConfirmationDialog({
-                      title: "Delete experience",
-                      body: (
-                        <p className="text-sm text-gray-500">
-                          Delete{" "}
-                          <b>
-                            {experience.jobTitle} at {experience.companyName}
-                          </b>
-                          ? This action cannot be undone.
-                        </p>
-                      ),
-                      action: "Delete",
-                    })
-                  ) {
-                    onChange(null);
-                  }
-                },
+                onClick: onDelete,
               },
             ]}
           />
@@ -167,11 +144,8 @@ const WorkHistoryCard: React.FC<WorkHistoryCardProps> = ({
           </SortableContext>
         </DndContext>
       </div>
-
-      {editExperiencePanel}
-      {confirmationDialog}
     </>
   );
 };
 
-export default WorkHistoryCard;
+export default ExperienceCard;

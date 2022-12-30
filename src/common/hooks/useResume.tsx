@@ -15,15 +15,13 @@ export default function useResume(
       .then((snapshot) => {
         // TODO: Defensive programming
         const resume = snapshot.data() as Resume | undefined;
-        setResume(
-          resume ?? {
-            personalDetails: null,
-            workHistory: [],
-            educationHistory: [],
-            projectHistory: [],
-            skills: [],
-          }
-        );
+        setResume({
+          personalDetails: null,
+          workHistory: resume?.workHistory ?? [],
+          educationHistory: resume?.educationHistory ?? [],
+          projectHistory: resume?.projectHistory ?? [],
+          skills: resume?.skills ?? [],
+        });
       })
       .catch((reason) => {
         console.error(reason);
