@@ -17,6 +17,11 @@ export interface TextOptions {
   letterSpacing: number;
 }
 
+export interface ReactOptions {
+  paintStyle: "stroke" | "fill";
+  fillColor: string;
+}
+
 /**
  * A wrapper around a 3rd party PDF document object that prevents tight coupling to 3rd party code.
  */
@@ -32,14 +37,18 @@ export class PDF {
     this.jsPdf.save(filename);
   }
 
-  drawBox(box: Box, paintStyle: "stroke" | "fill" = "stroke"): PDF {
-    this.jsPdf.rect(
-      box.topLeft.x,
-      box.topLeft.y,
-      box.size.width,
-      box.size.height,
-      paintStyle === "fill" ? "F" : "S"
-    );
+  drawBox(box: Box, options?: ReactOptions): PDF {
+    this.jsPdf
+      .saveGraphicsState()
+      .setFillColor(options?.fillColor ?? PDF.defaultColor)
+      .rect(
+        box.topLeft.x,
+        box.topLeft.y,
+        box.size.width,
+        box.size.height,
+        options?.paintStyle
+      )
+      .restoreGraphicsState();
     return this;
   }
 

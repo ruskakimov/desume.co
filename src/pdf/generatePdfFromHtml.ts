@@ -41,7 +41,11 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
 
   function renderRect(element: HTMLElement) {
     const elBox = pdfBoxFromDomRect(element.getBoundingClientRect());
-    doc.drawBox(elBox, "fill");
+    const styles = window.getComputedStyle(element);
+    doc.drawBox(elBox, {
+      paintStyle: "fill",
+      fillColor: styles.backgroundColor,
+    });
   }
 
   function renderTextNode(text: Text) {
