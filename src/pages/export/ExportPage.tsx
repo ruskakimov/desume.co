@@ -34,13 +34,13 @@ const ExportPage: React.FC = () => {
             width: a4SizeInPoints.width,
             height: a4SizeInPoints.height,
             margins: {
-              top: 48,
-              left: 64,
-              right: 64,
-              bottom: 48,
+              top: 50,
+              left: 100,
+              right: 100,
+              bottom: 50,
             },
             fontSizes: {
-              header: 14,
+              header: 12,
               body: 10,
             },
           }}

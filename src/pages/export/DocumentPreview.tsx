@@ -67,16 +67,23 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
                 : "Current";
 
               return (
-                <div className="my-8">
-                  <div className="flex" style={{ fontSize: headerFontSizePx }}>
+                <div style={{ marginTop: pointsToPx(16) }}>
+                  <div
+                    className="flex justify-between"
+                    style={{ fontSize: headerFontSizePx }}
+                  >
                     <label
                       className="font-bold"
                       style={{ marginRight: pointsToPx(6) }}
                     >
                       {experience.companyName}
                     </label>
+
+                    <label>{`${start} – ${end}`}</label>
+                  </div>
+
+                  <div className="italic" style={{ fontSize: bodyFontSizePx }}>
                     <label>{experience.jobTitle}</label>
-                    <label className="ml-auto">{`${start} – ${end}`}</label>
                   </div>
 
                   <ul style={{ fontSize: bodyFontSizePx }}>
