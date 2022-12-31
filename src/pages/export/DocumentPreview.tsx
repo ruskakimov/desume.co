@@ -82,8 +82,12 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
                     <label>{`${start} – ${end}`}</label>
                   </div>
 
-                  <div className="italic" style={{ fontSize: bodyFontSizePx }}>
-                    <label>{experience.jobTitle}</label>
+                  <div
+                    className="flex justify-between"
+                    style={{ fontSize: bodyFontSizePx }}
+                  >
+                    <label className="italic">{experience.jobTitle}</label>
+                    {/* <label>Kuala-Lumpur, Malaysia</label> */}
                   </div>
 
                   <ul style={{ fontSize: bodyFontSizePx }}>
