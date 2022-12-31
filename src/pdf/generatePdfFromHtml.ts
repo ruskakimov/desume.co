@@ -44,6 +44,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const styles = window.getComputedStyle(element);
     doc.drawBox(elBox, {
       paintStyle: "fill",
+      // TODO: Convert to hex (can be in rgba).
       fillColor: styles.backgroundColor,
     });
   }
