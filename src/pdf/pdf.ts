@@ -46,7 +46,7 @@ export class PDF {
         box.topLeft.y,
         box.size.width,
         box.size.height,
-        options?.paintStyle
+        options?.paintStyle === "fill" ? "F" : "S"
       )
       .restoreGraphicsState();
     return this;
