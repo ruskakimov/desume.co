@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import logo from "./assets/logo.svg";
-import { useSignOut } from "react-firebase-hooks/auth";
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
 import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 import useResume from "./common/hooks/useResume";
@@ -24,7 +24,8 @@ const userNavigation = [
 ];
 
 export default function AppShell() {
-  const resumeContext = useResume(firebaseAuth.currentUser);
+  const [user] = useAuthState(firebaseAuth);
+  const resumeContext = useResume(user ?? null);
 
   const [signOut] = useSignOut(firebaseAuth);
 
