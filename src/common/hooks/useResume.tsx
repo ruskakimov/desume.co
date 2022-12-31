@@ -1,50 +1,58 @@
+import { User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { firestore } from "../../App";
 import { Resume } from "../interfaces/resume";
 
+function getResumeDocRef(uid: string) {
+  return doc(firestore, "resumes", uid);
+}
+
 export default function useResume(
-  uid: string
+  user: User | null
 ): [Resume | null, (updatedResume: Resume) => void] {
   const [resume, setResume] = useState<Resume | null>(null);
-  const resumeDocRef = doc(firestore, "resumes", uid);
 
   useEffect(() => {
-    getDoc(resumeDocRef)
-      .then((snapshot) => {
-        // TODO: Defensive programming
-        const resume = snapshot.data() as Resume | undefined;
-        setResume({
-          personalDetails: resume?.personalDetails ?? {
-            fullName: "",
-            title: "",
-            email: null,
-            phoneNumber: null,
-            websiteUrl: null,
-            location: null,
-          },
-          workHistory: resume?.workHistory ?? [],
-          educationHistory: resume?.educationHistory ?? [],
-          projectHistory: resume?.projectHistory ?? [],
-          skills: resume?.skills ?? [],
+    if (user) {
+      getDoc(getResumeDocRef(user.uid))
+        .then((snapshot) => {
+          // TODO: Defensive programming
+          const resume = snapshot.data() as Resume | undefined;
+          setResume({
+            personalDetails: resume?.personalDetails ?? {
+              fullName: user.displayName ?? "",
+              title: "",
+              email: user.email,
+              phoneNumber: user.phoneNumber,
+              websiteUrl: "",
+              location: "",
+            },
+            workHistory: resume?.workHistory ?? [],
+            educationHistory: resume?.educationHistory ?? [],
+            projectHistory: resume?.projectHistory ?? [],
+            skills: resume?.skills ?? [],
+          });
+        })
+        .catch((reason) => {
+          console.error(reason);
+          toast.error("Failed to load data.");
         });
-      })
-      .catch((reason) => {
-        console.error(reason);
-        toast.error("Failed to load data.");
-      });
-  }, []);
+    }
+  }, [user?.uid]);
 
   const updateResume = (updatedResume: Resume) => {
     setResume(updatedResume);
 
-    // Warning: Doesn't resolve when offline.
-    // Warning: Writes are queued when offline, which can potentially send a lot of redundant writes at once.
-    setDoc(resumeDocRef, updatedResume).catch((reason) => {
-      console.error(reason);
-      toast.error("Failed to save data.");
-    });
+    if (user) {
+      // Warning: Doesn't resolve when offline.
+      // Warning: Writes are queued when offline, which can potentially send a lot of redundant writes at once.
+      setDoc(getResumeDocRef(user.uid), updatedResume).catch((reason) => {
+        console.error(reason);
+        toast.error("Failed to save data.");
+      });
+    }
   };
 
   return [resume, updateResume];

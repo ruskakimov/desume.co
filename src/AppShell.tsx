@@ -24,8 +24,7 @@ const userNavigation = [
 ];
 
 export default function AppShell() {
-  // Note: can assume currentUser to be available when inside AppShell
-  const resumeContext = useResume(firebaseAuth.currentUser!.uid);
+  const resumeContext = useResume(firebaseAuth.currentUser);
 
   const [signOut] = useSignOut(firebaseAuth);
 
