@@ -60,21 +60,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             WebkitFontSmoothing: "auto",
           }}
         >
-          <div
-            className={classNames(rectMarkerClass, "bg-black")}
-            style={{ height: pointsToPx(0.6) }}
-          />
-          <p
-            className="font-bold"
-            style={{
-              fontSize: pointsToPx(8),
-              marginTop: pointsToPx(4),
-              marginBottom: pointsToPx(8),
-              letterSpacing: pointsToPx(0.5),
-            }}
-          >
-            WORK HISTORY
-          </p>
+          <SectionHeader pointsToPx={pointsToPx} text="Work history" />
 
           {resume?.workHistory
             .filter((experience) => experience.included)
@@ -136,5 +122,30 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     );
   }
 );
+
+const SectionHeader: React.FC<{
+  pointsToPx: (points: number) => number;
+  text: string;
+}> = ({ pointsToPx, text }) => {
+  return (
+    <>
+      <div
+        className={classNames(rectMarkerClass, "bg-black")}
+        style={{ height: pointsToPx(0.6) }}
+      />
+      <p
+        className="font-bold"
+        style={{
+          fontSize: pointsToPx(8),
+          marginTop: pointsToPx(4),
+          marginBottom: pointsToPx(8),
+          letterSpacing: pointsToPx(0.5),
+        }}
+      >
+        {text.toUpperCase()}
+      </p>
+    </>
+  );
+};
 
 export default DocumentPreview;
