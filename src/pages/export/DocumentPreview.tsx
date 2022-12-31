@@ -38,6 +38,8 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       return (points / format.width) * containerSize.width;
     }
 
+    const { email, phoneNumber, websiteUrl, location } = resume.personalDetails;
+
     return (
       <div ref={containerRef}>
         <div
@@ -53,12 +55,28 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             WebkitFontSmoothing: "auto",
           }}
         >
-          <h1 style={{ fontSize: pointsToPx(16) }}>
-            {resume.personalDetails.fullName}
-          </h1>
-          <h2 style={{ fontSize: pointsToPx(format.fontSizes.header) }}>
-            {resume.personalDetails.title}
-          </h2>
+          <div className="flex justify-between">
+            <div>
+              <h1 style={{ fontSize: pointsToPx(16) }}>
+                {resume.personalDetails.fullName}
+              </h1>
+              <h2 style={{ fontSize: pointsToPx(format.fontSizes.header) }}>
+                {resume.personalDetails.title}
+              </h2>
+            </div>
+
+            <ul
+              className="text-right"
+              style={{ fontSize: pointsToPx(format.fontSizes.body) }}
+            >
+              {[email, phoneNumber, websiteUrl, location]
+                .map((text) => text.trim())
+                .filter((text) => text.length > 0)
+                .map((text) => (
+                  <li>{text}</li>
+                ))}
+            </ul>
+          </div>
 
           <SectionHeader pointsToPx={pointsToPx} text="Work history" />
           {resume.workHistory
