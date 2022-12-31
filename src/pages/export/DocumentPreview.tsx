@@ -47,7 +47,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       <div ref={containerRef}>
         <div
           ref={ref}
-          className="bg-white shadow"
+          className="bg-white shadow text-black"
           style={{
             aspectRatio: aspectRatio,
             fontFamily: "Times",
