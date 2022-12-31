@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React from "react";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
-import { Resume } from "../../common/interfaces/resume";
+import { Experience, Resume } from "../../common/interfaces/resume";
 import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
 
 interface DocumentPreviewProps {
@@ -62,59 +62,17 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         >
           <SectionHeader pointsToPx={pointsToPx} text="Work history" />
 
-          {resume?.workHistory
+          {resume.workHistory
             .filter((experience) => experience.included)
             .map((experience) => {
-              const start = monthYearToString(experience.startDate);
-              const end = experience.endDate
-                ? monthYearToString(experience.endDate)
-                : "Current";
-
               return (
-                <div style={{ marginBottom: pointsToPx(16) }}>
-                  <div
-                    className="flex justify-between"
-                    style={{ fontSize: headerFontSizePx }}
-                  >
-                    <label
-                      className="font-bold"
-                      style={{ marginRight: pointsToPx(6) }}
-                    >
-                      {experience.companyName}
-                    </label>
-
-                    <label>{`${start} – ${end}`}</label>
-                  </div>
-
-                  <div
-                    className="flex justify-between"
-                    style={{ fontSize: bodyFontSizePx }}
-                  >
-                    <label className="italic">{experience.jobTitle}</label>
-                    {/* <label>Kuala-Lumpur, Malaysia</label> */}
-                  </div>
-
-                  <ul style={{ fontSize: bodyFontSizePx }}>
-                    {experience.bulletPoints
-                      .filter((bullet) => bullet.included)
-                      .map((bullet) => (
-                        <li
-                          key={bullet.id}
-                          className="flex"
-                          style={{ marginTop: pointsToPx(4) }}
-                        >
-                          <span
-                            style={{
-                              marginRight: pointsToPx(8),
-                            }}
-                          >
-                            &bull;
-                          </span>
-                          {bullet.text}
-                        </li>
-                      ))}
-                  </ul>
-                </div>
+                <ExperienceItem
+                  title={experience.companyName}
+                  subtitle={experience.jobTitle}
+                  experience={experience}
+                  format={format}
+                  pointsToPx={pointsToPx}
+                />
               );
             })}
         </div>
@@ -145,6 +103,63 @@ const SectionHeader: React.FC<{
         {text.toUpperCase()}
       </p>
     </>
+  );
+};
+
+const ExperienceItem: React.FC<{
+  pointsToPx: (points: number) => number;
+  title: string;
+  subtitle: string;
+  experience: Experience;
+  format: DocumentFormat;
+}> = ({ pointsToPx, title, subtitle, experience, format }) => {
+  const start = monthYearToString(experience.startDate);
+  const end = experience.endDate
+    ? monthYearToString(experience.endDate)
+    : "Current";
+
+  return (
+    <div style={{ marginBottom: pointsToPx(16) }}>
+      <div
+        className="flex justify-between"
+        style={{ fontSize: pointsToPx(format.fontSizes.header) }}
+      >
+        <label className="font-bold" style={{ marginRight: pointsToPx(6) }}>
+          {title}
+        </label>
+
+        <label>{`${start} – ${end}`}</label>
+      </div>
+
+      <div
+        className="flex justify-between"
+        style={{ fontSize: pointsToPx(format.fontSizes.body) }}
+      >
+        <label className="italic">{subtitle}</label>
+        {/* <label>Kuala-Lumpur, Malaysia</label> */}
+      </div>
+
+      <ul style={{ fontSize: pointsToPx(format.fontSizes.body) }}>
+        {experience.bulletPoints
+          .filter((bullet) => bullet.included)
+          .map((bullet) => (
+            <li
+              key={bullet.id}
+              className="flex"
+              style={{ marginTop: pointsToPx(4) }}
+            >
+              <span
+                style={{
+                  marginRight: pointsToPx(8),
+                }}
+              >
+                &bull;
+              </span>
+              {bullet.text}
+            </li>
+          ))}
+      </ul>
+    </div>
   );
 };
 
