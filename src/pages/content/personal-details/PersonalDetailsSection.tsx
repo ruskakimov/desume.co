@@ -59,7 +59,7 @@ const PersonalDetailsSection: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = useForm<PersonalDetailsForm>();
 
   const isLoading = details === null;
@@ -90,7 +90,10 @@ const PersonalDetailsSection: React.FC = () => {
             <ShimmerOverlay loading={isLoading}>
               <TextField
                 label="Full name"
-                {...register("fullName", { required: true })}
+                error={errors.fullName?.message}
+                {...register("fullName", {
+                  required: "Full name is required.",
+                })}
               />
             </ShimmerOverlay>
           </div>
@@ -100,7 +103,8 @@ const PersonalDetailsSection: React.FC = () => {
               <TextField
                 label="Title"
                 placeholder="Ex: Software Engineer"
-                {...register("title", { required: true })}
+                error={errors.title?.message}
+                {...register("title", { required: "Title is required." })}
               />
             </ShimmerOverlay>
           </div>
