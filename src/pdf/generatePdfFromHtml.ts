@@ -5,6 +5,8 @@ import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
 import { textNodeByLines, textNodeLineRects } from "./text/textNodeUtils";
 
+export const rectMarkerClass = "render-this-rect";
+
 /**
  * Generates a single-page PDF document from an HTML element.
  */
@@ -24,12 +26,22 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     if (node.childNodes.length === 0) {
       if (node instanceof Text) {
         renderTextNode(node);
+      } else if (
+        node instanceof HTMLElement &&
+        node.classList.contains(rectMarkerClass)
+      ) {
+        renderRect(node);
       }
       return;
     }
     Array.from(node.childNodes).forEach((child) => {
       renderNode(child);
     });
+  }
+
+  function renderRect(element: HTMLElement) {
+    const elBox = pdfBoxFromDomRect(element.getBoundingClientRect());
+    doc.drawBox(elBox, "fill");
   }
 
   function renderTextNode(text: Text) {

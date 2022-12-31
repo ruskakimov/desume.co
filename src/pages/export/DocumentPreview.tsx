@@ -1,7 +1,9 @@
+import classNames from "classnames";
 import React from "react";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
 import { Resume } from "../../common/interfaces/resume";
+import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
 
 interface DocumentPreviewProps {
   resume: Resume;
@@ -58,7 +60,10 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             WebkitFontSmoothing: "auto",
           }}
         >
-          <div className="bg-black" style={{ height: pointsToPx(1) }} />
+          <div
+            className={classNames(rectMarkerClass, "bg-black")}
+            style={{ height: pointsToPx(1) }}
+          />
           <p
             className="font-bold"
             style={{

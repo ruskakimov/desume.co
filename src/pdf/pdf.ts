@@ -32,12 +32,13 @@ export class PDF {
     this.jsPdf.save(filename);
   }
 
-  drawBox(box: Box): PDF {
+  drawBox(box: Box, paintStyle: "stroke" | "fill" = "stroke"): PDF {
     this.jsPdf.rect(
       box.topLeft.x,
       box.topLeft.y,
       box.size.width,
-      box.size.height
+      box.size.height,
+      paintStyle === "fill" ? "F" : "S"
     );
     return this;
   }
