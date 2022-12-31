@@ -24,7 +24,7 @@ function convertFormDataToExperience(
 ): WorkExperience {
   return {
     companyName: formData.companyName,
-    companyWebsiteUrl: formData.companyWebsiteUrl ?? null,
+    companyWebsiteUrl: formData.companyWebsiteUrl ?? "",
     jobTitle: formData.jobTitle,
     startDate: {
       month: parseInt(formData.startDateMonth),

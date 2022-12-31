@@ -22,7 +22,7 @@ function convertFormDataToExperience(
 ): EducationExperience {
   return {
     schoolName: formData.schoolName,
-    schoolWebsiteUrl: formData.schoolWebsiteUrl ?? null,
+    schoolWebsiteUrl: formData.schoolWebsiteUrl ?? "",
     degree: formData.degree,
     startDate: {
       month: parseInt(formData.startDateMonth),

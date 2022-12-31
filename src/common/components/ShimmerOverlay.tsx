@@ -1,10 +1,15 @@
-const ShimmerOverlay: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+import classNames from "classnames";
+
+const ShimmerOverlay: React.FC<{
+  loading?: boolean;
+  children: React.ReactNode;
+}> = ({ loading = true, children }) => {
   return (
     <div className="relative">
-      <div className="opacity-0">{children}</div>
-      <div className="absolute inset-0 shimmer bg-gray-200 rounded-md animate-pulse"></div>
+      <div className={classNames({ "opacity-0": loading })}>{children}</div>
+      {loading && (
+        <div className="absolute inset-0 shimmer bg-gray-200 rounded-md animate-pulse" />
+      )}
     </div>
   );
 };

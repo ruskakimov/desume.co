@@ -21,7 +21,7 @@ interface ProjectForm {
 function convertFormDataToExperience(formData: ProjectForm): ProjectExperience {
   return {
     projectName: formData.projectName,
-    projectWebsiteUrl: formData.projectWebsiteUrl ?? null,
+    projectWebsiteUrl: formData.projectWebsiteUrl ?? "",
     startDate: {
       month: parseInt(formData.startDateMonth),
       year: parseInt(formData.startDateYear),

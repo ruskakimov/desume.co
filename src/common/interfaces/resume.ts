@@ -1,29 +1,31 @@
 import { MonthYear } from "../interfaces/time";
 
 export interface Resume {
-  personalDetails: {
-    fullName: string;
-    headline: string;
-    websiteUrl: string;
-    phoneNumber: string;
-    email: string;
-    location: string;
-  } | null;
+  personalDetails: PersonalDetails;
   workHistory: WorkExperience[];
   educationHistory: EducationExperience[];
   projectHistory: ProjectExperience[];
   skills: string[];
 }
 
+export interface PersonalDetails {
+  fullName: string;
+  title: string;
+  email: string;
+  phoneNumber: string;
+  websiteUrl: string;
+  location: string;
+}
+
 export interface WorkExperience extends Experience {
   companyName: string;
-  companyWebsiteUrl: string | null;
+  companyWebsiteUrl: string;
   jobTitle: string;
 }
 
 export interface EducationExperience extends Experience {
   schoolName: string;
-  schoolWebsiteUrl: string | null;
+  schoolWebsiteUrl: string;
   degree: string;
 
   /**
@@ -34,7 +36,7 @@ export interface EducationExperience extends Experience {
 
 export interface ProjectExperience extends Experience {
   projectName: string;
-  projectWebsiteUrl: string | null;
+  projectWebsiteUrl: string;
 }
 
 export interface Experience {
