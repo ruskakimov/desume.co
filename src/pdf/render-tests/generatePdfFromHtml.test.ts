@@ -28,22 +28,22 @@ describe("generatePdfFromHtml correctly renders", () => {
 
   test("a single line of text", async () => {
     const diff = await outputAndExpectedDiff("1-single-line-of-text", page);
-    expect(diff).toEqual(0);
+    expect(diff).toBeLessThan(0.01);
   });
 
   test("multiple lines of text", async () => {
     const diff = await outputAndExpectedDiff("2-multiple-lines-of-text", page);
-    expect(diff).toEqual(0);
+    expect(diff).toBeLessThan(0.01);
   });
 
   test("rich text", async () => {
     const diff = await outputAndExpectedDiff("3-rich-text", page);
-    expect(diff).toEqual(0);
+    expect(diff).toBeLessThan(0.01);
   });
 
   test("with scaled container", async () => {
     const diff = await outputAndExpectedDiff("4-scaled-container", page);
-    expect(diff).toEqual(0);
+    expect(diff).toBeLessThan(0.01);
   });
 });
 

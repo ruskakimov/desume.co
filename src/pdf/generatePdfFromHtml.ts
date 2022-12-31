@@ -15,7 +15,9 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
 
   const pdfBoxFromDomRect = (domRect: DOMRect) => {
-    return boxFromDomRect(domRect).relativeTo(pageBox).scaledBy(pdfScalar);
+    return boxFromDomRect(domRect)
+      .relativeTo(pageBox)
+      .scaleCoordinateSystemBy(pdfScalar);
   };
 
   function renderNode(node: Node) {
