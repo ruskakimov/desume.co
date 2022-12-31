@@ -20,7 +20,10 @@ interface DocumentFormat {
     right: number;
     bottom: number;
   };
-  bodyFontSize: number;
+  fontSizes: {
+    header: number;
+    body: number;
+  };
 }
 
 const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
@@ -37,7 +40,8 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     const marginLeftPx = pointsToPx(format.margins.left);
     const marginRightPx = pointsToPx(format.margins.right);
     const marginBottomPx = pointsToPx(format.margins.bottom);
-    const bodyFontSizePx = pointsToPx(format.bodyFontSize);
+    const headerFontSizePx = pointsToPx(format.fontSizes.header);
+    const bodyFontSizePx = pointsToPx(format.fontSizes.body);
 
     return (
       <div ref={containerRef}>
@@ -64,11 +68,11 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
               return (
                 <div className="my-8">
-                  <div
-                    className="flex gap-1"
-                    style={{ fontSize: bodyFontSizePx }}
-                  >
-                    <label className="font-bold">
+                  <div className="flex" style={{ fontSize: headerFontSizePx }}>
+                    <label
+                      className="font-bold"
+                      style={{ marginRight: pointsToPx(6) }}
+                    >
                       {experience.companyName}
                     </label>
                     <label>{experience.jobTitle}</label>

@@ -39,7 +39,10 @@ const ExportPage: React.FC = () => {
               right: 64,
               bottom: 48,
             },
-            bodyFontSize: 12,
+            fontSizes: {
+              header: 14,
+              body: 10,
+            },
           }}
         />
       )}
