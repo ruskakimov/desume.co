@@ -83,8 +83,20 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
                     {experience.bulletPoints
                       .filter((bullet) => bullet.included)
                       .map((bullet) => (
-                        <li key={bullet.id} className="my-1">
-                          &bull; {bullet.text}
+                        <li
+                          key={bullet.id}
+                          className="flex"
+                          style={{ marginTop: pointsToPx(4) }}
+                        >
+                          <span
+                            style={{
+                              marginLeft: pointsToPx(4),
+                              marginRight: pointsToPx(8),
+                            }}
+                          >
+                            &bull;
+                          </span>
+                          {bullet.text}
                         </li>
                       ))}
                   </ul>
