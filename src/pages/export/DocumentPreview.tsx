@@ -61,7 +61,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           }}
         >
           <SectionHeader pointsToPx={pointsToPx} text="Work history" />
-
           {resume.workHistory
             .filter((experience) => experience.included)
             .map((experience) => {
@@ -69,6 +68,35 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
                 <ExperienceItem
                   title={experience.companyName}
                   subtitle={experience.jobTitle}
+                  experience={experience}
+                  format={format}
+                  pointsToPx={pointsToPx}
+                />
+              );
+            })}
+
+          <SectionHeader pointsToPx={pointsToPx} text="Education" />
+          {resume.educationHistory
+            .filter((experience) => experience.included)
+            .map((experience) => {
+              return (
+                <ExperienceItem
+                  title={experience.schoolName}
+                  subtitle={experience.degree}
+                  experience={experience}
+                  format={format}
+                  pointsToPx={pointsToPx}
+                />
+              );
+            })}
+
+          <SectionHeader pointsToPx={pointsToPx} text="Projects" />
+          {resume.projectHistory
+            .filter((experience) => experience.included)
+            .map((experience) => {
+              return (
+                <ExperienceItem
+                  title={experience.projectName}
                   experience={experience}
                   format={format}
                   pointsToPx={pointsToPx}
@@ -89,7 +117,7 @@ const SectionHeader: React.FC<{
     <>
       <div
         className={classNames(rectMarkerClass, "bg-black")}
-        style={{ height: pointsToPx(0.6) }}
+        style={{ marginTop: pointsToPx(20), height: pointsToPx(0.6) }}
       />
       <p
         className="font-bold"
@@ -109,7 +137,7 @@ const SectionHeader: React.FC<{
 const ExperienceItem: React.FC<{
   pointsToPx: (points: number) => number;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   experience: Experience;
   format: DocumentFormat;
 }> = ({ pointsToPx, title, subtitle, experience, format }) => {
@@ -131,13 +159,15 @@ const ExperienceItem: React.FC<{
         <label>{`${start} – ${end}`}</label>
       </div>
 
-      <div
-        className="flex justify-between"
-        style={{ fontSize: pointsToPx(format.fontSizes.body) }}
-      >
-        <label className="italic">{subtitle}</label>
-        {/* <label>Kuala-Lumpur, Malaysia</label> */}
-      </div>
+      {subtitle && (
+        <div
+          className="flex justify-between"
+          style={{ fontSize: pointsToPx(format.fontSizes.body) }}
+        >
+          <label className="italic">{subtitle}</label>
+          {/* <label>Kuala-Lumpur, Malaysia</label> */}
+        </div>
+      )}
 
       <ul style={{ fontSize: pointsToPx(format.fontSizes.body) }}>
         {experience.bulletPoints
