@@ -28,6 +28,7 @@ const ExportPage: React.FC = () => {
 
       {resume && (
         <DocumentPreview
+          ref={docPreviewRef}
           resume={resume}
           format={{
             width: a4SizeInPoints.width,
