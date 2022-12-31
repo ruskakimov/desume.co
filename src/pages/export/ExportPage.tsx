@@ -35,8 +35,8 @@ const ExportPage: React.FC = () => {
             height: a4SizeInPoints.height,
             margins: {
               top: 48,
-              left: 48,
-              right: 48,
+              left: 64,
+              right: 64,
               bottom: 48,
             },
             bodyFontSize: 12,
