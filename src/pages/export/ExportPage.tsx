@@ -10,20 +10,20 @@ const ExportPage: React.FC = () => {
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div>
-      <h1>Export</h1>
-
-      <PrimaryButton
-        className="my-4"
-        onClick={() => {
-          const el = docPreviewRef.current;
-          if (el) {
-            generatePdfFromHtml(el).save();
-          }
-        }}
-      >
-        Download PDF
-      </PrimaryButton>
+    <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
+      <div>
+        <PrimaryButton
+          className="w-full"
+          onClick={() => {
+            const el = docPreviewRef.current;
+            if (el) {
+              generatePdfFromHtml(el).save();
+            }
+          }}
+        >
+          Download PDF
+        </PrimaryButton>
+      </div>
 
       {resume && <DocumentPreview resume={resume} />}
     </div>
