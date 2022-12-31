@@ -38,13 +38,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       return (points / format.width) * containerSize.width;
     }
 
-    const marginTopPx = pointsToPx(format.margins.top);
-    const marginLeftPx = pointsToPx(format.margins.left);
-    const marginRightPx = pointsToPx(format.margins.right);
-    const marginBottomPx = pointsToPx(format.margins.bottom);
-    const headerFontSizePx = pointsToPx(format.fontSizes.header);
-    const bodyFontSizePx = pointsToPx(format.fontSizes.body);
-
     return (
       <div ref={containerRef}>
         <div
@@ -53,13 +46,20 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           style={{
             aspectRatio: aspectRatio,
             fontFamily: "Times",
-            paddingTop: marginTopPx,
-            paddingLeft: marginLeftPx,
-            paddingRight: marginRightPx,
-            paddingBottom: marginBottomPx,
+            paddingTop: pointsToPx(format.margins.top),
+            paddingLeft: pointsToPx(format.margins.left),
+            paddingRight: pointsToPx(format.margins.right),
+            paddingBottom: pointsToPx(format.margins.bottom),
             WebkitFontSmoothing: "auto",
           }}
         >
+          <h1 style={{ fontSize: pointsToPx(16) }}>
+            {resume.personalDetails.fullName}
+          </h1>
+          <h2 style={{ fontSize: pointsToPx(format.fontSizes.header) }}>
+            {resume.personalDetails.title}
+          </h2>
+
           <SectionHeader pointsToPx={pointsToPx} text="Work history" />
           {resume.workHistory
             .filter((experience) => experience.included)
