@@ -24,8 +24,8 @@ export default function useResume(
             personalDetails: resume?.personalDetails ?? {
               fullName: user.displayName ?? "",
               title: "",
-              email: user.email,
-              phoneNumber: user.phoneNumber,
+              email: user.email ?? "",
+              phoneNumber: user.phoneNumber ?? "",
               websiteUrl: "",
               location: "",
             },

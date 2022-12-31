@@ -11,21 +11,21 @@ export interface Resume {
 export interface PersonalDetails {
   fullName: string;
   title: string;
-  email: string | null;
-  phoneNumber: string | null;
-  websiteUrl: string | null;
-  location: string | null;
+  email: string;
+  phoneNumber: string;
+  websiteUrl: string;
+  location: string;
 }
 
 export interface WorkExperience extends Experience {
   companyName: string;
-  companyWebsiteUrl: string | null;
+  companyWebsiteUrl: string;
   jobTitle: string;
 }
 
 export interface EducationExperience extends Experience {
   schoolName: string;
-  schoolWebsiteUrl: string | null;
+  schoolWebsiteUrl: string;
   degree: string;
 
   /**
@@ -36,7 +36,7 @@ export interface EducationExperience extends Experience {
 
 export interface ProjectExperience extends Experience {
   projectName: string;
-  projectWebsiteUrl: string | null;
+  projectWebsiteUrl: string;
 }
 
 export interface Experience {

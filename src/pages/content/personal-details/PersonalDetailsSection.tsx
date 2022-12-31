@@ -46,10 +46,10 @@ function convertFormDataToDetails(
   return {
     fullName: formData.fullName,
     title: formData.title,
-    email: formData.email ?? null,
-    phoneNumber: formData.phoneNumber ?? null,
-    websiteUrl: formData.websiteUrl ?? null,
-    location: formData.location ?? null,
+    email: formData.email ?? "",
+    phoneNumber: formData.phoneNumber ?? "",
+    websiteUrl: formData.websiteUrl ?? "",
+    location: formData.location ?? "",
   };
 }
 
