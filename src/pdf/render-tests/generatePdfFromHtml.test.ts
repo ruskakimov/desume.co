@@ -40,6 +40,11 @@ describe("generatePdfFromHtml correctly renders", () => {
     const diff = await outputAndExpectedDiff("3-rich-text", page);
     expect(diff).toEqual(0);
   });
+
+  test("with scaled container", async () => {
+    const diff = await outputAndExpectedDiff("4-scaled-container", page);
+    expect(diff).toEqual(0);
+  });
 });
 
 async function outputAndExpectedDiff(
