@@ -90,7 +90,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
                         >
                           <span
                             style={{
-                              marginLeft: pointsToPx(4),
                               marginRight: pointsToPx(8),
                             }}
                           >
