@@ -62,7 +62,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         >
           <div
             className={classNames(rectMarkerClass, "bg-black")}
-            style={{ height: pointsToPx(1) }}
+            style={{ height: pointsToPx(0.6) }}
           />
           <p
             className="font-bold"
