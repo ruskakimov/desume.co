@@ -5,19 +5,25 @@ import { Resume } from "../../common/interfaces/resume";
 
 interface DocumentPreviewProps {
   resume: Resume;
+  format: DocumentFormat;
+}
+
+interface DocumentFormat {
+  widthPt: number;
+  heightPt: number;
+  bodyFontSizePt: number;
 }
 
 const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
-  ({ resume }, ref) => {
-    const { width, height } = a4SizeInPoints;
+  ({ resume, format }, ref) => {
+    const aspectRatio = format.widthPt / format.heightPt;
 
     return (
       <div
         ref={ref}
         className="bg-white shadow p-8"
         style={{
-          width,
-          height,
+          aspectRatio: aspectRatio,
           fontFamily: "Times",
           WebkitFontSmoothing: "auto",
         }}

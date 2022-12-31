@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useContextResume } from "../../AppShell";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
+import { a4SizeInPoints } from "../../pdf/render-tests/build/common/constants/sizes";
 import DocumentPreview from "./DocumentPreview";
 
 const ExportPage: React.FC = () => {
@@ -10,7 +11,7 @@ const ExportPage: React.FC = () => {
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
+    <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
       <div>
         <PrimaryButton
           className="w-full"
@@ -25,7 +26,16 @@ const ExportPage: React.FC = () => {
         </PrimaryButton>
       </div>
 
-      {resume && <DocumentPreview resume={resume} />}
+      {resume && (
+        <DocumentPreview
+          resume={resume}
+          format={{
+            widthPt: a4SizeInPoints.width,
+            heightPt: a4SizeInPoints.height,
+            bodyFontSizePt: 14,
+          }}
+        />
+      )}
     </div>
   );
 };
