@@ -30,9 +30,15 @@ const ExportPage: React.FC = () => {
         <DocumentPreview
           resume={resume}
           format={{
-            widthPt: a4SizeInPoints.width,
-            heightPt: a4SizeInPoints.height,
-            bodyFontSizePt: 14,
+            width: a4SizeInPoints.width,
+            height: a4SizeInPoints.height,
+            margins: {
+              top: 48,
+              left: 48,
+              right: 48,
+              bottom: 48,
+            },
+            bodyFontSize: 12,
           }}
         />
       )}

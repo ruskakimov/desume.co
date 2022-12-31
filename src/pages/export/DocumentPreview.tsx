@@ -1,6 +1,6 @@
 import React from "react";
-import { a4SizeInPoints } from "../../common/constants/sizes";
 import { monthYearToString } from "../../common/functions/time";
+import useElementSize from "../../common/hooks/useElementSize";
 import { Resume } from "../../common/interfaces/resume";
 
 interface DocumentPreviewProps {
@@ -8,54 +8,86 @@ interface DocumentPreviewProps {
   format: DocumentFormat;
 }
 
+/**
+ * All measurements are in points.
+ */
 interface DocumentFormat {
-  widthPt: number;
-  heightPt: number;
-  bodyFontSizePt: number;
+  width: number;
+  height: number;
+  margins: {
+    top: number;
+    left: number;
+    right: number;
+    bottom: number;
+  };
+  bodyFontSize: number;
 }
 
 const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
   ({ resume, format }, ref) => {
-    const aspectRatio = format.widthPt / format.heightPt;
+    const aspectRatio = format.width / format.height;
+
+    const [containerRef, containerSize] = useElementSize();
+
+    function pointsToPx(points: number): number {
+      return (points / format.width) * containerSize.width;
+    }
+
+    const marginTopPx = pointsToPx(format.margins.top);
+    const marginLeftPx = pointsToPx(format.margins.left);
+    const marginRightPx = pointsToPx(format.margins.right);
+    const marginBottomPx = pointsToPx(format.margins.bottom);
+    const bodyFontSizePx = pointsToPx(format.bodyFontSize);
 
     return (
-      <div
-        ref={ref}
-        className="bg-white shadow p-8"
-        style={{
-          aspectRatio: aspectRatio,
-          fontFamily: "Times",
-          WebkitFontSmoothing: "auto",
-        }}
-      >
-        {resume?.workHistory
-          .filter((experience) => experience.included)
-          .map((experience) => {
-            const start = monthYearToString(experience.startDate);
-            const end = experience.endDate
-              ? monthYearToString(experience.endDate)
-              : "Current";
+      <div ref={containerRef}>
+        <div
+          ref={ref}
+          className="bg-white shadow"
+          style={{
+            aspectRatio: aspectRatio,
+            fontFamily: "Times",
+            paddingTop: marginTopPx,
+            paddingLeft: marginLeftPx,
+            paddingRight: marginRightPx,
+            paddingBottom: marginBottomPx,
+            WebkitFontSmoothing: "auto",
+          }}
+        >
+          {resume?.workHistory
+            .filter((experience) => experience.included)
+            .map((experience) => {
+              const start = monthYearToString(experience.startDate);
+              const end = experience.endDate
+                ? monthYearToString(experience.endDate)
+                : "Current";
 
-            return (
-              <div className="my-8">
-                <div className="flex gap-1 text-sm">
-                  <label className="font-bold">{experience.companyName}</label>
-                  <label>{experience.jobTitle}</label>
-                  <label className="ml-auto">{`${start} – ${end}`}</label>
+              return (
+                <div className="my-8">
+                  <div
+                    className="flex gap-1"
+                    style={{ fontSize: bodyFontSizePx }}
+                  >
+                    <label className="font-bold">
+                      {experience.companyName}
+                    </label>
+                    <label>{experience.jobTitle}</label>
+                    <label className="ml-auto">{`${start} – ${end}`}</label>
+                  </div>
+
+                  <ul style={{ fontSize: bodyFontSizePx }}>
+                    {experience.bulletPoints
+                      .filter((bullet) => bullet.included)
+                      .map((bullet) => (
+                        <li key={bullet.id} className="my-1">
+                          &bull; {bullet.text}
+                        </li>
+                      ))}
+                  </ul>
                 </div>
-
-                <ul className="text-xs">
-                  {experience.bulletPoints
-                    .filter((bullet) => bullet.included)
-                    .map((bullet) => (
-                      <li key={bullet.id} className="my-1">
-                        &bull; {bullet.text}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            );
-          })}
+              );
+            })}
+        </div>
       </div>
     );
   }
