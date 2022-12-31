@@ -45,6 +45,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
       fontFamily: styles.fontFamily,
       fontStyle: styles.fontStyle as FontStyle,
       fontWeight: parseInt(styles.fontWeight),
+      letterSpacing: parseFloat(styles.letterSpacing) * pdfScalar,
     };
 
     // TODO: Calc properties once per font

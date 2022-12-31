@@ -60,7 +60,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         >
           <div className="bg-black" style={{ height: pointsToPx(1) }} />
           <p
-            className="font-bold uppercase"
+            className="font-bold"
             style={{
               fontSize: pointsToPx(8),
               marginTop: pointsToPx(4),
@@ -68,7 +68,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
               letterSpacing: pointsToPx(0.5),
             }}
           >
-            Work history
+            WORK HISTORY
           </p>
 
           {resume?.workHistory

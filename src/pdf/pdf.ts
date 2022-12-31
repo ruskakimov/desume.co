@@ -14,6 +14,7 @@ export interface TextOptions {
   fontFamily: string;
   fontStyle: FontStyle;
   fontWeight: number;
+  letterSpacing: number;
 }
 
 /**
@@ -56,6 +57,7 @@ export class PDF {
       .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
       .setFontSize(options.fontSizePt)
       .text(text, baselineLeft.x, baselineLeft.y, {
+        charSpace: options.letterSpacing,
         lineHeightFactor: options.lineHeightPt / options.fontSizePt,
       })
       .restoreGraphicsState();
