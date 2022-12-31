@@ -58,6 +58,19 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             WebkitFontSmoothing: "auto",
           }}
         >
+          <div className="bg-black" style={{ height: pointsToPx(1) }} />
+          <p
+            className="font-bold uppercase"
+            style={{
+              fontSize: pointsToPx(8),
+              marginTop: pointsToPx(4),
+              marginBottom: pointsToPx(8),
+              letterSpacing: pointsToPx(0.5),
+            }}
+          >
+            Work history
+          </p>
+
           {resume?.workHistory
             .filter((experience) => experience.included)
             .map((experience) => {
@@ -67,7 +80,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
                 : "Current";
 
               return (
-                <div style={{ marginTop: pointsToPx(16) }}>
+                <div style={{ marginBottom: pointsToPx(16) }}>
                   <div
                     className="flex justify-between"
                     style={{ fontSize: headerFontSizePx }}
