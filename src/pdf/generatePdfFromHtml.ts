@@ -1,4 +1,4 @@
-import { Box } from "../common/classes/Box";
+import { Box } from "../common/classes/box";
 import { a4SizeInPoints } from "../common/constants/sizes";
 import { Coord } from "../common/interfaces/measure";
 import { getFontProperties } from "./text/fontProperties";
