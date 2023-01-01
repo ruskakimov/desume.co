@@ -17,12 +17,6 @@ const navigation = [
   { name: "Export", to: "/export" },
 ];
 
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Manage Subscription", href: "#" },
-  { name: "Sign out", href: "#" },
-];
-
 export default function AppShell() {
   const [user] = useAuthState(firebaseAuth);
   const resumeContext = useResume(user ?? null);
@@ -87,27 +81,19 @@ export default function AppShell() {
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {userNavigation.map((item) => (
-                          <Menu.Item key={item.name}>
-                            {({ active }) => (
-                              <a
-                                href={item.href}
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
-                                )}
-                                // TODO: Prevent adding hash to URL on logout
-                                onClick={
-                                  item.name === "Sign out"
-                                    ? () => signOut()
-                                    : undefined
-                                }
-                              >
-                                {item.name}
-                              </a>
-                            )}
-                          </Menu.Item>
-                        ))}
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "w-full text-left block px-4 py-2 text-sm text-gray-700"
+                              )}
+                              onClick={signOut}
+                            >
+                              Sign out
+                            </button>
+                          )}
+                        </Menu.Item>
                       </Menu.Items>
                     </Transition>
                   </Menu>
@@ -148,16 +134,13 @@ export default function AppShell() {
               </div>
               <div className="border-t border-gray-200 pt-4 pb-3">
                 <div className="space-y-1">
-                  {userNavigation.map((item) => (
-                    <Disclosure.Button
-                      key={item.name}
-                      as="a"
-                      href={item.href}
-                      className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                    >
-                      {item.name}
-                    </Disclosure.Button>
-                  ))}
+                  <Disclosure.Button
+                    as="a"
+                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                    onClick={signOut}
+                  >
+                    Sign out
+                  </Disclosure.Button>
                 </div>
               </div>
             </Disclosure.Panel>
