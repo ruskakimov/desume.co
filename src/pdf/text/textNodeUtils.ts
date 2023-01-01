@@ -28,10 +28,12 @@ export function textNodeByLines(textNode: Text): string[] {
 
     const lineIndex = range.getClientRects().length - 1;
 
-    // Start new line.
-    if (!lines[lineIndex]) lines.push([]);
-
-    lines[lineIndex].push(textContent[i]);
+    if (!lines[lineIndex]) {
+      // Start new line.
+      lines.push([textContent[i]]);
+    } else {
+      lines[lineIndex].push(textContent[i]);
+    }
   }
 
   return lines.map((chars) => chars.join(""));

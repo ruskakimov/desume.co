@@ -5,10 +5,10 @@ import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
 import { textNodeByLines, textNodeLineRects } from "./text/textNodeUtils";
 
-import charterRegularPath from "../assets/fonts/Charter/Charter-Regular.ttf";
-import charterItalicPath from "../assets/fonts/Charter/Charter-Italic.ttf";
-import charterBoldPath from "../assets/fonts/Charter/Charter-Bold.ttf";
-import charterBoldItalicPath from "../assets/fonts/Charter/Charter-Bold-Italic.ttf";
+// import charterRegularPath from "../assets/fonts/Charter/Charter-Regular.ttf";
+// import charterItalicPath from "../assets/fonts/Charter/Charter-Italic.ttf";
+// import charterBoldPath from "../assets/fonts/Charter/Charter-Bold.ttf";
+// import charterBoldItalicPath from "../assets/fonts/Charter/Charter-Bold-Italic.ttf";
 
 export const rectMarkerClass = "render-this-rect";
 
@@ -18,10 +18,10 @@ export const rectMarkerClass = "render-this-rect";
 export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   const doc = new PDF();
 
-  doc.loadFont(charterRegularPath, "Charter", "normal", 400);
-  doc.loadFont(charterItalicPath, "Charter", "italic", 400);
-  doc.loadFont(charterBoldPath, "Charter", "normal", 700);
-  doc.loadFont(charterBoldItalicPath, "Charter", "italic", 700);
+  // doc.loadFont(charterRegularPath, "Charter", "normal", 400);
+  // doc.loadFont(charterItalicPath, "Charter", "italic", 400);
+  // doc.loadFont(charterBoldPath, "Charter", "normal", 700);
+  // doc.loadFont(charterBoldItalicPath, "Charter", "italic", 700);
 
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
   const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
