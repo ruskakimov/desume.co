@@ -5,28 +5,56 @@ import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
 import { textNodeByLines, textNodeLineRects } from "./text/textNodeUtils";
 
+import charterRegularPath from "../assets/fonts/Charter/Charter-Regular.ttf";
+import charterItalicPath from "../assets/fonts/Charter/Charter-Italic.ttf";
+import charterBoldPath from "../assets/fonts/Charter/Charter-Bold.ttf";
+import charterBoldItalicPath from "../assets/fonts/Charter/Charter-Bold-Italic.ttf";
+
+export const rectMarkerClass = "render-this-rect";
+
 /**
  * Generates a single-page PDF document from an HTML element.
  */
 export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   const doc = new PDF();
 
+  doc.loadFont(charterRegularPath, "Charter", "normal", 400);
+  doc.loadFont(charterItalicPath, "Charter", "italic", 400);
+  doc.loadFont(charterBoldPath, "Charter", "normal", 700);
+  doc.loadFont(charterBoldItalicPath, "Charter", "italic", 700);
+
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
   const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
 
   const pdfBoxFromDomRect = (domRect: DOMRect) => {
-    return boxFromDomRect(domRect).relativeTo(pageBox).scaledBy(pdfScalar);
+    return boxFromDomRect(domRect)
+      .relativeTo(pageBox)
+      .scaleCoordinateSystemBy(pdfScalar);
   };
 
   function renderNode(node: Node) {
     if (node.childNodes.length === 0) {
       if (node instanceof Text) {
         renderTextNode(node);
+      } else if (
+        node instanceof HTMLElement &&
+        node.classList.contains(rectMarkerClass)
+      ) {
+        renderRect(node);
       }
       return;
     }
     Array.from(node.childNodes).forEach((child) => {
       renderNode(child);
+    });
+  }
+
+  function renderRect(element: HTMLElement) {
+    const elBox = pdfBoxFromDomRect(element.getBoundingClientRect());
+    const styles = window.getComputedStyle(element);
+    doc.drawBox(elBox, {
+      paintStyle: "fill",
+      fillColor: styles.backgroundColor,
     });
   }
 
@@ -40,9 +68,10 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     const textOptions: TextOptions = {
       fontSizePt: parseFloat(styles.fontSize) * pdfScalar,
       lineHeightPt: parseFloat(styles.lineHeight) * pdfScalar,
-      fontFamily: styles.fontFamily,
+      fontFamily: styles.fontFamily.split(",")[0],
       fontStyle: styles.fontStyle as FontStyle,
       fontWeight: parseInt(styles.fontWeight),
+      letterSpacing: parseFloat(styles.letterSpacing) * pdfScalar,
     };
 
     // TODO: Calc properties once per font
@@ -72,13 +101,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
     });
   }
 
-  Array.from(pageElement.children).forEach((cell) => {
-    const cellBox = pdfBoxFromDomRect(cell.getBoundingClientRect());
-    // doc.drawBox(cellBox);
-
-    Array.from(cell.children).forEach((el) => renderNode(el));
-  });
-
+  renderNode(pageElement);
   return doc;
 }
 

@@ -7,4 +7,12 @@ module.exports = {
     filename: "bundle.js",
     publicPath: "",
   },
+  module: {
+    rules: [
+      {
+        test: /\.ttf$/i,
+        type: "asset/resource",
+      },
+    ],
+  },
 };

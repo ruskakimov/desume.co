@@ -2,8 +2,8 @@ import SecondaryButton from "../../common/components/SecondaryButton";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
-import logo from "../../assets/logo.svg";
-import googleLogo from "../../assets/google-logo.svg";
+import logo from "../../assets/images/logo.svg";
+import googleLogo from "../../assets/images/google-logo.svg";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "../../App";
 import { Link, useLocation, useNavigate } from "react-router-dom";

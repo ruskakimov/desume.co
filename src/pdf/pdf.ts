@@ -14,6 +14,12 @@ export interface TextOptions {
   fontFamily: string;
   fontStyle: FontStyle;
   fontWeight: number;
+  letterSpacing: number;
+}
+
+export interface ReactOptions {
+  paintStyle: "stroke" | "fill";
+  fillColor: string;
 }
 
 /**
@@ -24,20 +30,45 @@ export class PDF {
   private jsPdf: jsPDF;
 
   constructor() {
-    this.jsPdf = new jsPDF({ format: "a4", unit: "pt" });
+    this.jsPdf = new jsPDF({
+      format: "a4",
+      unit: "pt",
+      putOnlyUsedFonts: true,
+    });
+  }
+
+  /**
+   * jsPDF only supports a subset of TTF fonts. (Source: https://github.com/parallax/jsPDF/issues/2921#issuecomment-696563669)
+   *
+   * Source code references:
+   * - https://github.com/parallax/jsPDF/issues/2921#issue-706056673
+   * - https://github.com/parallax/jsPDF/issues/3002#issue-742917585
+   */
+  loadFont(
+    fontPath: string,
+    familyName: string,
+    fontStyle: FontStyle,
+    fontWeight: number
+  ) {
+    this.jsPdf.addFont(fontPath, familyName, fontStyle, fontWeight);
   }
 
   save(filename?: string) {
     this.jsPdf.save(filename);
   }
 
-  drawBox(box: Box): PDF {
-    this.jsPdf.rect(
-      box.topLeft.x,
-      box.topLeft.y,
-      box.size.width,
-      box.size.height
-    );
+  drawBox(box: Box, options?: ReactOptions): PDF {
+    this.jsPdf
+      .saveGraphicsState()
+      .setFillColor(options?.fillColor ?? PDF.defaultColor)
+      .rect(
+        box.topLeft.x,
+        box.topLeft.y,
+        box.size.width,
+        box.size.height,
+        options?.paintStyle === "fill" ? "F" : "S"
+      )
+      .restoreGraphicsState();
     return this;
   }
 
@@ -56,6 +87,7 @@ export class PDF {
       .setFont(options.fontFamily, options.fontStyle, options.fontWeight)
       .setFontSize(options.fontSizePt)
       .text(text, baselineLeft.x, baselineLeft.y, {
+        charSpace: options.letterSpacing,
         lineHeightFactor: options.lineHeightPt / options.fontSizePt,
       })
       .restoreGraphicsState();

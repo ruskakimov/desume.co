@@ -32,7 +32,12 @@ export class Box {
     return new Box(this.x + dx, this.y + dy, this.width, this.height);
   }
 
-  scaledBy(scalar: number): Box {
-    return new Box(this.x, this.y, this.width * scalar, this.height * scalar);
+  scaleCoordinateSystemBy(scalar: number): Box {
+    return new Box(
+      this.x * scalar,
+      this.y * scalar,
+      this.width * scalar,
+      this.height * scalar
+    );
   }
 }

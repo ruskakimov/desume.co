@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, useLocation } from "react-router-dom";
 import AppShell from "./AppShell";
-import logo from "./assets/logo.svg";
+import logo from "./assets/images/logo.svg";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB34gwQ0mKdYJEUg36TBjtaSbujmZSVjZw",

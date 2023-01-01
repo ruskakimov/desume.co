@@ -1,71 +1,51 @@
 import { useRef } from "react";
 import { useContextResume } from "../../AppShell";
 import PrimaryButton from "../../common/components/PrimaryButton";
-import { monthYearToString } from "../../common/functions/time";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import { a4SizeInPoints } from "../../pdf/render-tests/build/common/constants/sizes";
+import DocumentPreview from "./DocumentPreview";
 
 const ExportPage: React.FC = () => {
   const [resume] = useContextResume();
-  const { width, height } = a4SizeInPoints;
 
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div>
-      <h1>Export</h1>
-
-      <PrimaryButton
-        className="my-4"
-        onClick={() => {
-          const el = docPreviewRef.current;
-          if (el) {
-            generatePdfFromHtml(el).save();
-          }
-        }}
-      >
-        Download PDF
-      </PrimaryButton>
-
-      <div
-        ref={docPreviewRef}
-        className="bg-white shadow p-8"
-        style={{
-          width,
-          height,
-          fontFamily: "Times",
-          WebkitFontSmoothing: "auto",
-        }}
-      >
-        {resume?.workHistory
-          .filter((experience) => experience.included)
-          .map((experience) => {
-            const start = monthYearToString(experience.startDate);
-            const end = experience.endDate
-              ? monthYearToString(experience.endDate)
-              : "Current";
-
-            return (
-              <div className="my-8">
-                <div className="flex gap-1 text-sm">
-                  <label className="font-bold">{experience.companyName}</label>
-                  <label>{experience.jobTitle}</label>
-                  <label className="ml-auto">{`${start} – ${end}`}</label>
-                </div>
-
-                <ul className="text-xs">
-                  {experience.bulletPoints
-                    .filter((bullet) => bullet.included)
-                    .map((bullet) => (
-                      <li key={bullet.id} className="my-1">
-                        &bull; {bullet.text}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            );
-          })}
+    <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
+      <div>
+        <PrimaryButton
+          className="w-full"
+          onClick={() => {
+            const el = docPreviewRef.current;
+            if (el) {
+              generatePdfFromHtml(el).save();
+            }
+          }}
+        >
+          Download PDF
+        </PrimaryButton>
       </div>
+
+      {resume && (
+        <DocumentPreview
+          ref={docPreviewRef}
+          resume={resume}
+          format={{
+            width: a4SizeInPoints.width,
+            height: a4SizeInPoints.height,
+            margins: {
+              top: 50,
+              left: 100,
+              right: 100,
+              bottom: 50,
+            },
+            fontSizes: {
+              header: 12,
+              body: 10,
+            },
+          }}
+        />
+      )}
     </div>
   );
 };
