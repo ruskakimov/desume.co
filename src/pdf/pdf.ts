@@ -30,7 +30,11 @@ export class PDF {
   private jsPdf: jsPDF;
 
   constructor() {
-    this.jsPdf = new jsPDF({ format: "a4", unit: "pt" });
+    this.jsPdf = new jsPDF({
+      format: "a4",
+      unit: "pt",
+      putOnlyUsedFonts: true,
+    });
   }
 
   save(filename?: string) {
