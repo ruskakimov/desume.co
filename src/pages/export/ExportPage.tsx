@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useContextResume } from "../../AppShell";
 import PrimaryButton from "../../common/components/PrimaryButton";
+import { a4SizeInPoints } from "../../common/constants/sizes";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
-import { a4SizeInPoints } from "../../pdf/render-tests/build/common/constants/sizes";
 import DocumentPreview from "./DocumentPreview";
 
 const ExportPage: React.FC = () => {
