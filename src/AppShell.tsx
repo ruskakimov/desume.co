@@ -6,7 +6,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import classNames from "classnames";
-import logo from "./assets/logo.svg";
+import logo from "./assets/images/logo.svg";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
 import { NavLink, Outlet, useOutletContext } from "react-router-dom";
