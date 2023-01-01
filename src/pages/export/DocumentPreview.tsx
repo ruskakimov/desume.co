@@ -44,7 +44,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       <div ref={containerRef}>
         <div
           ref={ref}
-          className="bg-white shadow text-black"
+          className="bg-white shadow text-black antialiased"
           style={{
             aspectRatio: aspectRatio,
             fontFamily: "Charter, Times",
@@ -52,7 +52,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             paddingLeft: pointsToPx(format.margins.left),
             paddingRight: pointsToPx(format.margins.right),
             paddingBottom: pointsToPx(format.margins.bottom),
-            WebkitFontSmoothing: "auto",
           }}
         >
           <div className="flex justify-between">
