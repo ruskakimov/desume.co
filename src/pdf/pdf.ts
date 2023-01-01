@@ -37,6 +37,22 @@ export class PDF {
     });
   }
 
+  /**
+   * jsPDF only supports a subset of TTF fonts. (Source: https://github.com/parallax/jsPDF/issues/2921#issuecomment-696563669)
+   *
+   * Source code references:
+   * - https://github.com/parallax/jsPDF/issues/2921#issue-706056673
+   * - https://github.com/parallax/jsPDF/issues/3002#issue-742917585
+   */
+  loadFont(
+    fontPath: string,
+    familyName: string,
+    fontStyle: FontStyle,
+    fontWeight: number
+  ) {
+    this.jsPdf.addFont(fontPath, familyName, fontStyle, fontWeight);
+  }
+
   save(filename?: string) {
     this.jsPdf.save(filename);
   }

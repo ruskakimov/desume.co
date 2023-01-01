@@ -47,7 +47,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           className="bg-white shadow text-black"
           style={{
             aspectRatio: aspectRatio,
-            fontFamily: "Times",
+            fontFamily: "Charter, Times",
             paddingTop: pointsToPx(format.margins.top),
             paddingLeft: pointsToPx(format.margins.left),
             paddingRight: pointsToPx(format.margins.right),
