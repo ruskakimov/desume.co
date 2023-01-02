@@ -3,11 +3,11 @@ import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
 import SelectField from "../../common/components/fields/SelectField";
 import PrimaryButton from "../../common/components/PrimaryButton";
-import { a4SizeInPoints } from "../../common/constants/sizes";
+import { PageSizeName, pageSizes } from "../../common/constants/page-sizes";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import DocumentPreview from "./DocumentPreview";
 
-const pageSizeOptions = [
+const pageSizeOptions: { label: string; value: PageSizeName }[] = [
   {
     label: "A4",
     value: "a4",
@@ -38,7 +38,7 @@ const ExportPage: React.FC = () => {
             onClick={() => {
               const el = docPreviewRef.current;
               if (el) {
-                generatePdfFromHtml(el).save();
+                generatePdfFromHtml(el, "a4").save();
               }
             }}
           >
@@ -52,8 +52,8 @@ const ExportPage: React.FC = () => {
           ref={docPreviewRef}
           resume={resume}
           format={{
-            width: a4SizeInPoints.width,
-            height: a4SizeInPoints.height,
+            width: pageSizes.a4.width,
+            height: pageSizes.a4.height,
             margins: {
               top: 50,
               left: 100,
