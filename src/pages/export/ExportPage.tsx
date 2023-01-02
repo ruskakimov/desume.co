@@ -152,7 +152,7 @@ const ExportPage: React.FC = () => {
         </Card>
       </div>
 
-      {resume && (
+      {resume ? (
         <DocumentPreview
           ref={docPreviewRef}
           resume={resume}
@@ -170,6 +170,13 @@ const ExportPage: React.FC = () => {
               body: 10,
             },
             bulletLineHeight: bulletSpacing,
+          }}
+        />
+      ) : (
+        <div
+          className="shimmer bg-gray-200 animate-pulse"
+          style={{
+            aspectRatio: pageSizes[pageSize].width / pageSizes[pageSize].height,
           }}
         />
       )}
