@@ -32,7 +32,22 @@ const bulletSpacingOptions: SelectOption[] = [
   },
 ];
 
-const sideMarginsOptions: SelectOption[] = [
+const verticalMarginsOptions: SelectOption[] = [
+  {
+    label: "0.5 inch",
+    value: "36",
+  },
+  {
+    label: "0.75 inch",
+    value: "54",
+  },
+  {
+    label: "1 inch",
+    value: "72",
+  },
+];
+
+const horizontalMarginsOptions: SelectOption[] = [
   {
     label: "1 inch",
     value: "72",
@@ -49,12 +64,14 @@ const sideMarginsOptions: SelectOption[] = [
 
 const defaultPageSize = pageSizeOptions[0].value;
 const defaultBulletSpacing = bulletSpacingOptions[0].value;
-const defaultSideMargins = sideMarginsOptions[1].value;
+const defaultVerticalMargins = verticalMarginsOptions[1].value;
+const defaultHorizontalMargins = horizontalMarginsOptions[1].value;
 
 interface ExportOptionsForm {
   pageSize?: PageSizeName;
   bulletSpacing?: string;
-  sideMargins?: string;
+  verticalMargins?: string;
+  horizontalMargins?: string;
 }
 
 const ExportPage: React.FC = () => {
@@ -66,7 +83,12 @@ const ExportPage: React.FC = () => {
   const bulletSpacing = parseFloat(
     watch("bulletSpacing") ?? defaultBulletSpacing
   );
-  const sideMargins = parseFloat(watch("sideMargins") ?? defaultSideMargins);
+  const verticalMargins = parseFloat(
+    watch("verticalMargins") ?? defaultVerticalMargins
+  );
+  const horizontalMargins = parseFloat(
+    watch("horizontalMargins") ?? defaultHorizontalMargins
+  );
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -87,10 +109,17 @@ const ExportPage: React.FC = () => {
           />
 
           <SelectField
-            label="Side margins"
-            defaultValue={defaultSideMargins}
-            options={sideMarginsOptions}
-            {...register("sideMargins")}
+            label="Vertical margins"
+            defaultValue={defaultVerticalMargins}
+            options={verticalMarginsOptions}
+            {...register("verticalMargins")}
+          />
+
+          <SelectField
+            label="Horizontal margins"
+            defaultValue={defaultHorizontalMargins}
+            options={horizontalMarginsOptions}
+            {...register("horizontalMargins")}
           />
 
           <PrimaryButton
@@ -115,10 +144,10 @@ const ExportPage: React.FC = () => {
             width: pageSizes[pageSize].width,
             height: pageSizes[pageSize].height,
             margins: {
-              top: 50,
-              left: sideMargins,
-              right: sideMargins,
-              bottom: 50,
+              top: verticalMargins,
+              left: horizontalMargins,
+              right: horizontalMargins,
+              bottom: verticalMargins,
             },
             fontSizes: {
               header: 12,
