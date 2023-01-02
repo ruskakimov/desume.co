@@ -69,7 +69,7 @@ interface ExportOptionsForm {
   horizontalMargins: string;
 }
 
-const defaultValues: ExportOptionsForm = {
+const defaultFormValues: ExportOptionsForm = {
   pageSize: pageSizeOptions[0].value,
   bulletSpacing: bulletSpacingOptions[0].value,
   verticalMargins: verticalMarginsOptions[1].value,
@@ -78,10 +78,16 @@ const defaultValues: ExportOptionsForm = {
 
 const formStorageKey = "export-form";
 
+function getSavedFormData(): ExportOptionsForm {
+  const serialized = localStorage.getItem(formStorageKey);
+  // TODO: Defensive programming
+  return serialized ? JSON.parse(serialized) : defaultFormValues;
+}
+
 const ExportPage: React.FC = () => {
   const [resume] = useContextResume();
-  const { register, watch, getValues, reset } = useForm<ExportOptionsForm>({
-    defaultValues,
+  const { register, watch, getValues } = useForm<ExportOptionsForm>({
+    defaultValues: getSavedFormData(),
   });
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
@@ -90,20 +96,11 @@ const ExportPage: React.FC = () => {
   const verticalMargins = parseFloat(watch("verticalMargins"));
   const horizontalMargins = parseFloat(watch("horizontalMargins"));
 
-  // // Read from local storage.
-  // useEffect(() => {
-  //   const serialized = localStorage.getItem(formStorageKey);
-  //   const formData: ExportOptionsForm = serialized
-  //     ? JSON.parse(serialized)
-  //     : {};
-  //   reset(formData);
-  // }, []);
-
-  // // Save to local storage.
-  // useEffect(() => {
-  //   const formData = getValues();
-  //   localStorage.setItem(formStorageKey, JSON.stringify(formData));
-  // }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
+  // Save to local storage.
+  useEffect(() => {
+    const formData = getValues();
+    localStorage.setItem(formStorageKey, JSON.stringify(formData));
+  }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
