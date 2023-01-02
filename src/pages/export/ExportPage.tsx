@@ -80,8 +80,16 @@ const formStorageKey = "export-form";
 
 function getSavedFormData(): ExportOptionsForm {
   const serialized = localStorage.getItem(formStorageKey);
-  // TODO: Defensive programming
-  return serialized ? JSON.parse(serialized) : defaultFormValues;
+  if (!serialized) return defaultFormValues;
+
+  const parsed: unknown = JSON.parse(serialized);
+  if (!isFormData(parsed)) return defaultFormValues;
+
+  return Object.assign({ ...defaultFormValues }, parsed);
+}
+
+function isFormData(obj: unknown): obj is Partial<ExportOptionsForm> {
+  return typeof obj === "object" && obj !== null;
 }
 
 const ExportPage: React.FC = () => {
