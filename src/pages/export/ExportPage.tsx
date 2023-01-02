@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
@@ -74,9 +74,11 @@ interface ExportOptionsForm {
   horizontalMargins?: string;
 }
 
+const exportFormStorageKey = "export-form";
+
 const ExportPage: React.FC = () => {
   const [resume] = useContextResume();
-  const { register, watch } = useForm<ExportOptionsForm>();
+  const { register, watch, getValues, reset } = useForm<ExportOptionsForm>();
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
   const pageSize = watch("pageSize") ?? defaultPageSize;
@@ -89,6 +91,21 @@ const ExportPage: React.FC = () => {
   const horizontalMargins = parseFloat(
     watch("horizontalMargins") ?? defaultHorizontalMargins
   );
+
+  // Read from local storage.
+  useEffect(() => {
+    const serialized = localStorage.getItem(exportFormStorageKey);
+    const formData: ExportOptionsForm = serialized
+      ? JSON.parse(serialized)
+      : {};
+    reset(formData);
+  }, []);
+
+  // Save to local storage.
+  useEffect(() => {
+    const formData = getValues();
+    localStorage.setItem(exportFormStorageKey, JSON.stringify(formData));
+  }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
