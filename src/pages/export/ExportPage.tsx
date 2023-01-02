@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useForm } from "react-hook-form";
 import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
 import SelectField from "../../common/components/fields/SelectField";
@@ -18,10 +19,16 @@ const pageSizeOptions: { label: string; value: PageSizeName }[] = [
   },
 ];
 
+interface ExportOptionsForm {
+  pageSize: PageSizeName;
+}
+
 const ExportPage: React.FC = () => {
   const [resume] = useContextResume();
-
+  const { register, watch } = useForm<ExportOptionsForm>();
   const docPreviewRef = useRef<HTMLDivElement>(null);
+
+  const pageSize = watch("pageSize");
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -31,6 +38,7 @@ const ExportPage: React.FC = () => {
             label="Page size"
             defaultValue={pageSizeOptions[0].value}
             options={pageSizeOptions}
+            {...register("pageSize")}
           />
 
           <PrimaryButton
@@ -38,7 +46,7 @@ const ExportPage: React.FC = () => {
             onClick={() => {
               const el = docPreviewRef.current;
               if (el) {
-                generatePdfFromHtml(el, "a4").save();
+                generatePdfFromHtml(el, pageSize).save();
               }
             }}
           >
@@ -52,8 +60,8 @@ const ExportPage: React.FC = () => {
           ref={docPreviewRef}
           resume={resume}
           format={{
-            width: pageSizes.a4.width,
-            height: pageSizes.a4.height,
+            width: pageSizes[pageSize].width,
+            height: pageSizes[pageSize].height,
             margins: {
               top: 50,
               left: 100,
