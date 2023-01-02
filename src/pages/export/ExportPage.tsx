@@ -28,7 +28,7 @@ const bulletSpacingOptions: SelectOption[] = [
   },
   {
     label: "Compact",
-    value: "1.2",
+    value: "1.25",
   },
 ];
 
