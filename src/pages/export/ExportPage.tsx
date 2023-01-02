@@ -32,9 +32,29 @@ const bulletSpacingOptions: SelectOption[] = [
   },
 ];
 
+const sideMarginsOptions: SelectOption[] = [
+  {
+    label: "Narrow",
+    value: "72", // 1 inch in points
+  },
+  {
+    label: "Moderate",
+    value: "126", // 0.75 inches in points
+  },
+  {
+    label: "Wide",
+    value: "144", // 2 inches in points
+  },
+];
+
+const defaultPageSize = pageSizeOptions[0].value;
+const defaultBulletSpacing = bulletSpacingOptions[0].value;
+const defaultSideMargins = sideMarginsOptions[1].value;
+
 interface ExportOptionsForm {
   pageSize?: PageSizeName;
   bulletSpacing?: string;
+  sideMargins?: string;
 }
 
 const ExportPage: React.FC = () => {
@@ -42,13 +62,11 @@ const ExportPage: React.FC = () => {
   const { register, watch } = useForm<ExportOptionsForm>();
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
-  const defaultPageSize = pageSizeOptions[0].value;
-  const defaultBulletSpacing = bulletSpacingOptions[0].value;
-
   const pageSize = watch("pageSize") ?? defaultPageSize;
   const bulletSpacing = parseFloat(
     watch("bulletSpacing") ?? defaultBulletSpacing
   );
+  const sideMargins = parseFloat(watch("sideMargins") ?? defaultSideMargins);
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -66,6 +84,13 @@ const ExportPage: React.FC = () => {
             defaultValue={defaultBulletSpacing}
             options={bulletSpacingOptions}
             {...register("bulletSpacing")}
+          />
+
+          <SelectField
+            label="Side margins"
+            defaultValue={defaultSideMargins}
+            options={sideMarginsOptions}
+            {...register("sideMargins")}
           />
 
           <PrimaryButton
@@ -91,8 +116,8 @@ const ExportPage: React.FC = () => {
             height: pageSizes[pageSize].height,
             margins: {
               top: 50,
-              left: 100,
-              right: 100,
+              left: sideMargins,
+              right: sideMargins,
               bottom: 50,
             },
             fontSizes: {
