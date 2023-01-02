@@ -2,7 +2,9 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
-import SelectField from "../../common/components/fields/SelectField";
+import SelectField, {
+  SelectOption,
+} from "../../common/components/fields/SelectField";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { PageSizeName, pageSizes } from "../../common/constants/page-sizes";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
@@ -19,8 +21,20 @@ const pageSizeOptions: { label: string; value: PageSizeName }[] = [
   },
 ];
 
+const bulletSpacingOptions: SelectOption[] = [
+  {
+    label: "Comfortable",
+    value: "1.4",
+  },
+  {
+    label: "Compact",
+    value: "1.2",
+  },
+];
+
 interface ExportOptionsForm {
   pageSize: PageSizeName;
+  bulletSpacing: string;
 }
 
 const ExportPage: React.FC = () => {
@@ -29,6 +43,7 @@ const ExportPage: React.FC = () => {
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
   const pageSize = watch("pageSize");
+  const bulletSpacing = parseFloat(watch("bulletSpacing"));
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -39,6 +54,13 @@ const ExportPage: React.FC = () => {
             defaultValue={pageSizeOptions[0].value}
             options={pageSizeOptions}
             {...register("pageSize")}
+          />
+
+          <SelectField
+            label="Bullet spacing"
+            defaultValue={bulletSpacingOptions[0].value}
+            options={bulletSpacingOptions}
+            {...register("bulletSpacing")}
           />
 
           <PrimaryButton
@@ -72,7 +94,7 @@ const ExportPage: React.FC = () => {
               header: 12,
               body: 10,
             },
-            bulletLineHeight: 1.2,
+            bulletLineHeight: bulletSpacing,
           }}
         />
       )}
