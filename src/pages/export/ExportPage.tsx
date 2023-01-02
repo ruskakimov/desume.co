@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useContextResume } from "../../AppShell";
+import Card from "../../common/components/Card";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { a4SizeInPoints } from "../../common/constants/sizes";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
@@ -13,17 +14,19 @@ const ExportPage: React.FC = () => {
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
       <div>
-        <PrimaryButton
-          className="w-full"
-          onClick={() => {
-            const el = docPreviewRef.current;
-            if (el) {
-              generatePdfFromHtml(el).save();
-            }
-          }}
-        >
-          Download PDF
-        </PrimaryButton>
+        <Card>
+          <PrimaryButton
+            className="w-full"
+            onClick={() => {
+              const el = docPreviewRef.current;
+              if (el) {
+                generatePdfFromHtml(el).save();
+              }
+            }}
+          >
+            Download PDF
+          </PrimaryButton>
+        </Card>
       </div>
 
       {resume && (
