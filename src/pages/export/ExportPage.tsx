@@ -33,8 +33,8 @@ const bulletSpacingOptions: SelectOption[] = [
 ];
 
 interface ExportOptionsForm {
-  pageSize: PageSizeName;
-  bulletSpacing: string;
+  pageSize?: PageSizeName;
+  bulletSpacing?: string;
 }
 
 const ExportPage: React.FC = () => {
@@ -42,8 +42,13 @@ const ExportPage: React.FC = () => {
   const { register, watch } = useForm<ExportOptionsForm>();
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
-  const pageSize = watch("pageSize");
-  const bulletSpacing = parseFloat(watch("bulletSpacing"));
+  const defaultPageSize = pageSizeOptions[0].value;
+  const defaultBulletSpacing = bulletSpacingOptions[0].value;
+
+  const pageSize = watch("pageSize") ?? defaultPageSize;
+  const bulletSpacing = parseFloat(
+    watch("bulletSpacing") ?? defaultBulletSpacing
+  );
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -51,14 +56,14 @@ const ExportPage: React.FC = () => {
         <Card>
           <SelectField
             label="Page size"
-            defaultValue={pageSizeOptions[0].value}
+            defaultValue={defaultPageSize}
             options={pageSizeOptions}
             {...register("pageSize")}
           />
 
           <SelectField
             label="Bullet spacing"
-            defaultValue={bulletSpacingOptions[0].value}
+            defaultValue={defaultBulletSpacing}
             options={bulletSpacingOptions}
             {...register("bulletSpacing")}
           />
