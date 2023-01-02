@@ -26,6 +26,7 @@ interface DocumentFormat {
     header: number;
     body: number;
   };
+  bulletLineHeight: number;
 }
 
 const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
@@ -186,15 +187,16 @@ const ExperienceItem: React.FC<{
         </div>
       )}
 
-      <ul style={{ fontSize: pointsToPx(format.fontSizes.body) }}>
+      <ul
+        style={{
+          fontSize: pointsToPx(format.fontSizes.body),
+          lineHeight: format.bulletLineHeight,
+        }}
+      >
         {experience.bulletPoints
           .filter((bullet) => bullet.included)
           .map((bullet) => (
-            <li
-              key={bullet.id}
-              className="flex"
-              style={{ marginTop: pointsToPx(4) }}
-            >
+            <li key={bullet.id} className="flex" style={{ marginTop: "0.4em" }}>
               <span
                 style={{
                   marginRight: pointsToPx(8),

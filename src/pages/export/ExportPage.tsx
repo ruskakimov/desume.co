@@ -43,6 +43,7 @@ const ExportPage: React.FC = () => {
               header: 12,
               body: 10,
             },
+            bulletLineHeight: 1.2,
           }}
         />
       )}
