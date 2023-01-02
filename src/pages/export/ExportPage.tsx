@@ -1,10 +1,22 @@
 import { useRef } from "react";
 import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
+import SelectField from "../../common/components/fields/SelectField";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { a4SizeInPoints } from "../../common/constants/sizes";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import DocumentPreview from "./DocumentPreview";
+
+const pageSizeOptions = [
+  {
+    label: "A4",
+    value: "a4",
+  },
+  {
+    label: "US letter",
+    value: "us-letter",
+  },
+];
 
 const ExportPage: React.FC = () => {
   const [resume] = useContextResume();
@@ -15,6 +27,12 @@ const ExportPage: React.FC = () => {
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
       <div className="mb-8 lg:mb-0">
         <Card>
+          <SelectField
+            label="Page size"
+            defaultValue={pageSizeOptions[0].value}
+            options={pageSizeOptions}
+          />
+
           <PrimaryButton
             className="w-full"
             onClick={() => {
