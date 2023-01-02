@@ -13,7 +13,7 @@ const ExportPage: React.FC = () => {
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
-      <div>
+      <div className="mb-8 lg:mb-0">
         <Card>
           <PrimaryButton
             className="w-full"
