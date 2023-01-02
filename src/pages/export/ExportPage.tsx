@@ -34,16 +34,16 @@ const bulletSpacingOptions: SelectOption[] = [
 
 const sideMarginsOptions: SelectOption[] = [
   {
-    label: "Narrow",
-    value: "72", // 1 inch in points
+    label: "1 inch",
+    value: "72",
   },
   {
-    label: "Moderate",
-    value: "126", // 0.75 inches in points
+    label: "1.25 inches",
+    value: "90",
   },
   {
-    label: "Wide",
-    value: "144", // 2 inches in points
+    label: "1.5 inches",
+    value: "108",
   },
 ];
 
