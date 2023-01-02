@@ -1,48 +1,182 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { useContextResume } from "../../AppShell";
+import Card from "../../common/components/Card";
+import SelectField, {
+  SelectOption,
+} from "../../common/components/fields/SelectField";
 import PrimaryButton from "../../common/components/PrimaryButton";
-import { a4SizeInPoints } from "../../common/constants/sizes";
+import { PageSizeName, pageSizes } from "../../common/constants/page-sizes";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import DocumentPreview from "./DocumentPreview";
 
+const pageSizeOptions: { label: string; value: PageSizeName }[] = [
+  {
+    label: "A4",
+    value: "a4",
+  },
+  {
+    label: "US letter",
+    value: "us-letter",
+  },
+];
+
+const bulletSpacingOptions: SelectOption[] = [
+  {
+    label: "Comfortable",
+    value: "1.4",
+  },
+  {
+    label: "Compact",
+    value: "1.25",
+  },
+];
+
+const verticalMarginsOptions: SelectOption[] = [
+  {
+    label: "0.5 inch",
+    value: "36",
+  },
+  {
+    label: "0.75 inch",
+    value: "54",
+  },
+  {
+    label: "1 inch",
+    value: "72",
+  },
+];
+
+const horizontalMarginsOptions: SelectOption[] = [
+  {
+    label: "1 inch",
+    value: "72",
+  },
+  {
+    label: "1.25 inches",
+    value: "90",
+  },
+  {
+    label: "1.5 inches",
+    value: "108",
+  },
+];
+
+interface ExportOptionsForm {
+  pageSize: PageSizeName;
+  bulletSpacing: string;
+  verticalMargins: string;
+  horizontalMargins: string;
+}
+
+const defaultFormValues: ExportOptionsForm = {
+  pageSize: pageSizeOptions[0].value,
+  bulletSpacing: bulletSpacingOptions[0].value,
+  verticalMargins: verticalMarginsOptions[1].value,
+  horizontalMargins: horizontalMarginsOptions[1].value,
+};
+
+const formStorageKey = "export-form";
+
+function getSavedFormData(): ExportOptionsForm {
+  const serialized = localStorage.getItem(formStorageKey);
+  if (!serialized) return defaultFormValues;
+
+  const parsed: unknown = JSON.parse(serialized);
+  if (!isFormData(parsed)) return defaultFormValues;
+
+  return Object.assign({ ...defaultFormValues }, parsed);
+}
+
+function isFormData(obj: unknown): obj is Partial<ExportOptionsForm> {
+  return typeof obj === "object" && obj !== null;
+}
+
 const ExportPage: React.FC = () => {
   const [resume] = useContextResume();
-
+  const { register, watch, getValues } = useForm<ExportOptionsForm>({
+    defaultValues: getSavedFormData(),
+  });
   const docPreviewRef = useRef<HTMLDivElement>(null);
+
+  const pageSize = watch("pageSize");
+  const bulletSpacing = parseFloat(watch("bulletSpacing"));
+  const verticalMargins = parseFloat(watch("verticalMargins"));
+  const horizontalMargins = parseFloat(watch("horizontalMargins"));
+
+  // Save to local storage.
+  useEffect(() => {
+    const formData = getValues();
+    localStorage.setItem(formStorageKey, JSON.stringify(formData));
+  }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
-      <div>
-        <PrimaryButton
-          className="w-full"
-          onClick={() => {
-            const el = docPreviewRef.current;
-            if (el) {
-              generatePdfFromHtml(el).save();
-            }
-          }}
-        >
-          Download PDF
-        </PrimaryButton>
+      <div className="mb-8 lg:mb-0">
+        <Card>
+          <SelectField
+            label="Page size"
+            options={pageSizeOptions}
+            {...register("pageSize")}
+          />
+
+          <SelectField
+            label="Bullet spacing"
+            options={bulletSpacingOptions}
+            {...register("bulletSpacing")}
+          />
+
+          <SelectField
+            label="Vertical margins"
+            options={verticalMarginsOptions}
+            {...register("verticalMargins")}
+          />
+
+          <SelectField
+            label="Horizontal margins"
+            options={horizontalMarginsOptions}
+            {...register("horizontalMargins")}
+          />
+
+          <PrimaryButton
+            className="w-full"
+            onClick={() => {
+              const el = docPreviewRef.current;
+              if (el) {
+                generatePdfFromHtml(el, pageSize).save();
+              }
+            }}
+          >
+            Download PDF
+          </PrimaryButton>
+        </Card>
       </div>
 
-      {resume && (
+      {resume ? (
         <DocumentPreview
           ref={docPreviewRef}
           resume={resume}
           format={{
-            width: a4SizeInPoints.width,
-            height: a4SizeInPoints.height,
+            width: pageSizes[pageSize].width,
+            height: pageSizes[pageSize].height,
             margins: {
-              top: 50,
-              left: 100,
-              right: 100,
-              bottom: 50,
+              top: verticalMargins,
+              left: horizontalMargins,
+              right: horizontalMargins,
+              bottom: verticalMargins,
             },
             fontSizes: {
               header: 12,
               body: 10,
             },
+            bulletLineHeight: bulletSpacing,
+          }}
+        />
+      ) : (
+        <div
+          className="shimmer bg-gray-200 animate-pulse"
+          style={{
+            aspectRatio: pageSizes[pageSize].width / pageSizes[pageSize].height,
           }}
         />
       )}

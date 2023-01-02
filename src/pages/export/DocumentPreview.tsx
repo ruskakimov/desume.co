@@ -26,13 +26,19 @@ interface DocumentFormat {
     header: number;
     body: number;
   };
+  bulletLineHeight: number;
 }
 
 const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
   ({ resume, format }, ref) => {
     const aspectRatio = format.width / format.height;
 
-    const [containerRef, containerSize] = useElementSize();
+    const [containerRef, containerSize] = useElementSize([
+      format.margins.top,
+      format.margins.left,
+      format.margins.right,
+      format.margins.bottom,
+    ]);
 
     function pointsToPx(points: number): number {
       return (points / format.width) * containerSize.width;
@@ -41,10 +47,12 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     const { email, phoneNumber, websiteUrl, location } = resume.personalDetails;
 
     return (
-      <div ref={containerRef}>
+      <div
+        ref={containerRef}
+        className="bg-white shadow text-black antialiased overflow-hidden"
+      >
         <div
           ref={ref}
-          className="bg-white shadow text-black antialiased"
           style={{
             aspectRatio: aspectRatio,
             fontFamily: "Charter, Times",
@@ -186,15 +194,16 @@ const ExperienceItem: React.FC<{
         </div>
       )}
 
-      <ul style={{ fontSize: pointsToPx(format.fontSizes.body) }}>
+      <ul
+        style={{
+          fontSize: pointsToPx(format.fontSizes.body),
+          lineHeight: format.bulletLineHeight,
+        }}
+      >
         {experience.bulletPoints
           .filter((bullet) => bullet.included)
           .map((bullet) => (
-            <li
-              key={bullet.id}
-              className="flex"
-              style={{ marginTop: pointsToPx(4) }}
-            >
+            <li key={bullet.id} className="flex" style={{ marginTop: "0.4em" }}>
               <span
                 style={{
                   marginRight: pointsToPx(8),

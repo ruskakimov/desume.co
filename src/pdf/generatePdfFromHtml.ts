@@ -1,5 +1,5 @@
 import { Box } from "../common/classes/box";
-import { a4SizeInPoints } from "../common/constants/sizes";
+import { PageSizeName, pageSizes } from "../common/constants/page-sizes";
 import { Coord } from "../common/interfaces/measure";
 import { getFontProperties } from "./text/fontProperties";
 import { FontStyle, PDF, TextOptions } from "./pdf";
@@ -15,8 +15,12 @@ export const rectMarkerClass = "render-this-rect";
 /**
  * Generates a single-page PDF document from an HTML element.
  */
-export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
-  const doc = new PDF();
+export function generatePdfFromHtml(
+  pageElement: HTMLElement,
+  pageSize: PageSizeName = "a4"
+): PDF {
+  const { width, height } = pageSizes[pageSize];
+  const doc = new PDF(width, height);
 
   doc.loadFont(charterRegularPath, "Charter", "normal", 400);
   doc.loadFont(charterItalicPath, "Charter", "italic", 400);
@@ -24,7 +28,7 @@ export function generatePdfFromHtml(pageElement: HTMLElement): PDF {
   doc.loadFont(charterBoldItalicPath, "Charter", "italic", 700);
 
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
-  const pdfScalar = a4SizeInPoints.width / pageBox.size.width;
+  const pdfScalar = width / pageBox.size.width;
 
   const pdfBoxFromDomRect = (domRect: DOMRect) => {
     return boxFromDomRect(domRect)

@@ -29,9 +29,9 @@ export class PDF {
   static defaultColor: string = "#000000";
   private jsPdf: jsPDF;
 
-  constructor() {
+  constructor(width: number, height: number) {
     this.jsPdf = new jsPDF({
-      format: "a4",
+      format: [width, height],
       unit: "pt",
       putOnlyUsedFonts: true,
     });
