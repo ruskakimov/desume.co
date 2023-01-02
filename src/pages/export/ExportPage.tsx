@@ -62,50 +62,48 @@ const horizontalMarginsOptions: SelectOption[] = [
   },
 ];
 
-const defaultPageSize = pageSizeOptions[0].value;
-const defaultBulletSpacing = bulletSpacingOptions[0].value;
-const defaultVerticalMargins = verticalMarginsOptions[1].value;
-const defaultHorizontalMargins = horizontalMarginsOptions[1].value;
-
 interface ExportOptionsForm {
-  pageSize?: PageSizeName;
-  bulletSpacing?: string;
-  verticalMargins?: string;
-  horizontalMargins?: string;
+  pageSize: PageSizeName;
+  bulletSpacing: string;
+  verticalMargins: string;
+  horizontalMargins: string;
 }
 
-const exportFormStorageKey = "export-form";
+const defaultValues: ExportOptionsForm = {
+  pageSize: pageSizeOptions[0].value,
+  bulletSpacing: bulletSpacingOptions[0].value,
+  verticalMargins: verticalMarginsOptions[1].value,
+  horizontalMargins: horizontalMarginsOptions[1].value,
+};
+
+const formStorageKey = "export-form";
 
 const ExportPage: React.FC = () => {
   const [resume] = useContextResume();
-  const { register, watch, getValues, reset } = useForm<ExportOptionsForm>();
+  const { register, watch, getValues, reset } = useForm<ExportOptionsForm>({
+    defaultValues,
+  });
   const docPreviewRef = useRef<HTMLDivElement>(null);
 
-  const pageSize = watch("pageSize") ?? defaultPageSize;
-  const bulletSpacing = parseFloat(
-    watch("bulletSpacing") ?? defaultBulletSpacing
-  );
-  const verticalMargins = parseFloat(
-    watch("verticalMargins") ?? defaultVerticalMargins
-  );
-  const horizontalMargins = parseFloat(
-    watch("horizontalMargins") ?? defaultHorizontalMargins
-  );
+  const pageSize = watch("pageSize");
+  const bulletSpacing = parseFloat(watch("bulletSpacing"));
+  const verticalMargins = parseFloat(watch("verticalMargins"));
+  const horizontalMargins = parseFloat(watch("horizontalMargins"));
 
-  // Read from local storage.
-  useEffect(() => {
-    const serialized = localStorage.getItem(exportFormStorageKey);
-    const formData: ExportOptionsForm = serialized
-      ? JSON.parse(serialized)
-      : {};
-    reset(formData);
-  }, []);
+  // // Read from local storage.
+  // useEffect(() => {
+  //   const serialized = localStorage.getItem(formStorageKey);
+  //   const formData: ExportOptionsForm = serialized
+  //     ? JSON.parse(serialized)
+  //     : {};
+  //   reset(formData);
+  // }, []);
 
-  // Save to local storage.
-  useEffect(() => {
-    const formData = getValues();
-    localStorage.setItem(exportFormStorageKey, JSON.stringify(formData));
-  }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
+  // // Save to local storage.
+  // useEffect(() => {
+  //   const formData = getValues();
+  //   localStorage.setItem(formStorageKey, JSON.stringify(formData));
+  // }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -113,28 +111,24 @@ const ExportPage: React.FC = () => {
         <Card>
           <SelectField
             label="Page size"
-            defaultValue={defaultPageSize}
             options={pageSizeOptions}
             {...register("pageSize")}
           />
 
           <SelectField
             label="Bullet spacing"
-            defaultValue={defaultBulletSpacing}
             options={bulletSpacingOptions}
             {...register("bulletSpacing")}
           />
 
           <SelectField
             label="Vertical margins"
-            defaultValue={defaultVerticalMargins}
             options={verticalMarginsOptions}
             {...register("verticalMargins")}
           />
 
           <SelectField
             label="Horizontal margins"
-            defaultValue={defaultHorizontalMargins}
             options={horizontalMarginsOptions}
             {...register("horizontalMargins")}
           />

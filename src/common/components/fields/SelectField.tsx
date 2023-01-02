@@ -9,7 +9,6 @@ export interface SelectOption {
 interface SelectFieldProps
   extends React.InputHTMLAttributes<HTMLSelectElement> {
   label: string;
-  defaultValue: string;
   options: SelectOption[];
 }
 
