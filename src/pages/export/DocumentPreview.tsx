@@ -165,10 +165,10 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     }, [containerSize]);
 
     return (
-      <div>
+      <div className="relative">
         <div
           ref={containerRef}
-          className="bg-white shadow text-black antialiased overflow-hidden"
+          className="bg-white shadow text-black antialiased overflow-hidden w-full absolute invisible"
         >
           <div
             ref={ref}
@@ -187,7 +187,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         </div>
 
         {pageBlocks.map(([start, end]) => (
-          <div className="mt-8 bg-white shadow text-black antialiased overflow-hidden">
+          <div className="mb-8 bg-white shadow text-black antialiased overflow-hidden">
             <div
               style={{
                 aspectRatio: aspectRatio,
