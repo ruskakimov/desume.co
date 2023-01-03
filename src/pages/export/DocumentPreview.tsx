@@ -2,7 +2,11 @@ import classNames from "classnames";
 import React from "react";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
-import { Experience, Resume } from "../../common/interfaces/resume";
+import {
+  Experience,
+  PersonalDetails,
+  Resume,
+} from "../../common/interfaces/resume";
 import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
 
 interface DocumentPreviewProps {
@@ -44,8 +48,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       return (points / format.width) * containerSize.width;
     }
 
-    const { email, phoneNumber, websiteUrl, location } = resume.personalDetails;
-
     return (
       <div
         ref={containerRef}
@@ -62,28 +64,11 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             paddingBottom: pointsToPx(format.margins.bottom),
           }}
         >
-          <div className="flex justify-between">
-            <div>
-              <h1 style={{ fontSize: pointsToPx(16) }}>
-                {resume.personalDetails.fullName}
-              </h1>
-              <h2 style={{ fontSize: pointsToPx(format.fontSizes.header) }}>
-                {resume.personalDetails.title}
-              </h2>
-            </div>
-
-            <ul
-              className="text-right"
-              style={{ fontSize: pointsToPx(format.fontSizes.body) }}
-            >
-              {[email, phoneNumber, websiteUrl, location]
-                .map((text) => text.trim())
-                .filter((text) => text.length > 0)
-                .map((text) => (
-                  <li>{text}</li>
-                ))}
-            </ul>
-          </div>
+          <DetailsSection
+            details={resume.personalDetails}
+            format={format}
+            pointsToPx={pointsToPx}
+          />
 
           <SectionHeader pointsToPx={pointsToPx} text="Work history" />
           {resume.workHistory
@@ -133,6 +118,40 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     );
   }
 );
+
+const DetailsSection: React.FC<{
+  details: PersonalDetails;
+  format: DocumentFormat;
+  pointsToPx: (points: number) => number;
+}> = ({ pointsToPx, details, format }) => {
+  return (
+    <div className="flex justify-between">
+      <div>
+        <h1 style={{ fontSize: pointsToPx(16) }}>{details.fullName}</h1>
+        <h2 style={{ fontSize: pointsToPx(format.fontSizes.header) }}>
+          {details.title}
+        </h2>
+      </div>
+
+      <ul
+        className="text-right"
+        style={{ fontSize: pointsToPx(format.fontSizes.body) }}
+      >
+        {[
+          details.email,
+          details.phoneNumber,
+          details.websiteUrl,
+          details.location,
+        ]
+          .map((text) => text.trim())
+          .filter((text) => text.length > 0)
+          .map((text) => (
+            <li>{text}</li>
+          ))}
+      </ul>
+    </div>
+  );
+};
 
 const SectionHeader: React.FC<{
   pointsToPx: (points: number) => number;
