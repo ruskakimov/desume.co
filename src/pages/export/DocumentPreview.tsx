@@ -48,6 +48,58 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       return (points / format.width) * containerSize.width;
     }
 
+    const blocks = [
+      <DetailsSection
+        details={resume.personalDetails}
+        format={format}
+        pointsToPx={pointsToPx}
+      />,
+
+      <SectionHeader pointsToPx={pointsToPx} text="Work history" />,
+      ...resume.workHistory
+        .filter((experience) => experience.included)
+        .map((experience) => {
+          return (
+            <ExperienceItem
+              title={experience.companyName}
+              subtitle={experience.jobTitle}
+              experience={experience}
+              format={format}
+              pointsToPx={pointsToPx}
+            />
+          );
+        }),
+
+      <SectionHeader pointsToPx={pointsToPx} text="Education" />,
+      ...resume.educationHistory
+        .filter((experience) => experience.included)
+        .map((experience) => {
+          return (
+            <ExperienceItem
+              title={experience.schoolName}
+              subtitle={experience.degree}
+              experience={experience}
+              format={format}
+              pointsToPx={pointsToPx}
+            />
+          );
+        }),
+
+      <SectionHeader pointsToPx={pointsToPx} text="Projects" />,
+      ...resume.projectHistory
+        .filter((experience) => experience.included)
+        .map((experience) => {
+          return (
+            <ExperienceItem
+              title={experience.projectName}
+              experience={experience}
+              format={format}
+              pointsToPx={pointsToPx}
+            />
+          );
+        }),
+    ];
+
     return (
       <div
         ref={containerRef}
@@ -64,55 +116,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             paddingBottom: pointsToPx(format.margins.bottom),
           }}
         >
-          <DetailsSection
-            details={resume.personalDetails}
-            format={format}
-            pointsToPx={pointsToPx}
-          />
-
-          <SectionHeader pointsToPx={pointsToPx} text="Work history" />
-          {resume.workHistory
-            .filter((experience) => experience.included)
-            .map((experience) => {
-              return (
-                <ExperienceItem
-                  title={experience.companyName}
-                  subtitle={experience.jobTitle}
-                  experience={experience}
-                  format={format}
-                  pointsToPx={pointsToPx}
-                />
-              );
-            })}
-
-          <SectionHeader pointsToPx={pointsToPx} text="Education" />
-          {resume.educationHistory
-            .filter((experience) => experience.included)
-            .map((experience) => {
-              return (
-                <ExperienceItem
-                  title={experience.schoolName}
-                  subtitle={experience.degree}
-                  experience={experience}
-                  format={format}
-                  pointsToPx={pointsToPx}
-                />
-              );
-            })}
-
-          <SectionHeader pointsToPx={pointsToPx} text="Projects" />
-          {resume.projectHistory
-            .filter((experience) => experience.included)
-            .map((experience) => {
-              return (
-                <ExperienceItem
-                  title={experience.projectName}
-                  experience={experience}
-                  format={format}
-                  pointsToPx={pointsToPx}
-                />
-              );
-            })}
+          {blocks}
         </div>
       </div>
     );
