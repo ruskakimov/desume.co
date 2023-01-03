@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React from "react";
+import React, { useRef } from "react";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
 import {
@@ -43,6 +43,8 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       format.margins.right,
       format.margins.bottom,
     ]);
+
+    const blocksRef = useRef<HTMLDivElement[]>([]);
 
     function pointsToPx(points: number): number {
       return (points / format.width) * containerSize.width;
@@ -98,7 +100,19 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             />
           );
         }),
-    ];
+    ].map((block, index) =>
+      React.cloneElement<any>(block, {
+        ref: (ref: any) => (blocksRef.current[index] = ref),
+      })
+    );
+
+    console.log(blocksRef);
+
+    const marginTopPx = pointsToPx(format.margins.top);
+    const marginBottomPx = pointsToPx(format.margins.bottom);
+
+    const pageContentHeight =
+      containerSize.height - marginTopPx - marginBottomPx;
 
     return (
       <div
@@ -110,10 +124,10 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           style={{
             aspectRatio: aspectRatio,
             fontFamily: "Charter, Times",
-            paddingTop: pointsToPx(format.margins.top),
+            paddingTop: marginTopPx,
             paddingLeft: pointsToPx(format.margins.left),
             paddingRight: pointsToPx(format.margins.right),
-            paddingBottom: pointsToPx(format.margins.bottom),
+            paddingBottom: marginBottomPx,
           }}
         >
           {blocks}
@@ -123,13 +137,16 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
   }
 );
 
-const DetailsSection: React.FC<{
-  details: PersonalDetails;
-  format: DocumentFormat;
-  pointsToPx: (points: number) => number;
-}> = ({ pointsToPx, details, format }) => {
+const DetailsSection = React.forwardRef<
+  HTMLDivElement,
+  {
+    details: PersonalDetails;
+    format: DocumentFormat;
+    pointsToPx: (points: number) => number;
+  }
+>(({ pointsToPx, details, format }, ref) => {
   return (
-    <div className="flex justify-between">
+    <div ref={ref} className="flex justify-between">
       <div>
         <h1 style={{ fontSize: pointsToPx(16) }}>{details.fullName}</h1>
         <h2 style={{ fontSize: pointsToPx(format.fontSizes.header) }}>
@@ -155,14 +172,17 @@ const DetailsSection: React.FC<{
       </ul>
     </div>
   );
-};
+});
 
-const SectionHeader: React.FC<{
-  pointsToPx: (points: number) => number;
-  text: string;
-}> = ({ pointsToPx, text }) => {
+const SectionHeader = React.forwardRef<
+  HTMLDivElement,
+  {
+    pointsToPx: (points: number) => number;
+    text: string;
+  }
+>(({ pointsToPx, text }, ref) => {
   return (
-    <>
+    <div ref={ref}>
       <div
         className={classNames(rectMarkerClass, "bg-black")}
         style={{ marginTop: pointsToPx(20), height: pointsToPx(0.6) }}
@@ -178,24 +198,27 @@ const SectionHeader: React.FC<{
       >
         {text.toUpperCase()}
       </p>
-    </>
+    </div>
   );
-};
+});
 
-const ExperienceItem: React.FC<{
-  pointsToPx: (points: number) => number;
-  title: string;
-  subtitle?: string;
-  experience: Experience;
-  format: DocumentFormat;
-}> = ({ pointsToPx, title, subtitle, experience, format }) => {
+const ExperienceItem = React.forwardRef<
+  HTMLDivElement,
+  {
+    pointsToPx: (points: number) => number;
+    title: string;
+    subtitle?: string;
+    experience: Experience;
+    format: DocumentFormat;
+  }
+>(({ pointsToPx, title, subtitle, experience, format }, ref) => {
   const start = monthYearToString(experience.startDate);
   const end = experience.endDate
     ? monthYearToString(experience.endDate)
     : "Current";
 
   return (
-    <div style={{ marginBottom: pointsToPx(16) }}>
+    <div ref={ref} style={{ marginBottom: pointsToPx(16) }}>
       <div
         className="flex justify-between"
         style={{ fontSize: pointsToPx(format.fontSizes.header) }}
@@ -240,6 +263,6 @@ const ExperienceItem: React.FC<{
       </ul>
     </div>
   );
-};
+});
 
 export default DocumentPreview;
