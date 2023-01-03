@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
 import {
@@ -111,27 +111,94 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     const marginTopPx = pointsToPx(format.margins.top);
     const marginBottomPx = pointsToPx(format.margins.bottom);
 
-    const pageContentHeight =
-      containerSize.height - marginTopPx - marginBottomPx;
+    const [pageBlocks, setPageBlocks] = useState<number[][]>([[0, 0]]);
+
+    useLayoutEffect(() => {
+      const pageContentHeight =
+        containerSize.height - marginTopPx - marginBottomPx;
+
+      console.log("page height", pageContentHeight);
+
+      const blockHeights = blocksRef.current.map((el) => {
+        const margins =
+          parseFloat(el.style.marginTop) ||
+          0 + parseFloat(el.style.marginBottom) ||
+          0;
+        return el.getBoundingClientRect().height + margins;
+      });
+
+      const blocksPerPage: number[] = [];
+      let currentHeight = 0;
+      let currentCount = 0;
+
+      for (let h of blockHeights) {
+        if (h > pageContentHeight)
+          throw Error("Element is too big to fit a page.");
+
+        if (currentHeight + h > pageContentHeight) {
+          blocksPerPage.push(currentCount);
+          currentHeight = h;
+          currentCount = 1;
+        } else {
+          currentHeight += h;
+          currentCount++;
+        }
+      }
+
+      if (currentCount > 0) blocksPerPage.push(currentCount);
+
+      console.log("blocksPerPage", blocksPerPage);
+      let count = 0;
+      const ranges = blocksPerPage.map((c) => {
+        const range = [count, count + c];
+        count += c;
+        return range;
+      });
+
+      console.log("ranges", ranges);
+
+      setPageBlocks(ranges);
+    }, [containerSize]);
 
     return (
-      <div
-        ref={containerRef}
-        className="bg-white shadow text-black antialiased overflow-hidden"
-      >
+      <div>
         <div
-          ref={ref}
-          style={{
-            aspectRatio: aspectRatio,
-            fontFamily: "Charter, Times",
-            paddingTop: marginTopPx,
-            paddingLeft: pointsToPx(format.margins.left),
-            paddingRight: pointsToPx(format.margins.right),
-            paddingBottom: marginBottomPx,
-          }}
+          ref={containerRef}
+          className="bg-white shadow text-black antialiased overflow-hidden"
         >
-          {blocks}
+          <div
+            ref={ref}
+            style={{
+              aspectRatio: aspectRatio,
+              fontFamily: "Charter, Times",
+              paddingTop: marginTopPx,
+              paddingLeft: pointsToPx(format.margins.left),
+              paddingRight: pointsToPx(format.margins.right),
+              paddingBottom: marginBottomPx,
+              overflow: "hidden",
+            }}
+          >
+            {blocks}
+          </div>
         </div>
+
+        {pageBlocks.map(([start, end]) => (
+          <div className="mt-8 bg-white shadow text-black antialiased overflow-hidden">
+            <div
+              style={{
+                aspectRatio: aspectRatio,
+                fontFamily: "Charter, Times",
+                paddingTop: marginTopPx,
+                paddingLeft: pointsToPx(format.margins.left),
+                paddingRight: pointsToPx(format.margins.right),
+                paddingBottom: marginBottomPx,
+                overflow: "hidden",
+              }}
+            >
+              {blocks.slice(start, end)}
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
