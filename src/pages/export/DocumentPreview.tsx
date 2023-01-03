@@ -72,20 +72,36 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           );
         }),
 
-      <SectionHeader pointsToPx={pointsToPx} text="Education" />,
-      ...resume.educationHistory
-        .filter((experience) => experience.included)
-        .map((experience) => {
-          return (
-            <ExperienceItem
-              title={experience.schoolName}
-              subtitle={experience.degree}
-              experience={experience}
-              format={format}
-              pointsToPx={pointsToPx}
-            />
-          );
-        }),
+      ...(resume.educationHistory.length > 0
+        ? [
+            <div>
+              <SectionHeader pointsToPx={pointsToPx} text="Education" />
+
+              <ExperienceItem
+                title={resume.educationHistory[0].schoolName}
+                subtitle={resume.educationHistory[0].degree}
+                experience={resume.educationHistory[0]}
+                format={format}
+                pointsToPx={pointsToPx}
+              />
+            </div>,
+
+            ...resume.educationHistory
+              .slice(1)
+              .filter((experience) => experience.included)
+              .map((experience) => {
+                return (
+                  <ExperienceItem
+                    title={experience.schoolName}
+                    subtitle={experience.degree}
+                    experience={experience}
+                    format={format}
+                    pointsToPx={pointsToPx}
+                  />
+                );
+              }),
+          ]
+        : []),
 
       <SectionHeader pointsToPx={pointsToPx} text="Projects" />,
       ...resume.projectHistory
