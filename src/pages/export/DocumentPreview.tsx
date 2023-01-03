@@ -100,7 +100,9 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             />
           );
         }),
-    ].map((block, index) =>
+    ];
+
+    const blocksWithRefs = blocks.map((block, index) =>
       React.cloneElement<any>(block, {
         ref: (ref: any) => (blocksRef.current[index] = ref),
       })
@@ -126,6 +128,8 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           0;
         return el.getBoundingClientRect().height + margins;
       });
+
+      console.log("block heights", blockHeights, blocksRef.current);
 
       const blocksPerPage: number[] = [];
       let currentHeight = 0;
@@ -178,7 +182,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
               overflow: "hidden",
             }}
           >
-            {blocks}
+            {blocksWithRefs}
           </div>
         </div>
 
@@ -249,10 +253,10 @@ const SectionHeader = React.forwardRef<
   }
 >(({ pointsToPx, text }, ref) => {
   return (
-    <div ref={ref}>
+    <div ref={ref} style={{ marginTop: pointsToPx(20) }}>
       <div
         className={classNames(rectMarkerClass, "bg-black")}
-        style={{ marginTop: pointsToPx(20), height: pointsToPx(0.6) }}
+        style={{ height: pointsToPx(0.6) }}
       />
       <p
         className="font-bold"
