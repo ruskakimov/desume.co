@@ -9,6 +9,11 @@ export function groupIntoStacks(heights: number[], maxHeight: number): Range[] {
   let stackHeight = 0;
 
   heights.forEach((h, i) => {
+    if (h > maxHeight)
+      throw Error(
+        `Found a height ${h} that exceeds the given max ${maxHeight}.`
+      );
+
     if (stackHeight + h <= maxHeight) {
       stackHeight += h;
     } else {

@@ -11,4 +11,8 @@ describe("groupIntoStacks", () => {
       [2, 3],
     ]);
   });
+
+  test("throws an error if some height exceeds max", () => {
+    expect(() => groupIntoStacks([100, 150, 200], 160)).toThrow();
+  });
 });
