@@ -50,7 +50,27 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       return (points / format.width) * containerSize.width;
     }
 
-    function renderEducationBlocks() {
+    function renderWorkHistoryBlocks(): JSX.Element[] {
+      if (resume.workHistory.length === 0) return [];
+      return [
+        <SectionHeader pointsToPx={pointsToPx} text="Work history" />,
+        ...resume.workHistory
+          .filter((experience) => experience.included)
+          .map((experience) => {
+            return (
+              <ExperienceItem
+                title={experience.companyName}
+                subtitle={experience.jobTitle}
+                experience={experience}
+                format={format}
+                pointsToPx={pointsToPx}
+              />
+            );
+          }),
+      ];
+    }
+
+    function renderEducationBlocks(): JSX.Element[] {
       if (resume.educationHistory.length === 0) return [];
       return [
         <SectionHeader pointsToPx={pointsToPx} text="Education" />,
@@ -70,43 +90,34 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       ];
     }
 
+    function renderProjectsBlocks(): JSX.Element[] {
+      if (resume.projectHistory.length === 0) return [];
+      return [
+        <SectionHeader pointsToPx={pointsToPx} text="Projects" />,
+        ...resume.projectHistory
+          .filter((experience) => experience.included)
+          .map((experience) => {
+            return (
+              <ExperienceItem
+                title={experience.projectName}
+                experience={experience}
+                format={format}
+                pointsToPx={pointsToPx}
+              />
+            );
+          }),
+      ];
+    }
+
     const blocks = [
       <DetailsSection
         details={resume.personalDetails}
         format={format}
         pointsToPx={pointsToPx}
       />,
-
-      <SectionHeader pointsToPx={pointsToPx} text="Work history" />,
-      ...resume.workHistory
-        .filter((experience) => experience.included)
-        .map((experience) => {
-          return (
-            <ExperienceItem
-              title={experience.companyName}
-              subtitle={experience.jobTitle}
-              experience={experience}
-              format={format}
-              pointsToPx={pointsToPx}
-            />
-          );
-        }),
-
+      ...renderWorkHistoryBlocks(),
       ...renderEducationBlocks(),
-
-      <SectionHeader pointsToPx={pointsToPx} text="Projects" />,
-      ...resume.projectHistory
-        .filter((experience) => experience.included)
-        .map((experience) => {
-          return (
-            <ExperienceItem
-              title={experience.projectName}
-              experience={experience}
-              format={format}
-              pointsToPx={pointsToPx}
-            />
-          );
-        }),
+      ...renderProjectsBlocks(),
     ];
 
     const blocksWithRefs = blocks.map((block, index) =>
