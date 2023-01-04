@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { groupIntoStacks } from "../../common/functions/layout";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
 import {
@@ -142,34 +143,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         return el.getBoundingClientRect().height + margins;
       });
 
-      const blocksPerPage: number[] = [];
-      let currentHeight = 0;
-      let currentCount = 0;
-
-      for (let h of blockHeights) {
-        if (h > pageContentHeight)
-          throw Error("Element is too big to fit a page.");
-
-        if (currentHeight + h > pageContentHeight) {
-          blocksPerPage.push(currentCount);
-          currentHeight = h;
-          currentCount = 1;
-        } else {
-          currentHeight += h;
-          currentCount++;
-        }
-      }
-
-      if (currentCount > 0) blocksPerPage.push(currentCount);
-
-      let count = 0;
-      const ranges = blocksPerPage.map((c) => {
-        const range = [count, count + c];
-        count += c;
-        return range;
-      });
-
-      setPageBlockRanges(ranges);
+      setPageBlockRanges(groupIntoStacks(blockHeights, pageContentHeight));
     }, [containerSize]);
 
     const pageStyle = {
