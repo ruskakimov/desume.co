@@ -126,7 +126,9 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     const marginTopPx = pointsToPx(format.margins.top);
     const marginBottomPx = pointsToPx(format.margins.bottom);
 
-    const [pageBlocks, setPageBlocks] = useState<number[][]>([[0, 0]]);
+    const [pageBlockRanges, setPageBlockRanges] = useState<number[][]>([
+      [0, 0],
+    ]);
 
     useLayoutEffect(() => {
       const pageContentHeight =
@@ -167,7 +169,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         return range;
       });
 
-      setPageBlocks(ranges);
+      setPageBlockRanges(ranges);
     }, [containerSize]);
 
     const pageStyle = {
@@ -191,7 +193,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           {blocksWithRefs}
         </div>
 
-        {pageBlocks.map(([start, end]) => (
+        {pageBlockRanges.map(([start, end]) => (
           <div
             className="mb-8 bg-white shadow text-black antialiased"
             style={pageStyle}
