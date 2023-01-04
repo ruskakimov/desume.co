@@ -123,8 +123,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       })
     );
 
-    console.log(blocksRef);
-
     const marginTopPx = pointsToPx(format.margins.top);
     const marginBottomPx = pointsToPx(format.margins.bottom);
 
@@ -134,8 +132,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       const pageContentHeight =
         containerSize.height - marginTopPx - marginBottomPx;
 
-      console.log("page height", pageContentHeight);
-
       const blockHeights = blocksRef.current.map((el) => {
         const margins =
           parseFloat(el.style.marginTop) ||
@@ -143,8 +139,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           0;
         return el.getBoundingClientRect().height + margins;
       });
-
-      console.log("block heights", blockHeights, blocksRef.current);
 
       const blocksPerPage: number[] = [];
       let currentHeight = 0;
@@ -166,15 +160,12 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
       if (currentCount > 0) blocksPerPage.push(currentCount);
 
-      console.log("blocksPerPage", blocksPerPage);
       let count = 0;
       const ranges = blocksPerPage.map((c) => {
         const range = [count, count + c];
         count += c;
         return range;
       });
-
-      console.log("ranges", ranges);
 
       setPageBlocks(ranges);
     }, [containerSize]);
