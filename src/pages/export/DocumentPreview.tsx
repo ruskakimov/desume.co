@@ -196,7 +196,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       <div className="relative">
         <div
           ref={containerRef}
-          className="bg-white shadow text-black antialiased overflow-hidden w-full absolute invisible"
+          className="overflow-hidden w-full absolute invisible"
         >
           <div ref={ref} style={pageStyle}>
             {blocksWithRefs}
@@ -204,8 +204,11 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         </div>
 
         {pageBlocks.map(([start, end]) => (
-          <div className="mb-8 bg-white shadow text-black antialiased overflow-hidden">
-            <div style={pageStyle}>{blocks.slice(start, end)}</div>
+          <div
+            className="mb-8 bg-white shadow text-black antialiased"
+            style={pageStyle}
+          >
+            {blocks.slice(start, end)}
           </div>
         ))}
       </div>
