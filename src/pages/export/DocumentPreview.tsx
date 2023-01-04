@@ -61,7 +61,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
       return [
         // Prevent widow header by grouping it with the first item.
-        <div>
+        <div style={{ marginTop: pointsToPx(20) }}>
           <SectionHeader pointsToPx={pointsToPx} text={header} />
           {renderItem(includedExperiences[0])}
         </div>,
@@ -225,7 +225,7 @@ const SectionHeader = React.forwardRef<
   }
 >(({ pointsToPx, text }, ref) => {
   return (
-    <div ref={ref} style={{ marginTop: pointsToPx(20) }}>
+    <div ref={ref}>
       <div
         className={classNames(rectMarkerClass, "bg-black")}
         style={{ height: pointsToPx(0.6) }}
