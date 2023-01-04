@@ -194,6 +194,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
     return (
       <div className="relative">
+        {/* This invisible page is for measuring page content area and block heights. */}
         <div
           ref={containerRef}
           className="w-full absolute invisible"
