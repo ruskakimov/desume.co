@@ -50,62 +50,21 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       return (points / format.width) * containerSize.width;
     }
 
-    function renderWorkHistoryBlocks(): JSX.Element[] {
-      if (resume.workHistory.length === 0) return [];
-      return [
-        <SectionHeader pointsToPx={pointsToPx} text="Work history" />,
-        ...resume.workHistory
-          .filter((experience) => experience.included)
-          .map((experience) => {
-            return (
-              <ExperienceItem
-                title={experience.companyName}
-                subtitle={experience.jobTitle}
-                experience={experience}
-                format={format}
-                pointsToPx={pointsToPx}
-              />
-            );
-          }),
-      ];
-    }
+    function renderExperienceSectionBlocks<T extends Experience>(
+      header: string,
+      experiences: T[],
+      renderItem: (experience: T) => JSX.Element
+    ): JSX.Element[] {
+      const includedExperiences = experiences.filter((exp) => exp.included);
+      if (includedExperiences.length === 0) return [];
 
-    function renderEducationBlocks(): JSX.Element[] {
-      if (resume.educationHistory.length === 0) return [];
       return [
-        <SectionHeader pointsToPx={pointsToPx} text="Education" />,
-        ...resume.educationHistory
-          .filter((experience) => experience.included)
-          .map((experience) => {
-            return (
-              <ExperienceItem
-                title={experience.schoolName}
-                subtitle={experience.degree}
-                experience={experience}
-                format={format}
-                pointsToPx={pointsToPx}
-              />
-            );
-          }),
-      ];
-    }
-
-    function renderProjectsBlocks(): JSX.Element[] {
-      if (resume.projectHistory.length === 0) return [];
-      return [
-        <SectionHeader pointsToPx={pointsToPx} text="Projects" />,
-        ...resume.projectHistory
-          .filter((experience) => experience.included)
-          .map((experience) => {
-            return (
-              <ExperienceItem
-                title={experience.projectName}
-                experience={experience}
-                format={format}
-                pointsToPx={pointsToPx}
-              />
-            );
-          }),
+        // Prevent widow header by grouping it with the first item.
+        <div>
+          <SectionHeader pointsToPx={pointsToPx} text={header} />
+          {renderItem(includedExperiences[0])}
+        </div>,
+        ...includedExperiences.slice(1).map(renderItem),
       ];
     }
 
@@ -115,9 +74,47 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         format={format}
         pointsToPx={pointsToPx}
       />,
-      ...renderWorkHistoryBlocks(),
-      ...renderEducationBlocks(),
-      ...renderProjectsBlocks(),
+
+      ...renderExperienceSectionBlocks(
+        "Work experience",
+        resume.workHistory,
+        (experience) => (
+          <ExperienceItem
+            title={experience.companyName}
+            subtitle={experience.jobTitle}
+            experience={experience}
+            format={format}
+            pointsToPx={pointsToPx}
+          />
+        )
+      ),
+
+      ...renderExperienceSectionBlocks(
+        "Education",
+        resume.educationHistory,
+        (education) => (
+          <ExperienceItem
+            title={education.schoolName}
+            subtitle={education.degree}
+            experience={education}
+            format={format}
+            pointsToPx={pointsToPx}
+          />
+        )
+      ),
+
+      ...renderExperienceSectionBlocks(
+        "Projects",
+        resume.projectHistory,
+        (project) => (
+          <ExperienceItem
+            title={project.projectName}
+            experience={project}
+            format={format}
+            pointsToPx={pointsToPx}
+          />
+        )
+      ),
     ];
 
     const blocksWithRefs = blocks.map((block, index) =>
