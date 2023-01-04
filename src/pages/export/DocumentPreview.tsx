@@ -118,7 +118,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     ];
 
     const blocksWithRefs = blocks.map((block, index) =>
-      React.cloneElement<any>(block, {
+      React.cloneElement(block, {
         ref: (ref: any) => (blocksRef.current[index] = ref),
       })
     );
