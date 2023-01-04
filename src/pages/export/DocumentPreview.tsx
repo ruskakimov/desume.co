@@ -182,43 +182,30 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       setPageBlocks(ranges);
     }, [containerSize]);
 
+    const pageStyle = {
+      aspectRatio: aspectRatio,
+      fontFamily: "Charter, Times",
+      paddingTop: marginTopPx,
+      paddingLeft: pointsToPx(format.margins.left),
+      paddingRight: pointsToPx(format.margins.right),
+      paddingBottom: marginBottomPx,
+      overflow: "hidden",
+    };
+
     return (
       <div className="relative">
         <div
           ref={containerRef}
           className="bg-white shadow text-black antialiased overflow-hidden w-full absolute invisible"
         >
-          <div
-            ref={ref}
-            style={{
-              aspectRatio: aspectRatio,
-              fontFamily: "Charter, Times",
-              paddingTop: marginTopPx,
-              paddingLeft: pointsToPx(format.margins.left),
-              paddingRight: pointsToPx(format.margins.right),
-              paddingBottom: marginBottomPx,
-              overflow: "hidden",
-            }}
-          >
+          <div ref={ref} style={pageStyle}>
             {blocksWithRefs}
           </div>
         </div>
 
         {pageBlocks.map(([start, end]) => (
           <div className="mb-8 bg-white shadow text-black antialiased overflow-hidden">
-            <div
-              style={{
-                aspectRatio: aspectRatio,
-                fontFamily: "Charter, Times",
-                paddingTop: marginTopPx,
-                paddingLeft: pointsToPx(format.margins.left),
-                paddingRight: pointsToPx(format.margins.right),
-                paddingBottom: marginBottomPx,
-                overflow: "hidden",
-              }}
-            >
-              {blocks.slice(start, end)}
-            </div>
+            <div style={pageStyle}>{blocks.slice(start, end)}</div>
           </div>
         ))}
       </div>
