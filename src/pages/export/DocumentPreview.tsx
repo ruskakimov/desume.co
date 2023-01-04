@@ -196,11 +196,10 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       <div className="relative">
         <div
           ref={containerRef}
-          className="overflow-hidden w-full absolute invisible"
+          className="w-full absolute invisible"
+          style={pageStyle}
         >
-          <div ref={ref} style={pageStyle}>
-            {blocksWithRefs}
-          </div>
+          {blocksWithRefs}
         </div>
 
         {pageBlocks.map(([start, end]) => (
