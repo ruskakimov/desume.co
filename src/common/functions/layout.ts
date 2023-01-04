@@ -17,5 +17,7 @@ export function groupIntoStacks(heights: number[], maxHeight: number): Range[] {
     }
   });
 
+  ranges.push([startIndex, heights.length]);
+
   return ranges;
 }
