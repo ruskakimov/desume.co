@@ -19,6 +19,7 @@ export function groupIntoStacks(heights: number[], maxHeight: number): Range[] {
     } else {
       ranges.push([startIndex, i]);
       startIndex = i;
+      stackHeight = h;
     }
   });
 
