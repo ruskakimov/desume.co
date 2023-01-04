@@ -74,20 +74,8 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
       ...(resume.educationHistory.length > 0
         ? [
-            <div>
-              <SectionHeader pointsToPx={pointsToPx} text="Education" />
-
-              <ExperienceItem
-                title={resume.educationHistory[0].schoolName}
-                subtitle={resume.educationHistory[0].degree}
-                experience={resume.educationHistory[0]}
-                format={format}
-                pointsToPx={pointsToPx}
-              />
-            </div>,
-
+            <SectionHeader pointsToPx={pointsToPx} text="Education" />,
             ...resume.educationHistory
-              .slice(1)
               .filter((experience) => experience.included)
               .map((experience) => {
                 return (
