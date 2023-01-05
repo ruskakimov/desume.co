@@ -97,7 +97,7 @@ const ExportPage: React.FC = () => {
   const { register, watch, getValues } = useForm<ExportOptionsForm>({
     defaultValues: getSavedFormData(),
   });
-  const docPreviewRef = useRef<HTMLDivElement>(null);
+  const pagesRef = useRef<HTMLDivElement[]>([]);
 
   const pageSize = watch("pageSize");
   const bulletSpacing = parseFloat(watch("bulletSpacing"));
@@ -141,10 +141,11 @@ const ExportPage: React.FC = () => {
           <PrimaryButton
             className="w-full"
             onClick={() => {
-              const el = docPreviewRef.current;
-              if (el) {
-                generatePdfFromHtml(el, pageSize).save();
-              }
+              console.log(pagesRef.current);
+              // const el = docPreviewRef.current;
+              // if (el) {
+              //   generatePdfFromHtml(el, pageSize).save();
+              // }
             }}
           >
             Download PDF
@@ -154,7 +155,7 @@ const ExportPage: React.FC = () => {
 
       {resume ? (
         <DocumentPreview
-          ref={docPreviewRef}
+          pagesRef={pagesRef}
           resume={resume}
           format={{
             width: pageSizes[pageSize].width,

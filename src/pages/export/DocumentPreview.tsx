@@ -13,6 +13,7 @@ import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
 interface DocumentPreviewProps {
   resume: Resume;
   format: DocumentFormat;
+  pagesRef: React.MutableRefObject<HTMLDivElement[]>;
 }
 
 /**
@@ -37,6 +38,7 @@ interface DocumentFormat {
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   resume,
   format,
+  pagesRef,
 }) => {
   const aspectRatio = format.width / format.height;
 
@@ -179,6 +181,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
       {pageBlockRanges.map(([start, end], pageIndex) => (
         <div
+          ref={(el) => {
+            if (el) pagesRef.current[pageIndex] = el;
+          }}
           className="mb-8 bg-white shadow text-black antialiased flex flex-col"
           style={pageStyle}
         >
