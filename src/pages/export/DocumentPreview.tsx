@@ -174,13 +174,16 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             style={pageStyle}
           >
             {blocks.slice(start, end)}
-            <Footer
-              name={resume.personalDetails.fullName}
-              pageNumber={pageIndex + 1}
-              pageCount={pageBlockRanges.length}
-              height={footerHeightPx}
-              pointsToPx={pointsToPx}
-            />
+
+            {pageBlockRanges.length > 1 && (
+              <Footer
+                name={resume.personalDetails.fullName}
+                pageNumber={pageIndex + 1}
+                pageCount={pageBlockRanges.length}
+                height={footerHeightPx}
+                pointsToPx={pointsToPx}
+              />
+            )}
           </div>
         ))}
       </div>
