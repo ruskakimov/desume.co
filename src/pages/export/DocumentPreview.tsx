@@ -126,6 +126,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
     const marginTopPx = pointsToPx(format.margins.top);
     const marginBottomPx = pointsToPx(format.margins.bottom);
+    const footerHeightPx = pointsToPx(20);
 
     const [pageBlockRanges, setPageBlockRanges] = useState<number[][]>([
       [0, 0],
@@ -133,7 +134,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
     useLayoutEffect(() => {
       const pageContentHeight =
-        containerSize.height - marginTopPx - marginBottomPx;
+        containerSize.height - marginTopPx - marginBottomPx - footerHeightPx;
 
       const blockHeights = blocksRef.current.map((el) => {
         const margins =
@@ -167,12 +168,25 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
           {blocksWithRefs}
         </div>
 
-        {pageBlockRanges.map(([start, end]) => (
+        {pageBlockRanges.map(([start, end], pageIndex) => (
           <div
-            className="mb-8 bg-white shadow text-black antialiased"
+            className="mb-8 bg-white shadow text-black antialiased flex flex-col"
             style={pageStyle}
           >
             {blocks.slice(start, end)}
+
+            <div
+              className="mt-auto text-center flex justify-center items-end"
+              style={{
+                height: footerHeightPx,
+                fontSize: pointsToPx(8),
+                letterSpacing: pointsToPx(0.5),
+              }}
+            >
+              {`${resume.personalDetails.fullName} résumé — page ${
+                pageIndex + 1
+              } of ${pageBlockRanges.length}`.toUpperCase()}
+            </div>
           </div>
         ))}
       </div>
