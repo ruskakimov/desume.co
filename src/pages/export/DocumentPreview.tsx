@@ -174,25 +174,40 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
             style={pageStyle}
           >
             {blocks.slice(start, end)}
-
-            <div
-              className="mt-auto text-center flex justify-center items-end"
-              style={{
-                height: footerHeightPx,
-                fontSize: pointsToPx(8),
-                letterSpacing: pointsToPx(0.5),
-              }}
-            >
-              {`${resume.personalDetails.fullName} résumé — page ${
-                pageIndex + 1
-              } of ${pageBlockRanges.length}`.toUpperCase()}
-            </div>
+            <Footer
+              name={resume.personalDetails.fullName}
+              pageNumber={pageIndex + 1}
+              pageCount={pageBlockRanges.length}
+              height={footerHeightPx}
+              pointsToPx={pointsToPx}
+            />
           </div>
         ))}
       </div>
     );
   }
 );
+
+const Footer: React.FC<{
+  name: string;
+  pageNumber: number;
+  pageCount: number;
+  height: number;
+  pointsToPx: (points: number) => number;
+}> = ({ name, pageNumber, pageCount, height, pointsToPx }) => {
+  return (
+    <div
+      className="mt-auto flex justify-center items-end"
+      style={{
+        height,
+        fontSize: pointsToPx(8),
+        letterSpacing: pointsToPx(0.5),
+      }}
+    >
+      {`${name} résumé — page ${pageNumber} of ${pageCount}`.toUpperCase()}
+    </div>
+  );
+};
 
 const DetailsSection = React.forwardRef<
   HTMLDivElement,
