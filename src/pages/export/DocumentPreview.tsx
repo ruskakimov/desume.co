@@ -34,172 +34,170 @@ interface DocumentFormat {
   bulletLineHeight: number;
 }
 
-const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
-  ({ resume, format }, ref) => {
-    const aspectRatio = format.width / format.height;
+const DocumentPreview: React.FC<DocumentPreviewProps> = ({
+  resume,
+  format,
+}) => {
+  const aspectRatio = format.width / format.height;
 
-    const [containerRef, containerSize] = useElementSize([
-      format.margins.top,
-      format.margins.left,
-      format.margins.right,
-      format.margins.bottom,
-    ]);
+  const [containerRef, containerSize] = useElementSize([
+    format.margins.top,
+    format.margins.left,
+    format.margins.right,
+    format.margins.bottom,
+  ]);
 
-    const blocksRef = useRef<HTMLDivElement[]>([]);
+  const blocksRef = useRef<HTMLDivElement[]>([]);
 
-    function pointsToPx(points: number): number {
-      return (points / format.width) * containerSize.width;
-    }
+  function pointsToPx(points: number): number {
+    return (points / format.width) * containerSize.width;
+  }
 
-    function renderExperienceSectionBlocks<T extends Experience>(
-      header: string,
-      experiences: T[],
-      renderItem: (experience: T) => JSX.Element
-    ): JSX.Element[] {
-      const includedExperiences = experiences.filter((exp) => exp.included);
-      if (includedExperiences.length === 0) return [];
+  function renderExperienceSectionBlocks<T extends Experience>(
+    header: string,
+    experiences: T[],
+    renderItem: (experience: T) => JSX.Element
+  ): JSX.Element[] {
+    const includedExperiences = experiences.filter((exp) => exp.included);
+    if (includedExperiences.length === 0) return [];
 
-      return [
-        // Prevent widow header by grouping it with the first item.
-        <div style={{ marginTop: pointsToPx(20) }}>
-          <SectionHeader pointsToPx={pointsToPx} text={header} />
-          {renderItem(includedExperiences[0])}
-        </div>,
-        ...includedExperiences.slice(1).map(renderItem),
-      ];
-    }
-
-    const blocks = [
-      <DetailsSection
-        details={resume.personalDetails}
-        format={format}
-        pointsToPx={pointsToPx}
-      />,
-
-      ...renderExperienceSectionBlocks(
-        "Work experience",
-        resume.workHistory,
-        (experience) => (
-          <ExperienceItem
-            title={experience.companyName}
-            subtitle={experience.jobTitle}
-            experience={experience}
-            format={format}
-            pointsToPx={pointsToPx}
-          />
-        )
-      ),
-
-      ...renderExperienceSectionBlocks(
-        "Education",
-        resume.educationHistory,
-        (education) => (
-          <ExperienceItem
-            title={education.schoolName}
-            subtitle={education.degree}
-            experience={education}
-            format={format}
-            pointsToPx={pointsToPx}
-          />
-        )
-      ),
-
-      ...renderExperienceSectionBlocks(
-        "Projects",
-        resume.projectHistory,
-        (project) => (
-          <ExperienceItem
-            title={project.projectName}
-            experience={project}
-            format={format}
-            pointsToPx={pointsToPx}
-          />
-        )
-      ),
+    return [
+      // Prevent widow header by grouping it with the first item.
+      <div style={{ marginTop: pointsToPx(20) }}>
+        <SectionHeader pointsToPx={pointsToPx} text={header} />
+        {renderItem(includedExperiences[0])}
+      </div>,
+      ...includedExperiences.slice(1).map(renderItem),
     ];
+  }
 
-    const blocksWithRefs = blocks.map((block, index) =>
-      React.cloneElement(block, {
-        ref: (ref: any) => (blocksRef.current[index] = ref),
-      })
+  const blocks = [
+    <DetailsSection
+      details={resume.personalDetails}
+      format={format}
+      pointsToPx={pointsToPx}
+    />,
+
+    ...renderExperienceSectionBlocks(
+      "Work experience",
+      resume.workHistory,
+      (experience) => (
+        <ExperienceItem
+          title={experience.companyName}
+          subtitle={experience.jobTitle}
+          experience={experience}
+          format={format}
+          pointsToPx={pointsToPx}
+        />
+      )
+    ),
+
+    ...renderExperienceSectionBlocks(
+      "Education",
+      resume.educationHistory,
+      (education) => (
+        <ExperienceItem
+          title={education.schoolName}
+          subtitle={education.degree}
+          experience={education}
+          format={format}
+          pointsToPx={pointsToPx}
+        />
+      )
+    ),
+
+    ...renderExperienceSectionBlocks(
+      "Projects",
+      resume.projectHistory,
+      (project) => (
+        <ExperienceItem
+          title={project.projectName}
+          experience={project}
+          format={format}
+          pointsToPx={pointsToPx}
+        />
+      )
+    ),
+  ];
+
+  const blocksWithRefs = blocks.map((block, index) =>
+    React.cloneElement(block, {
+      ref: (ref: any) => (blocksRef.current[index] = ref),
+    })
+  );
+
+  const marginTopPx = pointsToPx(format.margins.top);
+  const marginBottomPx = pointsToPx(format.margins.bottom);
+  const footerHeightPx = pointsToPx(36);
+
+  const [pageBlockRanges, setPageBlockRanges] = useState<number[][]>([[0, 0]]);
+
+  useLayoutEffect(() => {
+    const blockHeights = blocksRef.current.map((el) => {
+      const margins =
+        parseFloat(el.style.marginTop) ||
+        0 + parseFloat(el.style.marginBottom) ||
+        0;
+      return el.getBoundingClientRect().height + margins;
+    });
+
+    const availableHeight = containerSize.height - marginTopPx - marginBottomPx;
+
+    const pagesWithoutFooter = groupIntoStacks(blockHeights, availableHeight);
+    const pagesWithFooter = groupIntoStacks(
+      blockHeights,
+      availableHeight - footerHeightPx
     );
 
-    const marginTopPx = pointsToPx(format.margins.top);
-    const marginBottomPx = pointsToPx(format.margins.bottom);
-    const footerHeightPx = pointsToPx(36);
+    if (pagesWithoutFooter.length === 1) {
+      setPageBlockRanges(pagesWithoutFooter);
+    } else {
+      setPageBlockRanges(pagesWithFooter);
+    }
+  }, [containerSize, format]);
 
-    const [pageBlockRanges, setPageBlockRanges] = useState<number[][]>([
-      [0, 0],
-    ]);
+  const pageStyle = {
+    aspectRatio: aspectRatio,
+    fontFamily: "Charter, Times",
+    paddingTop: marginTopPx,
+    paddingLeft: pointsToPx(format.margins.left),
+    paddingRight: pointsToPx(format.margins.right),
+    paddingBottom: marginBottomPx,
+    overflow: "hidden",
+  };
 
-    useLayoutEffect(() => {
-      const blockHeights = blocksRef.current.map((el) => {
-        const margins =
-          parseFloat(el.style.marginTop) ||
-          0 + parseFloat(el.style.marginBottom) ||
-          0;
-        return el.getBoundingClientRect().height + margins;
-      });
+  return (
+    <div className="relative">
+      {/* This invisible page is for measuring page content area and block heights. */}
+      <div
+        ref={containerRef}
+        className="w-full absolute invisible"
+        style={pageStyle}
+      >
+        {blocksWithRefs}
+      </div>
 
-      const availableHeight =
-        containerSize.height - marginTopPx - marginBottomPx;
-
-      const pagesWithoutFooter = groupIntoStacks(blockHeights, availableHeight);
-      const pagesWithFooter = groupIntoStacks(
-        blockHeights,
-        availableHeight - footerHeightPx
-      );
-
-      if (pagesWithoutFooter.length === 1) {
-        setPageBlockRanges(pagesWithoutFooter);
-      } else {
-        setPageBlockRanges(pagesWithFooter);
-      }
-    }, [containerSize, format]);
-
-    const pageStyle = {
-      aspectRatio: aspectRatio,
-      fontFamily: "Charter, Times",
-      paddingTop: marginTopPx,
-      paddingLeft: pointsToPx(format.margins.left),
-      paddingRight: pointsToPx(format.margins.right),
-      paddingBottom: marginBottomPx,
-      overflow: "hidden",
-    };
-
-    return (
-      <div className="relative">
-        {/* This invisible page is for measuring page content area and block heights. */}
+      {pageBlockRanges.map(([start, end], pageIndex) => (
         <div
-          ref={containerRef}
-          className="w-full absolute invisible"
+          className="mb-8 bg-white shadow text-black antialiased flex flex-col"
           style={pageStyle}
         >
-          {blocksWithRefs}
+          {blocks.slice(start, end)}
+
+          {pageBlockRanges.length > 1 && (
+            <Footer
+              name={resume.personalDetails.fullName}
+              pageNumber={pageIndex + 1}
+              pageCount={pageBlockRanges.length}
+              height={footerHeightPx}
+              pointsToPx={pointsToPx}
+            />
+          )}
         </div>
-
-        {pageBlockRanges.map(([start, end], pageIndex) => (
-          <div
-            className="mb-8 bg-white shadow text-black antialiased flex flex-col"
-            style={pageStyle}
-          >
-            {blocks.slice(start, end)}
-
-            {pageBlockRanges.length > 1 && (
-              <Footer
-                name={resume.personalDetails.fullName}
-                pageNumber={pageIndex + 1}
-                pageCount={pageBlockRanges.length}
-                height={footerHeightPx}
-                pointsToPx={pointsToPx}
-              />
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  }
-);
+      ))}
+    </div>
+  );
+};
 
 const Footer: React.FC<{
   name: string;
