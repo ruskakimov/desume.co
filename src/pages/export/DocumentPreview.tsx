@@ -133,9 +133,6 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
     ]);
 
     useLayoutEffect(() => {
-      const pageContentHeight =
-        containerSize.height - marginTopPx - marginBottomPx - footerHeightPx;
-
       const blockHeights = blocksRef.current.map((el) => {
         const margins =
           parseFloat(el.style.marginTop) ||
@@ -144,7 +141,20 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
         return el.getBoundingClientRect().height + margins;
       });
 
-      setPageBlockRanges(groupIntoStacks(blockHeights, pageContentHeight));
+      const availableHeight =
+        containerSize.height - marginTopPx - marginBottomPx;
+
+      const pagesWithoutFooter = groupIntoStacks(blockHeights, availableHeight);
+      const pagesWithFooter = groupIntoStacks(
+        blockHeights,
+        availableHeight - footerHeightPx
+      );
+
+      if (pagesWithoutFooter.length === 1) {
+        setPageBlockRanges(pagesWithoutFooter);
+      } else {
+        setPageBlockRanges(pagesWithFooter);
+      }
     }, [containerSize, format]);
 
     const pageStyle = {
