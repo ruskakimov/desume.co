@@ -145,7 +145,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
       });
 
       setPageBlockRanges(groupIntoStacks(blockHeights, pageContentHeight));
-    }, [containerSize]);
+    }, [containerSize, format]);
 
     const pageStyle = {
       aspectRatio: aspectRatio,
