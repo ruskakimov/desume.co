@@ -126,7 +126,7 @@ const DocumentPreview = React.forwardRef<HTMLDivElement, DocumentPreviewProps>(
 
     const marginTopPx = pointsToPx(format.margins.top);
     const marginBottomPx = pointsToPx(format.margins.bottom);
-    const footerHeightPx = pointsToPx(20);
+    const footerHeightPx = pointsToPx(36);
 
     const [pageBlockRanges, setPageBlockRanges] = useState<number[][]>([
       [0, 0],
