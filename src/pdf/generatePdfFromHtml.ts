@@ -12,11 +12,8 @@ import charterBoldItalicPath from "../assets/fonts/Charter/Charter-Bold-Italic.t
 
 export const rectMarkerClass = "render-this-rect";
 
-/**
- * Generates a single-page PDF document from an HTML element.
- */
 export function generatePdfFromHtml(
-  pageElement: HTMLElement,
+  pageElements: HTMLElement[],
   pageSize: PageSizeName = "a4"
 ): PDF {
   const { width, height } = pageSizes[pageSize];
@@ -26,6 +23,21 @@ export function generatePdfFromHtml(
   doc.loadFont(charterItalicPath, "Charter", "italic", 400);
   doc.loadFont(charterBoldPath, "Charter", "normal", 700);
   doc.loadFont(charterBoldItalicPath, "Charter", "italic", 700);
+
+  pageElements.forEach((el, i) => {
+    if (i > 0) doc.nextPage();
+    renderPage(doc, el, pageSize);
+  });
+
+  return doc;
+}
+
+function renderPage(
+  doc: PDF,
+  pageElement: HTMLElement,
+  pageSize: PageSizeName
+) {
+  const { width } = pageSizes[pageSize];
 
   const pageBox = boxFromDomRect(pageElement.getBoundingClientRect());
   const pdfScalar = width / pageBox.size.width;
@@ -106,7 +118,6 @@ export function generatePdfFromHtml(
   }
 
   renderNode(pageElement);
-  return doc;
 }
 
 function boxFromDomRect({ x, y, width, height }: DOMRect): Box {

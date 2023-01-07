@@ -141,11 +141,9 @@ const ExportPage: React.FC = () => {
           <PrimaryButton
             className="w-full"
             onClick={() => {
-              console.log(pagesRef.current);
-              // const el = docPreviewRef.current;
-              // if (el) {
-              //   generatePdfFromHtml(el, pageSize).save();
-              // }
+              if (pagesRef.current) {
+                generatePdfFromHtml(pagesRef.current, pageSize).save();
+              }
             }}
           >
             Download PDF
