@@ -182,6 +182,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       {pageBlockRanges.map(([start, end], pageIndex) => (
         <div
           ref={(el) => {
+            // Erases old references if previous list is longer.
+            if (pageIndex === 0 && el) pagesRef.current = [];
+
             if (el) pagesRef.current[pageIndex] = el;
           }}
           className="mb-8 bg-white shadow text-black antialiased flex flex-col"
