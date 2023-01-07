@@ -10,6 +10,7 @@ import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import useEducationPanel from "./useEducationPanel";
 import { AcademicCapIcon } from "@heroicons/react/24/outline";
+import { sortExperiences } from "../../../common/functions/experiences";
 
 function useEducation(): [
   EducationExperience[] | null,
@@ -36,7 +37,7 @@ const EducationSection: React.FC = () => {
   const addExperience = async () => {
     const newExperience = await openAddExperiencePanel(null);
     if (newExperience && experiences) {
-      setExperiences([newExperience, ...experiences]);
+      setExperiences(sortExperiences([newExperience, ...experiences]));
     }
   };
 
