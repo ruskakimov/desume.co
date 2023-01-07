@@ -10,7 +10,7 @@ import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import useProjectPanel from "./useProjectPanel";
 import { RocketLaunchIcon } from "@heroicons/react/24/outline";
-import { sortExperiencesByStartDate } from "../../../common/functions/experiences";
+import { sortExperiences } from "../../../common/functions/experiences";
 
 function useProjects(): [
   ProjectExperience[] | null,
@@ -37,9 +37,7 @@ const ProjectsSection: React.FC = () => {
   const addExperience = async () => {
     const newExperience = await openAddExperiencePanel(null);
     if (newExperience && experiences) {
-      setExperiences(
-        sortExperiencesByStartDate([newExperience, ...experiences])
-      );
+      setExperiences(sortExperiences([newExperience, ...experiences]));
     }
   };
 

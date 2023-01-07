@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { firestore } from "../../App";
-import { sortExperiencesByStartDate } from "../functions/experiences";
+import { sortExperiences } from "../functions/experiences";
 import { Resume } from "../interfaces/resume";
 
 function getResumeDocRef(uid: string) {
@@ -30,13 +30,9 @@ export default function useResume(
               websiteUrl: "",
               location: "",
             },
-            workHistory: sortExperiencesByStartDate(resume?.workHistory ?? []),
-            educationHistory: sortExperiencesByStartDate(
-              resume?.educationHistory ?? []
-            ),
-            projectHistory: sortExperiencesByStartDate(
-              resume?.projectHistory ?? []
-            ),
+            workHistory: sortExperiences(resume?.workHistory ?? []),
+            educationHistory: sortExperiences(resume?.educationHistory ?? []),
+            projectHistory: sortExperiences(resume?.projectHistory ?? []),
             skills: resume?.skills ?? [],
           });
         })
