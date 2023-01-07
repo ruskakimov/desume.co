@@ -1,7 +1,16 @@
 import { WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
 import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton";
+import { BulletPoint } from "../../../common/interfaces/resume";
+import SortableBulletList from "../components/SortableBulletList";
 
 const SkillsSection: React.FC = () => {
+  const [bullets, setBullets] = useState<BulletPoint[]>([
+    { id: "react", text: "React", included: true },
+    { id: "js", text: "JavaScript", included: true },
+    { id: "ts", text: "TypeScript", included: true },
+  ]);
+
   return (
     <div className="pb-4">
       <div className="h-10 flex justify-between items-center">
@@ -9,14 +18,17 @@ const SkillsSection: React.FC = () => {
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-4">
-        {Array(2)
+        {Array(1)
           .fill(null)
           .map(() => (
             <div className="rounded-md border border-gray-300">
               <div className="rounded-t-md h-14 px-4 flex flex-row items-center border-b border-gray-300 bg-gray-50">
                 Languages
               </div>
-              <div className="h-12"></div>
+              <SortableBulletList
+                bullets={bullets}
+                onChange={(bullets) => setBullets(bullets)}
+              />
             </div>
           ))}
 
