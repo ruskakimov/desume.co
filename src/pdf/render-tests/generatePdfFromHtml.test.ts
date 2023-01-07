@@ -59,7 +59,7 @@ async function outputAndExpectedDiff(
   await page.evaluate(async (testFolderName) => {
     const container = document.getElementById("container");
     return (window as any)
-      .generatePdfFromHtml(container)
+      .generatePdfFromHtml([container])
       .save(`${testFolderName}.pdf`);
   }, testFolderName);
 
