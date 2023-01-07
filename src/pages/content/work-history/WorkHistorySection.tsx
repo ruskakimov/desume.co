@@ -10,6 +10,7 @@ import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
+import { sortExperiencesByStartDate } from "../../../common/functions/experiences";
 
 function useWorkHistory(): [
   WorkExperience[] | null,
@@ -36,7 +37,9 @@ const WorkHistorySection: React.FC = () => {
   const addExperience = async () => {
     const newExperience = await openAddExperiencePanel(null);
     if (newExperience && experiences) {
-      setExperiences([newExperience, ...experiences]);
+      setExperiences(
+        sortExperiencesByStartDate([newExperience, ...experiences])
+      );
     }
   };
 
