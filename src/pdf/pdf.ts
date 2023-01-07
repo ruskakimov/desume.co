@@ -29,12 +29,19 @@ export class PDF {
   static defaultColor: string = "#000000";
   private jsPdf: jsPDF;
 
-  constructor(width: number, height: number) {
+  constructor(private pageWidth: number, private pageHeight: number) {
     this.jsPdf = new jsPDF({
-      format: [width, height],
+      format: [pageWidth, pageHeight],
       unit: "pt",
       putOnlyUsedFonts: true,
     });
+  }
+
+  /**
+   * Appends a new page and transfers the focus of drawing operations to it.
+   */
+  nextPage() {
+    this.jsPdf.addPage([this.pageWidth, this.pageHeight], "portrait");
   }
 
   /**

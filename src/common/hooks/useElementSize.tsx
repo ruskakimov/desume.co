@@ -11,6 +11,7 @@ function useElementSize<T extends HTMLElement = HTMLDivElement>(
   });
 
   const handleSize = useCallback(() => {
+    // TODO: getBoundingClientRect is more precise
     setSize({
       width: ref?.offsetWidth || 0,
       height: ref?.offsetHeight || 0,
