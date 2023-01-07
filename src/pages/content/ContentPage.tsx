@@ -6,6 +6,7 @@ import useLocalState from "../../common/hooks/useLocalState";
 import EducationSection from "./education/EducationSection";
 import ProjectsSection from "./projects/ProjectsSection";
 import PersonalDetailsSection from "./personal-details/PersonalDetailsSection";
+import SkillsSection from "./skills/SkillsSection";
 
 interface TabItem {
   key: string;
@@ -37,7 +38,7 @@ const navigation: TabItem[] = [
   {
     key: "skills",
     name: "Skills",
-    element: <h1>Skills</h1>,
+    element: <SkillsSection />,
   },
 ];
 
