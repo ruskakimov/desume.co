@@ -33,7 +33,7 @@ export default function useResume(
             workHistory: sortExperiences(resume?.workHistory ?? []),
             educationHistory: sortExperiences(resume?.educationHistory ?? []),
             projectHistory: sortExperiences(resume?.projectHistory ?? []),
-            skills: resume?.skills ?? [],
+            skillGroups: resume?.skillGroups ?? [],
           });
         })
         .catch((reason) => {

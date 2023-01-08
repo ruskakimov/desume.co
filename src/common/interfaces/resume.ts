@@ -5,7 +5,7 @@ export interface Resume {
   workHistory: WorkExperience[];
   educationHistory: EducationExperience[];
   projectHistory: ProjectExperience[];
-  skills: SkillGroup[];
+  skillGroups: SkillGroup[];
 }
 
 export interface PersonalDetails {
