@@ -63,21 +63,24 @@ export default function useSkillGroupPanel(
 
   const oldSkillGroupRef = useRef<SkillGroup | null>(null);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
+  const rejectCallbackRef = useRef<RejectCallback | null>(null);
 
   const openPanel = (
     skillGroup: SkillGroup | null,
-    onResolve: ResolveCallback
+    onResolve: ResolveCallback,
+    onReject: RejectCallback
   ) => {
     if (skillGroup) {
-      // Edit
+      // Edit skill group
       const prefilledForm = convertSkillGroupToFormData(skillGroup);
       reset(prefilledForm);
     } else {
-      // Add
+      // Add a new skill group
       reset();
     }
     oldSkillGroupRef.current = skillGroup;
     resolveCallbackRef.current = onResolve;
+    rejectCallbackRef.current = onReject;
     setIsOpen(true);
   };
 
@@ -93,25 +96,24 @@ export default function useSkillGroupPanel(
   };
 
   const onCancel = () => {
-    // TODO: Call reject callback
-    // TODO: onDelete handler
-    resolveCallbackRef.current?.(null);
+    rejectCallbackRef.current?.("Canceled by user");
     closePanel();
   };
 
-  const onError: SubmitErrorHandler<SkillGroupForm> = (error) =>
-    console.error(error);
+  const onDelete = () => {
+    resolveCallbackRef.current?.(null);
+  };
 
   return [
     (experience) =>
-      new Promise((resolve) => {
-        openPanel(experience, resolve);
+      new Promise((resolve, reject) => {
+        openPanel(experience, resolve, reject);
       }),
     <SlideOver
       isOpen={isOpen}
       title={title}
       onClose={onCancel}
-      onSubmit={handleSubmit(onSubmit, onError)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-full">
