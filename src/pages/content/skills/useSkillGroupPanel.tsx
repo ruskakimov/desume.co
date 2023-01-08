@@ -33,11 +33,14 @@ function convertFormDataToSkillGroup(
   return {
     groupName: formData.groupName,
     included: oldSkillGroup.included,
-    skills: parsedSkills.map((skillText, index) => ({
-      id: skillsByText[skillText]?.id ?? newIds[index],
-      text: skillText,
-      included: skillsByText[skillText]?.included ?? true,
-    })),
+    skills: parsedSkills.map(
+      (skillText, index) =>
+        skillsByText[skillText] ?? {
+          id: newIds[index],
+          text: skillText,
+          included: true,
+        }
+    ),
   };
 }
 
