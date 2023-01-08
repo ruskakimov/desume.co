@@ -24,7 +24,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
   const start = monthYearToString(experience.startDate);
   const end = experience.endDate
     ? monthYearToString(experience.endDate)
-    : "Current";
+    : "Present";
 
   return (
     <>

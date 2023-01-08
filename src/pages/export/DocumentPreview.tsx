@@ -309,7 +309,7 @@ const ExperienceItem = React.forwardRef<
   const start = monthYearToString(experience.startDate);
   const end = experience.endDate
     ? monthYearToString(experience.endDate)
-    : "Current";
+    : "Present";
 
   return (
     <div ref={ref} style={{ paddingBottom: pointsToPx(16) }}>
