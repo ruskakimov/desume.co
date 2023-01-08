@@ -5,7 +5,7 @@ export interface Resume {
   workHistory: WorkExperience[];
   educationHistory: EducationExperience[];
   projectHistory: ProjectExperience[];
-  skills: string[];
+  skills: SkillGroup[];
 }
 
 export interface PersonalDetails {
@@ -43,6 +43,11 @@ export interface Experience extends Includable {
   startDate: MonthYear;
   endDate: MonthYear | null;
   bulletPoints: BulletPoint[];
+}
+
+export interface SkillGroup extends Includable {
+  groupName: string;
+  skills: BulletPoint[];
 }
 
 export interface BulletPoint extends Includable {
