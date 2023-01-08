@@ -1,4 +1,4 @@
-import { WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import Checkbox from "../../../common/components/Checkbox";
 import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton";
@@ -31,6 +31,14 @@ const SkillsSection: React.FC = () => {
                 />
               </div>
               <span className="font-medium text-gray-900">{label}</span>
+
+              <button
+                type="button"
+                className="ml-auto mr-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+              >
+                <span className="sr-only">Edit skill group</span>
+                <PencilIcon className="h-5 w-5" />
+              </button>
             </div>
             <SortableBulletList
               bullets={bullets}
