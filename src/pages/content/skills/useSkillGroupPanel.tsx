@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import TextField from "../../../common/components/fields/TextField";
 import SlideOver from "../../../common/components/SlideOver";
 import { generateIds } from "../../../common/functions/ids";
@@ -55,6 +55,8 @@ type OpenSkillGroupPanel = (
 type ResolveCallback = (skillGroup: SkillGroup | null) => void;
 type RejectCallback = (reason: string) => void;
 
+export const userCancelReason = "Canceled by user";
+
 export default function useSkillGroupPanel(
   title: string
 ): [OpenSkillGroupPanel, React.ReactNode] {
@@ -96,7 +98,7 @@ export default function useSkillGroupPanel(
   };
 
   const onCancel = () => {
-    rejectCallbackRef.current?.("Canceled by user");
+    rejectCallbackRef.current?.(userCancelReason);
     closePanel();
   };
 
@@ -105,9 +107,9 @@ export default function useSkillGroupPanel(
   };
 
   return [
-    (experience) =>
+    (skillGroup) =>
       new Promise((resolve, reject) => {
-        openPanel(experience, resolve, reject);
+        openPanel(skillGroup, resolve, reject);
       }),
     <SlideOver
       isOpen={isOpen}

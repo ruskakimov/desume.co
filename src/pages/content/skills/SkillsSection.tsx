@@ -5,6 +5,7 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import { withReplacedAt } from "../../../common/functions/array";
 import { SkillGroup } from "../../../common/interfaces/resume";
 import SortableBulletList from "../components/SortableBulletList";
+import useSkillGroupPanel, { userCancelReason } from "./useSkillGroupPanel";
 
 function useSkillGroups(): [
   SkillGroup[] | null,
@@ -19,6 +20,12 @@ function useSkillGroups(): [
 
 const SkillsSection: React.FC = () => {
   const [skillGroups, setSkillGroups] = useSkillGroups();
+
+  const [openAddSkillGroupPanel, addSkillGroupPanel] =
+    useSkillGroupPanel("Add skill group");
+
+  const [openEditSkillGroupPanel, editSkillGroupPanel] =
+    useSkillGroupPanel("Edit skill group");
 
   // TODO: Add loading state
   const isLoading = skillGroups === null;
@@ -77,11 +84,21 @@ const SkillsSection: React.FC = () => {
         <EmptyStateAddButton
           Icon={WrenchScrewdriverIcon}
           label="Add skill group"
-          onClick={function (): void {
-            throw new Error("Function not implemented.");
+          onClick={() => {
+            openAddSkillGroupPanel(null)
+              .then((skillGroup) => {
+                if (skillGroups && skillGroup)
+                  setSkillGroups([...skillGroups, skillGroup]);
+              })
+              .catch((e) => {
+                if (e !== userCancelReason) console.error(e);
+              });
           }}
         />
       </div>
+
+      {addSkillGroupPanel}
+      {editSkillGroupPanel}
     </div>
   );
 };
