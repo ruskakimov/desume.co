@@ -19,7 +19,8 @@ function convertFormDataToSkillGroup(
 
   const parsedSkills = formData.skillsCsv
     .split(",")
-    .map((skillText) => skillText.trim());
+    .map((text) => text.trim())
+    .filter((text) => text.length > 0);
 
   const newIds = generateIds(parsedSkills.length);
 
@@ -27,11 +28,11 @@ function convertFormDataToSkillGroup(
     groupName: formData.groupName,
     included: oldSkillGroup?.included ?? true,
     skills: parsedSkills.map(
-      (skillText, index) =>
-        skillsByText[skillText] ?? {
+      (text, index) =>
+        skillsByText[text] ?? {
           id: newIds[index],
-          text: skillText,
           included: true,
+          text,
         }
     ),
   };
