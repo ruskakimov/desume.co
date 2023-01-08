@@ -62,7 +62,7 @@ const SkillsSection: React.FC = () => {
 
                 <button
                   type="button"
-                  className="ml-auto mr-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+                  className="ml-auto mr-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
                   onClick={() => {
                     openEditSkillGroupPanel(skillGroup)
                       .then((skillGroup) => {
