@@ -2,7 +2,7 @@ import { PencilIcon, WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 import { useContextResume } from "../../../AppShell";
 import Checkbox from "../../../common/components/Checkbox";
 import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton";
-import { withReplacedAt } from "../../../common/functions/array";
+import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { SkillGroup } from "../../../common/interfaces/resume";
 import SortableBulletList from "../components/SortableBulletList";
 import useSkillGroupPanel, { userCancelReason } from "./useSkillGroupPanel";
@@ -63,6 +63,19 @@ const SkillsSection: React.FC = () => {
                 <button
                   type="button"
                   className="ml-auto mr-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+                  onClick={() => {
+                    openEditSkillGroupPanel(skillGroup)
+                      .then((skillGroup) => {
+                        if (skillGroup) {
+                          updateSkillGroup(skillGroup);
+                        } else {
+                          setSkillGroups(withRemovedAt(skillGroups, index));
+                        }
+                      })
+                      .catch((e) => {
+                        if (e !== userCancelReason) console.error(e);
+                      });
+                  }}
                 >
                   <span className="sr-only">Edit skill group</span>
                   <PencilIcon className="h-5 w-5" />
