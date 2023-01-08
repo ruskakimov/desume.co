@@ -1,16 +1,9 @@
 import React, { useRef, useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
-import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
-import WebsiteField from "../../../common/components/fields/WebsiteField";
 import SlideOver from "../../../common/components/SlideOver";
 import { generateIds } from "../../../common/functions/ids";
-import {
-  BulletPoint,
-  EducationExperience,
-  SkillGroup,
-} from "../../../common/interfaces/resume";
-import BulletForm, { FormBullet } from "../components/BulletForm";
+import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
 
 interface SkillGroupForm {
   groupName: string;
@@ -19,10 +12,10 @@ interface SkillGroupForm {
 
 function convertFormDataToSkillGroup(
   formData: SkillGroupForm,
-  oldSkillGroup: SkillGroup
+  oldSkillGroup: SkillGroup | null
 ): SkillGroup {
   const skillsByText: Record<string, BulletPoint | undefined> = {};
-  oldSkillGroup.skills.forEach((skill) => (skillsByText[skill.text] = skill));
+  oldSkillGroup?.skills.forEach((skill) => (skillsByText[skill.text] = skill));
 
   const parsedSkills = formData.skillsCsv
     .split(",")
@@ -32,7 +25,7 @@ function convertFormDataToSkillGroup(
 
   return {
     groupName: formData.groupName,
-    included: oldSkillGroup.included,
+    included: oldSkillGroup?.included ?? true,
     skills: parsedSkills.map(
       (skillText, index) =>
         skillsByText[skillText] ?? {
@@ -52,45 +45,38 @@ function convertSkillGroupToFormData(skillGroup: SkillGroup): SkillGroupForm {
 }
 
 /**
- * @param experience experience for edit or `null` for a new one.
- * @returns a promise of edited experience or `null` if user cancels.
+ * @param skillGroup skill group for edit or `null` for a new one.
+ * @returns a promise of edited skill group or `null` if deleted. Promise is rejected if user cancels.
  */
-type OpenEducationPanel = (
-  experience: EducationExperience | null
-) => Promise<EducationExperience | null>;
+type OpenSkillGroupPanel = (
+  skillGroup: SkillGroup | null
+) => Promise<SkillGroup | null>;
 
-/**
- * @returns edited experience or `null` if user cancels.
- */
-type ResolveCallback = (experience: EducationExperience | null) => void;
+type ResolveCallback = (skillGroup: SkillGroup | null) => void;
+type RejectCallback = (reason: string) => void;
 
 export default function useSkillGroupPanel(
   title: string
-): [OpenEducationPanel, React.ReactNode] {
+): [OpenSkillGroupPanel, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm<SkillGroupForm>();
-  const [bullets, setBullets] = useState<FormBullet[]>([]);
+
+  const oldSkillGroupRef = useRef<SkillGroup | null>(null);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
 
   const openPanel = (
-    experience: EducationExperience | null,
+    skillGroup: SkillGroup | null,
     onResolve: ResolveCallback
   ) => {
-    if (experience) {
-      // Edit experience
-      const prefilledForm = convertSkillGroupToFormData(experience);
+    if (skillGroup) {
+      // Edit
+      const prefilledForm = convertSkillGroupToFormData(skillGroup);
       reset(prefilledForm);
-      setBullets(
-        experience.bulletPoints.map((bulletPoint) => ({
-          ...bulletPoint,
-          shouldDelete: false,
-        }))
-      );
     } else {
-      // Add experience
+      // Add
       reset();
-      setBullets([]);
     }
+    oldSkillGroupRef.current = skillGroup;
     resolveCallbackRef.current = onResolve;
     setIsOpen(true);
   };
@@ -98,21 +84,23 @@ export default function useSkillGroupPanel(
   const closePanel = () => setIsOpen(false);
 
   const onSubmit: SubmitHandler<SkillGroupForm> = (formData) => {
-    const newExperience = convertFormDataToSkillGroup(formData);
-    newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
+    const newExperience = convertFormDataToSkillGroup(
+      formData,
+      oldSkillGroupRef.current
+    );
     resolveCallbackRef.current?.(newExperience);
     closePanel();
   };
 
   const onCancel = () => {
+    // TODO: Call reject callback
+    // TODO: onDelete handler
     resolveCallbackRef.current?.(null);
     closePanel();
   };
 
   const onError: SubmitErrorHandler<SkillGroupForm> = (error) =>
     console.error(error);
-
-  const currentYear = new Date().getFullYear();
 
   return [
     (experience) =>
@@ -126,55 +114,21 @@ export default function useSkillGroupPanel(
       onSubmit={handleSubmit(onSubmit, onError)}
     >
       <div className="grid grid-cols-6 gap-6">
-        <div className="col-span-6 sm:col-span-3">
+        <div className="col-span-full">
           <TextField
             label="School name"
-            {...register("schoolName", { required: true })}
+            {...register("groupName", { required: true })}
           />
         </div>
 
-        <div className="col-span-6 sm:col-span-3">
-          <WebsiteField
-            label="School website"
-            {...register("schoolWebsiteUrl")}
-          />
-        </div>
-
-        <div className="col-span-6">
+        <div className="col-span-full">
+          {/* TODO: Use text area */}
           <TextField
-            label="Degree and field of study"
-            {...register("degree", { required: true })}
-          />
-        </div>
-
-        <div className="col-span-6 sm:col-span-3">
-          <MonthYearField
-            label="Start date"
-            endYear={currentYear}
-            monthProps={register("startDateMonth", {
-              required: true,
-            })}
-            yearProps={register("startDateYear", {
-              required: true,
-            })}
-          />
-        </div>
-
-        <div className="col-span-6 sm:col-span-3">
-          <MonthYearField
-            label="End date (or expected)"
-            endYear={currentYear + 8}
-            monthProps={register("endDateMonth", {
-              required: true,
-            })}
-            yearProps={register("endDateYear", {
-              required: true,
-            })}
+            label="Skills (comma separated)"
+            {...register("skillsCsv")}
           />
         </div>
       </div>
-
-      <BulletForm bullets={bullets} onChange={setBullets} />
     </SlideOver>,
   ];
 }
