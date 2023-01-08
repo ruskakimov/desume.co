@@ -120,7 +120,7 @@ export default function useSkillGroupPanel(
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-full">
           <TextField
-            label="School name"
+            label="Group name"
             {...register("groupName", { required: true })}
           />
         </div>
