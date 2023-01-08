@@ -145,6 +145,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
     const availableHeight = containerSize.height - marginTopPx - marginBottomPx;
 
+    console.log(blockHeights.reduce((acc, h) => acc + h, 0));
+    console.log(blocksRef.current, blockHeights);
+
     const pagesWithoutFooter = groupIntoStacks(blockHeights, availableHeight);
     const pagesWithFooter = groupIntoStacks(
       blockHeights,
@@ -309,7 +312,7 @@ const ExperienceItem = React.forwardRef<
     : "Current";
 
   return (
-    <div ref={ref} style={{ marginBottom: pointsToPx(16) }}>
+    <div ref={ref} style={{ paddingBottom: pointsToPx(16) }}>
       <div
         className="flex justify-between"
         style={{ fontSize: pointsToPx(format.fontSizes.header) }}
