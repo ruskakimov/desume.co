@@ -47,7 +47,7 @@ const SkillsSection: React.FC = () => {
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
-    if (skillGroups.length === 0) return null;
+    if (skillGroups.length === 0 || skillGroups.length >= 6) return null;
     return button;
   }
 
