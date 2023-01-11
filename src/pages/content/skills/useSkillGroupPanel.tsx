@@ -61,6 +61,7 @@ export const userCancelReason = "Canceled by user";
 export default function useSkillGroupPanel(
   title: string
 ): [OpenSkillGroupPanel, React.ReactNode] {
+  const [hasDelete, setHasDelete] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm<SkillGroupForm>();
 
@@ -77,9 +78,11 @@ export default function useSkillGroupPanel(
       // Edit skill group
       const prefilledForm = convertSkillGroupToFormData(skillGroup);
       reset(prefilledForm);
+      setHasDelete(true);
     } else {
       // Add a new skill group
       reset();
+      setHasDelete(false);
     }
     oldSkillGroupRef.current = skillGroup;
     resolveCallbackRef.current = onResolve;
@@ -118,7 +121,7 @@ export default function useSkillGroupPanel(
       title={title}
       onClose={onCancel}
       onSubmit={handleSubmit(onSubmit)}
-      onDelete={onDelete}
+      onDelete={hasDelete ? onDelete : undefined}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-full">
