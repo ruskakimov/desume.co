@@ -149,6 +149,7 @@ export default function useSkillGroupPanel(
         <div className="col-span-full">
           <TextField
             label="Group name"
+            placeholder="Ex: Proficient"
             {...register("groupName", { required: true })}
           />
         </div>
@@ -156,6 +157,7 @@ export default function useSkillGroupPanel(
         <div className="col-span-full">
           <TextAreaField
             label="Skills (comma separated)"
+            placeholder="Ex: JavaScript, UI/UX design, Leadership"
             rows={5}
             {...register("skillsCsv")}
           />
