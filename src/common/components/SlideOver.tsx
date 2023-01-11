@@ -10,6 +10,7 @@ interface SlideOverProps {
   children: React.ReactNode;
   onClose: () => void;
   onSubmit: () => void;
+  onDelete?: () => void;
 }
 
 const SlideOver: React.FC<SlideOverProps> = ({
@@ -18,6 +19,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
   children,
   onClose,
   onSubmit,
+  onDelete,
 }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -83,6 +85,15 @@ const SlideOver: React.FC<SlideOverProps> = ({
                         </div>
                       </div>
                       <div className="flex flex-shrink-0 justify-end gap-4 px-4 py-4">
+                        {onDelete && (
+                          <SecondaryButton
+                            className="text-red-600 mr-auto"
+                            onClick={onDelete}
+                          >
+                            Delete
+                          </SecondaryButton>
+                        )}
+
                         <SecondaryButton type="button" onClick={onClose}>
                           Cancel
                         </SecondaryButton>

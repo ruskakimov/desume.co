@@ -105,6 +105,7 @@ export default function useSkillGroupPanel(
 
   const onDelete = () => {
     resolveCallbackRef.current?.(null);
+    closePanel();
   };
 
   return [
@@ -117,6 +118,7 @@ export default function useSkillGroupPanel(
       title={title}
       onClose={onCancel}
       onSubmit={handleSubmit(onSubmit)}
+      onDelete={onDelete}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-full">
