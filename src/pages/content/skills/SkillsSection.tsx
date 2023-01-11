@@ -30,6 +30,25 @@ const SkillsSection: React.FC = () => {
   // TODO: Add loading state
   const isLoading = skillGroups === null;
 
+  const handleAdd = () => {
+    openAddSkillGroupPanel(null)
+      .then((skillGroup) => {
+        if (skillGroups && skillGroup)
+          setSkillGroups([...skillGroups, skillGroup]);
+      })
+      .catch((e) => {
+        if (e !== userCancelReason) console.error(e);
+      });
+  };
+
+  const emptyState = (
+    <EmptyStateAddButton
+      Icon={WrenchScrewdriverIcon}
+      label="Add skill group"
+      onClick={handleAdd}
+    />
+  );
+
   return (
     <div className="pb-4">
       <div className="h-10 flex justify-between items-center">
@@ -95,21 +114,6 @@ const SkillsSection: React.FC = () => {
             </div>
           );
         })}
-
-        <EmptyStateAddButton
-          Icon={WrenchScrewdriverIcon}
-          label="Add skill group"
-          onClick={() => {
-            openAddSkillGroupPanel(null)
-              .then((skillGroup) => {
-                if (skillGroups && skillGroup)
-                  setSkillGroups([...skillGroups, skillGroup]);
-              })
-              .catch((e) => {
-                if (e !== userCancelReason) console.error(e);
-              });
-          }}
-        />
       </div>
 
       {addSkillGroupPanel}
