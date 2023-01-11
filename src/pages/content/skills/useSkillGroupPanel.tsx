@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import TextAreaField from "../../../common/components/fields/TextAreaField";
 import TextField from "../../../common/components/fields/TextField";
 import SlideOver from "../../../common/components/SlideOver";
 import { generateIds } from "../../../common/functions/ids";
@@ -132,8 +133,7 @@ export default function useSkillGroupPanel(
         </div>
 
         <div className="col-span-full">
-          {/* TODO: Use text area */}
-          <TextField
+          <TextAreaField
             label="Skills (comma separated)"
             {...register("skillsCsv")}
           />
