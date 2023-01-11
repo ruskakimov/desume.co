@@ -3,6 +3,7 @@ import { useContextResume } from "../../../AppShell";
 import Checkbox from "../../../common/components/Checkbox";
 import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton";
 import PrimaryButton from "../../../common/components/PrimaryButton";
+import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { SkillGroup } from "../../../common/interfaces/resume";
@@ -40,14 +41,6 @@ const SkillsSection: React.FC = () => {
       });
   };
 
-  const emptyState = (
-    <EmptyStateAddButton
-      Icon={WrenchScrewdriverIcon}
-      label="Add skill group"
-      onClick={handleAdd}
-    />
-  );
-
   function buildTopAddButton(): React.ReactNode {
     const button = (
       <PrimaryButton onClick={handleAdd}>Add skill group</PrimaryButton>
@@ -58,6 +51,35 @@ const SkillsSection: React.FC = () => {
     return button;
   }
 
+  function buildContent(): React.ReactNode {
+    if (isLoading) return <ShimmerCards count={3} />;
+
+    if (skillGroups.length === 0)
+      return (
+        <div className="col-span-full">
+          <EmptyStateAddButton
+            Icon={WrenchScrewdriverIcon}
+            label="Add skill group"
+            onClick={handleAdd}
+          />
+        </div>
+      );
+
+    return skillGroups.map((skillGroup, index) => {
+      const updateSkillGroup = (skillGroup: SkillGroup | null) => {
+        if (skillGroup) {
+          setSkillGroups(withReplacedAt(skillGroups, index, skillGroup));
+        } else {
+          setSkillGroups(withRemovedAt(skillGroups, index));
+        }
+      };
+
+      return (
+        <SkillGroupCard skillGroup={skillGroup} onChange={updateSkillGroup} />
+      );
+    });
+  }
+
   return (
     <div className="pb-4">
       <div className="h-10 flex justify-between items-center">
@@ -65,24 +87,7 @@ const SkillsSection: React.FC = () => {
         {buildTopAddButton()}
       </div>
 
-      <div className="mt-6 grid grid-cols-3 gap-4">
-        {skillGroups?.map((skillGroup, index) => {
-          const updateSkillGroup = (skillGroup: SkillGroup | null) => {
-            if (skillGroup) {
-              setSkillGroups(withReplacedAt(skillGroups, index, skillGroup));
-            } else {
-              setSkillGroups(withRemovedAt(skillGroups, index));
-            }
-          };
-
-          return (
-            <SkillGroupCard
-              skillGroup={skillGroup}
-              onChange={updateSkillGroup}
-            />
-          );
-        })}
-      </div>
+      <div className="mt-6 grid grid-cols-3 gap-4">{buildContent()}</div>
 
       {addSkillGroupPanel}
     </div>
