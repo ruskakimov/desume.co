@@ -4,6 +4,7 @@ import TextAreaField from "../../../common/components/fields/TextAreaField";
 import TextField from "../../../common/components/fields/TextField";
 import SlideOver from "../../../common/components/SlideOver";
 import { generateIds } from "../../../common/functions/ids";
+import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
 
 interface SkillGroupForm {
@@ -64,11 +65,14 @@ export default function useSkillGroupPanel(
 ): [OpenSkillGroupPanel, React.ReactNode] {
   const [hasDelete, setHasDelete] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, reset } = useForm<SkillGroupForm>();
+  const { register, handleSubmit, reset, getValues } =
+    useForm<SkillGroupForm>();
 
   const oldSkillGroupRef = useRef<SkillGroup | null>(null);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
   const rejectCallbackRef = useRef<RejectCallback | null>(null);
+
+  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
 
   const openPanel = (
     skillGroup: SkillGroup | null,
@@ -107,9 +111,26 @@ export default function useSkillGroupPanel(
     closePanel();
   };
 
-  const onDelete = () => {
-    resolveCallbackRef.current?.(null);
-    closePanel();
+  const onDelete = async () => {
+    const groupName = getValues("groupName");
+    const skillCount = convertFormDataToSkillGroup(getValues(), null).skills
+      .length;
+
+    const confirmed = await openConfirmationDialog({
+      title: "Delete skill group",
+      body: (
+        <p className="text-sm text-gray-500">
+          Delete <b>{groupName}</b> with <b>{skillCount} skills</b>? This action
+          cannot be undone.
+        </p>
+      ),
+      action: "Delete",
+    });
+
+    if (confirmed) {
+      resolveCallbackRef.current?.(null);
+      closePanel();
+    }
   };
 
   return [
@@ -140,6 +161,8 @@ export default function useSkillGroupPanel(
           />
         </div>
       </div>
+
+      {confirmationDialog}
     </SlideOver>,
   ];
 }
