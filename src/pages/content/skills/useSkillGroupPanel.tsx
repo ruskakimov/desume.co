@@ -135,6 +135,7 @@ export default function useSkillGroupPanel(
         <div className="col-span-full">
           <TextAreaField
             label="Skills (comma separated)"
+            rows={5}
             {...register("skillsCsv")}
           />
         </div>

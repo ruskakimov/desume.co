@@ -2,7 +2,7 @@ import React from "react";
 import { useId } from "react";
 
 interface TextAreaFieldProps
-  extends React.InputHTMLAttributes<HTMLTextAreaElement> {
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
 }
 
