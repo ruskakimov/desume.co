@@ -2,6 +2,8 @@ import { PencilIcon, WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 import { useContextResume } from "../../../AppShell";
 import Checkbox from "../../../common/components/Checkbox";
 import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton";
+import PrimaryButton from "../../../common/components/PrimaryButton";
+import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { SkillGroup } from "../../../common/interfaces/resume";
 import SortableBulletList from "../components/SortableBulletList";
@@ -49,10 +51,21 @@ const SkillsSection: React.FC = () => {
     />
   );
 
+  function buildTopAddButton(): React.ReactNode {
+    const button = (
+      <PrimaryButton onClick={handleAdd}>Add skill group</PrimaryButton>
+    );
+
+    if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
+    if (skillGroups.length === 0) return null;
+    return button;
+  }
+
   return (
     <div className="pb-4">
       <div className="h-10 flex justify-between items-center">
         <h3 className="text-lg font-medium leading-6 text-gray-900">Skills</h3>
+        {buildTopAddButton()}
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-4">
