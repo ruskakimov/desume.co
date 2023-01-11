@@ -145,9 +145,6 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
     const availableHeight = containerSize.height - marginTopPx - marginBottomPx;
 
-    console.log(blockHeights.reduce((acc, h) => acc + h, 0));
-    console.log(blocksRef.current, blockHeights);
-
     const pagesWithoutFooter = groupIntoStacks(blockHeights, availableHeight);
     const pagesWithFooter = groupIntoStacks(
       blockHeights,
