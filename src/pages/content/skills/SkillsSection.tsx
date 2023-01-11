@@ -112,7 +112,7 @@ const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
         <div className="rounded-t-md h-14 px-2 flex flex-row gap-2 items-center border-b border-gray-300 bg-gray-50">
           <div className="mx-2 h-6 flex items-center">
             <Checkbox
-              checked={true}
+              checked={skillGroup.included}
               onChange={(e) =>
                 onChange({
                   ...skillGroup,
