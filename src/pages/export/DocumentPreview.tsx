@@ -90,14 +90,19 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           gap: "0.4em",
         }}
       >
-        {resume.skillGroups.map((skillGroup) => (
-          <>
-            <div className="font-bold">{skillGroup.groupName}</div>
-            <div className="col-span-3">
-              {skillGroup.skills.map((skill) => skill.text).join(", ")}
-            </div>
-          </>
-        ))}
+        {resume.skillGroups
+          .filter((skillGroup) => skillGroup.included)
+          .map((skillGroup) => (
+            <>
+              <div className="font-bold">{skillGroup.groupName}</div>
+              <div className="col-span-3">
+                {skillGroup.skills
+                  .filter((skill) => skill.included)
+                  .map((skill) => skill.text)
+                  .join(", ")}
+              </div>
+            </>
+          ))}
       </div>
     </div>,
 
