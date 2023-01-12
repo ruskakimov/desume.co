@@ -66,7 +66,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
     return [
       // Prevent widow header by grouping it with the first item.
-      <div style={{ marginTop: pointsToPx(20) }}>
+      <div>
         <SectionHeader pointsToPx={pointsToPx} text={header} />
         {renderItem(includedExperiences[0])}
       </div>,
@@ -243,7 +243,7 @@ const SkillsSection: React.FC<{
   pointsToPx: (points: number) => number;
 }> = ({ skillGroups, format, pointsToPx }) => {
   return (
-    <div style={{ marginTop: pointsToPx(20) }}>
+    <div>
       <SectionHeader pointsToPx={pointsToPx} text="Skills" />
       <div
         className="grid grid-cols-4"
@@ -316,7 +316,7 @@ const SectionHeader = React.forwardRef<
   }
 >(({ pointsToPx, text }, ref) => {
   return (
-    <div ref={ref}>
+    <div ref={ref} style={{ paddingTop: pointsToPx(20) }}>
       <div
         className={classNames(rectMarkerClass, "bg-black")}
         style={{ height: pointsToPx(0.6) }}
