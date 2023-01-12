@@ -7,6 +7,7 @@ import {
   Experience,
   PersonalDetails,
   Resume,
+  SkillGroup,
 } from "../../common/interfaces/resume";
 import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
 
@@ -80,30 +81,12 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       pointsToPx={pointsToPx}
     />,
 
-    <div style={{ marginTop: pointsToPx(20) }}>
-      <SectionHeader pointsToPx={pointsToPx} text="Skills" />
-      <div
-        className="grid grid-cols-4"
-        style={{
-          fontSize: pointsToPx(format.fontSizes.body),
-          lineHeight: format.bulletLineHeight,
-          gap: "0.4em",
-        }}
-      >
-        {resume.skillGroups
-          .filter((skillGroup) => skillGroup.included)
-          .map((skillGroup) => (
-            <>
-              <div className="font-bold">{skillGroup.groupName}</div>
-              <div className="col-span-3">
-                {skillGroup.skills
-                  .filter((skill) => skill.included)
-                  .map((skill) => skill.text)
-                  .join(", ")}
-              </div>
-            </>
-          ))}
-      </div>
+    <div>
+      <SkillsSection
+        skillGroups={resume.skillGroups}
+        format={format}
+        pointsToPx={pointsToPx}
+      />
     </div>,
 
     ...renderExperienceSectionBlocks(
@@ -168,8 +151,6 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         0;
       return el.getBoundingClientRect().height + margins;
     });
-
-    console.log(blockHeights);
 
     const availableHeight = containerSize.height - marginTopPx - marginBottomPx;
 
@@ -252,6 +233,40 @@ const Footer: React.FC<{
       }}
     >
       {`${name} résumé — page ${pageNumber} of ${pageCount}`.toUpperCase()}
+    </div>
+  );
+};
+
+const SkillsSection: React.FC<{
+  skillGroups: SkillGroup[];
+  format: DocumentFormat;
+  pointsToPx: (points: number) => number;
+}> = ({ skillGroups, format, pointsToPx }) => {
+  return (
+    <div style={{ marginTop: pointsToPx(20) }}>
+      <SectionHeader pointsToPx={pointsToPx} text="Skills" />
+      <div
+        className="grid grid-cols-4"
+        style={{
+          fontSize: pointsToPx(format.fontSizes.body),
+          lineHeight: format.bulletLineHeight,
+          gap: "0.4em",
+        }}
+      >
+        {skillGroups
+          .filter((skillGroup) => skillGroup.included)
+          .map((skillGroup) => (
+            <>
+              <div className="font-bold">{skillGroup.groupName}</div>
+              <div className="col-span-3">
+                {skillGroup.skills
+                  .filter((skill) => skill.included)
+                  .map((skill) => skill.text)
+                  .join(", ")}
+              </div>
+            </>
+          ))}
+      </div>
     </div>
   );
 };
