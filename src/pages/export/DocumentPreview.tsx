@@ -80,6 +80,27 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       pointsToPx={pointsToPx}
     />,
 
+    <div style={{ marginTop: pointsToPx(20) }}>
+      <SectionHeader pointsToPx={pointsToPx} text="Skills" />
+      <div
+        className="grid grid-cols-4"
+        style={{
+          fontSize: pointsToPx(format.fontSizes.body),
+          lineHeight: format.bulletLineHeight,
+          gap: "0.4em",
+        }}
+      >
+        {resume.skillGroups.map((skillGroup) => (
+          <>
+            <div className="font-bold">{skillGroup.groupName}</div>
+            <div className="col-span-3">
+              {skillGroup.skills.map((skill) => skill.text).join(", ")}
+            </div>
+          </>
+        ))}
+      </div>
+    </div>,
+
     ...renderExperienceSectionBlocks(
       "Work experience",
       resume.workHistory,
@@ -142,6 +163,8 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         0;
       return el.getBoundingClientRect().height + margins;
     });
+
+    console.log(blockHeights);
 
     const availableHeight = containerSize.height - marginTopPx - marginBottomPx;
 
