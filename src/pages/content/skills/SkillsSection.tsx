@@ -25,6 +25,8 @@ import SortableBulletList from "../components/SortableBulletList";
 import SortableCardItem from "../components/SortableCardItem";
 import useSkillGroupPanel, { userCancelReason } from "./useSkillGroupPanel";
 
+const maxSkillGroups = 3;
+
 function useSkillGroups(): [
   SkillGroup[] | null,
   (skillGroups: SkillGroup[]) => void
@@ -69,7 +71,8 @@ const SkillsSection: React.FC = () => {
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
-    if (skillGroups.length === 0 || skillGroups.length >= 6) return null;
+    if (skillGroups.length === 0 || skillGroups.length >= maxSkillGroups)
+      return null;
     return button;
   }
 
