@@ -148,7 +148,7 @@ export default function AppShell() {
         )}
       </Disclosure>
 
-      <div className="py-10 overflow-y-scroll">
+      <div className="py-10 overflow-y-scroll flex-1">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <Outlet context={resumeContext} />
         </div>
