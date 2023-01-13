@@ -107,7 +107,7 @@ const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
     useSkillGroupPanel("Edit skill group");
 
   return (
-    <>
+    <div>
       <div className="rounded-md border border-gray-300">
         <div className="rounded-t-md h-14 px-2 flex flex-row gap-2 items-center border-b border-gray-300 bg-gray-50">
           <div className="mx-2 h-6 flex items-center">
@@ -140,18 +140,25 @@ const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
             <PencilIcon className="h-5 w-5" />
           </button>
         </div>
-        <SortableBulletList
-          bullets={skillGroup.skills}
-          onChange={(skills) =>
-            onChange({
-              ...skillGroup,
-              skills,
-            })
-          }
-        />
+
+        {skillGroup.skills.length === 0 ? (
+          <div className="my-2 h-9 flex items-center justify-center">
+            <span className="text-sm text-gray-400">No skills</span>
+          </div>
+        ) : (
+          <SortableBulletList
+            bullets={skillGroup.skills}
+            onChange={(skills) =>
+              onChange({
+                ...skillGroup,
+                skills,
+              })
+            }
+          />
+        )}
       </div>
       {editSkillGroupPanel}
-    </>
+    </div>
   );
 };
 
