@@ -24,7 +24,7 @@ const SortableCardItem: React.FC<{ id: string; children: React.ReactNode }> = (
     <div
       ref={setNodeRef}
       className={classNames(
-        "rounded-md border border-gray-300 transition-shadow relative cursor-auto",
+        "rounded-md bg-white border border-gray-300 transition-shadow relative cursor-auto",
         {
           "z-10 shadow-lg": isDragging,
         }

@@ -1,3 +1,17 @@
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
 import { PencilIcon, WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 import { useContextResume } from "../../../AppShell";
 import Checkbox from "../../../common/components/Checkbox";
@@ -24,6 +38,13 @@ function useSkillGroups(): [
 
 const SkillsSection: React.FC = () => {
   const [skillGroups, setSkillGroups] = useSkillGroups();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const [openAddSkillGroupPanel, addSkillGroupPanel] =
     useSkillGroupPanel("Add skill group");
@@ -66,21 +87,51 @@ const SkillsSection: React.FC = () => {
         </div>
       );
 
-    return skillGroups.map((skillGroup, index) => {
-      const updateSkillGroup = (skillGroup: SkillGroup | null) => {
-        if (skillGroup) {
-          setSkillGroups(withReplacedAt(skillGroups, index, skillGroup));
-        } else {
-          setSkillGroups(withRemovedAt(skillGroups, index));
-        }
-      };
+    // TODO: Replace with actual ids
+    const groupIds = skillGroups.map((skillGroup) => skillGroup.groupName);
 
-      return (
-        <SortableCardItem id={skillGroup.groupName}>
-          <SkillGroupCard skillGroup={skillGroup} onChange={updateSkillGroup} />
-        </SortableCardItem>
-      );
-    });
+    return (
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={(e) => {
+          const { active, over } = e;
+
+          if (active.id !== over?.id) {
+            const oldIndex = groupIds.indexOf(active.id as string);
+            const newIndex = groupIds.indexOf(over?.id as string);
+            const reorderedSkillGroups = arrayMove(
+              skillGroups,
+              oldIndex,
+              newIndex
+            );
+            setSkillGroups(reorderedSkillGroups);
+          }
+        }}
+      >
+        <SortableContext items={groupIds} strategy={rectSortingStrategy}>
+          {skillGroups.map((skillGroup, index) => {
+            const updateSkillGroup = (skillGroup: SkillGroup | null) => {
+              if (skillGroup) {
+                setSkillGroups(withReplacedAt(skillGroups, index, skillGroup));
+              } else {
+                setSkillGroups(withRemovedAt(skillGroups, index));
+              }
+            };
+
+            return (
+              // TODO: Add ids to skill groups
+              <SortableCardItem id={skillGroup.groupName}>
+                <SkillGroupCard
+                  skillGroup={skillGroup}
+                  onChange={updateSkillGroup}
+                />
+              </SortableCardItem>
+            );
+          })}
+        </SortableContext>
+      </DndContext>
+    );
   }
 
   return (
