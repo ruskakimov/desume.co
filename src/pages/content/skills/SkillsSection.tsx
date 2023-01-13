@@ -8,6 +8,7 @@ import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { SkillGroup } from "../../../common/interfaces/resume";
 import SortableBulletList from "../components/SortableBulletList";
+import SortableCardItem from "../components/SortableCardItem";
 import useSkillGroupPanel, { userCancelReason } from "./useSkillGroupPanel";
 
 function useSkillGroups(): [
@@ -75,7 +76,9 @@ const SkillsSection: React.FC = () => {
       };
 
       return (
-        <SkillGroupCard skillGroup={skillGroup} onChange={updateSkillGroup} />
+        <SortableCardItem id={skillGroup.groupName}>
+          <SkillGroupCard skillGroup={skillGroup} onChange={updateSkillGroup} />
+        </SortableCardItem>
       );
     });
   }
@@ -107,58 +110,57 @@ const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
     useSkillGroupPanel("Edit skill group");
 
   return (
-    <div>
-      <div className="rounded-md border border-gray-300">
-        <div className="rounded-t-md h-14 px-2 flex flex-row gap-2 items-center border-b border-gray-300 bg-gray-50">
-          <div className="mx-2 h-6 flex items-center">
-            <Checkbox
-              checked={skillGroup.included}
-              onChange={(e) =>
-                onChange({
-                  ...skillGroup,
-                  included: e.target.checked,
-                })
-              }
-            />
-          </div>
-          <span className="font-medium text-gray-900">
-            {skillGroup.groupName}
-          </span>
-
-          <button
-            type="button"
-            className="ml-auto mr-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
-            onClick={() => {
-              openEditSkillGroupPanel(skillGroup)
-                .then(onChange)
-                .catch((e) => {
-                  if (e !== userCancelReason) console.error(e);
-                });
-            }}
-          >
-            <span className="sr-only">Edit skill group</span>
-            <PencilIcon className="h-5 w-5" />
-          </button>
-        </div>
-
-        {skillGroup.skills.length === 0 ? (
-          <div className="my-2 h-9 flex items-center justify-center">
-            <span className="text-sm text-gray-400">No skills</span>
-          </div>
-        ) : (
-          <SortableBulletList
-            bullets={skillGroup.skills}
-            onChange={(skills) =>
+    <>
+      <div className="rounded-t-md h-14 px-2 flex flex-row gap-2 items-center border-b border-gray-300 bg-gray-50">
+        <div className="mx-2 h-6 flex items-center">
+          <Checkbox
+            checked={skillGroup.included}
+            onChange={(e) =>
               onChange({
                 ...skillGroup,
-                skills,
+                included: e.target.checked,
               })
             }
           />
-        )}
+        </div>
+        <span className="font-medium text-gray-900">
+          {skillGroup.groupName}
+        </span>
+
+        <button
+          type="button"
+          className="ml-auto mr-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+          onClick={() => {
+            openEditSkillGroupPanel(skillGroup)
+              .then(onChange)
+              .catch((e) => {
+                if (e !== userCancelReason) console.error(e);
+              });
+          }}
+        >
+          <span className="sr-only">Edit skill group</span>
+          <PencilIcon className="h-5 w-5" />
+        </button>
       </div>
+
+      {skillGroup.skills.length === 0 ? (
+        <div className="my-2 h-9 flex items-center justify-center">
+          <span className="text-sm text-gray-400">No skills</span>
+        </div>
+      ) : (
+        <SortableBulletList
+          bullets={skillGroup.skills}
+          onChange={(skills) =>
+            onChange({
+              ...skillGroup,
+              skills,
+            })
+          }
+        />
+      )}
+
       {editSkillGroupPanel}
-    </div>
+    </>
   );
 };
 
