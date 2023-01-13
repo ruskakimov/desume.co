@@ -121,7 +121,10 @@ const SkillsSection: React.FC = () => {
 
             return (
               // TODO: Add ids to skill groups
-              <SortableCardItem id={skillGroup.groupName}>
+              <SortableCardItem
+                key={skillGroup.groupName}
+                id={skillGroup.groupName}
+              >
                 <SkillGroupCard
                   skillGroup={skillGroup}
                   onChange={updateSkillGroup}

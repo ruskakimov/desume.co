@@ -13,7 +13,10 @@ const SortableCardItem: React.FC<{ id: string; children: React.ReactNode }> = (
     setNodeRef,
     transform,
     transition,
-  } = useSortable({ id: props.id });
+  } = useSortable({
+    id: props.id,
+    animateLayoutChanges: () => false,
+  });
 
   const style = {
     transform: CSS.Translate.toString(transform),
