@@ -18,10 +18,10 @@ const defaultSectionOrder: ResumeSectionId[] = [
   "skills",
 ];
 
-function parseResume(data: unknown): Resume {
+function parseResume(data: unknown, user: User): Resume {
   // TODO: Complete defensive programming
   const resume: Resume = {
-    personalDetails: parseResumePersonalDetails(data),
+    personalDetails: parseResumePersonalDetails(data, user),
     workHistory: sortExperiences((data as any)?.workHistory ?? []),
     educationHistory: sortExperiences((data as any)?.educationHistory ?? []),
     projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
@@ -32,11 +32,14 @@ function parseResume(data: unknown): Resume {
   return resume;
 }
 
-function parseResumePersonalDetails(data: unknown): PersonalDetails {
+function parseResumePersonalDetails(
+  data: unknown,
+  user: User
+): PersonalDetails {
   return {
-    fullName: extractString(data, "fullName") ?? "",
+    fullName: extractString(data, "fullName") ?? user.displayName ?? "",
     title: extractString(data, "title") ?? "",
-    email: extractString(data, "email") ?? "",
+    email: extractString(data, "email") ?? user.email ?? "",
     phoneNumber: extractString(data, "phoneNumber") ?? "",
     websiteUrl: extractString(data, "websiteUrl") ?? "",
     location: extractString(data, "location") ?? "",
@@ -44,9 +47,12 @@ function parseResumePersonalDetails(data: unknown): PersonalDetails {
 }
 
 function extractString(data: unknown, key: string): string | undefined {
-  if (isObject(data) && key in data) {
-    return (data as any)[key];
-  }
+  const value = extractProperty(data, key);
+  if (isString(value)) return value;
+}
+
+function extractProperty(data: unknown, key: string): unknown | undefined {
+  if (isObject(data) && key in data) return (data as any)[key];
 }
 
 export default function useResume(
@@ -59,7 +65,7 @@ export default function useResume(
       getDoc(getResumeDocRef(user.uid))
         .then((snapshot) => {
           const data = snapshot.data() as unknown;
-          setResume(parseResume(data));
+          setResume(parseResume(data, user));
         })
         .catch((reason) => {
           console.error(reason);
