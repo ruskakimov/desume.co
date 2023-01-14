@@ -147,7 +147,7 @@ const SkillsSection: React.FC = () => {
         {buildTopAddButton()}
       </div>
 
-      <div className="mt-6 grid grid-cols-3 gap-4">{buildContent()}</div>
+      <div className="mt-6 grid sm:grid-cols-3 gap-4">{buildContent()}</div>
 
       {addSkillGroupPanel}
     </div>
@@ -180,7 +180,7 @@ const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
             }
           />
         </div>
-        <span className="font-medium text-gray-900">
+        <span className="font-medium text-gray-900 overflow-hidden text-ellipsis">
           {skillGroup.groupName}
         </span>
 
