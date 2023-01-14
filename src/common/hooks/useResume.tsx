@@ -33,61 +33,20 @@ function parseResume(data: unknown): Resume {
 }
 
 function parseResumePersonalDetails(data: unknown): PersonalDetails {
-  const details = {
-    fullName: "",
-    title: "",
-    email: "",
-    phoneNumber: "",
-    websiteUrl: "",
-    location: "",
+  return {
+    fullName: extractString(data, "fullName") ?? "",
+    title: extractString(data, "title") ?? "",
+    email: extractString(data, "email") ?? "",
+    phoneNumber: extractString(data, "phoneNumber") ?? "",
+    websiteUrl: extractString(data, "websiteUrl") ?? "",
+    location: extractString(data, "location") ?? "",
   };
+}
 
-  if (isObject(data)) {
-    if ("personalDetails" in data && isObject(data.personalDetails)) {
-      if (
-        "fullName" in data.personalDetails &&
-        isString(data.personalDetails.fullName)
-      ) {
-        details.fullName = data.personalDetails.fullName;
-      }
-
-      if (
-        "title" in data.personalDetails &&
-        isString(data.personalDetails.title)
-      ) {
-        details.title = data.personalDetails.title;
-      }
-
-      if (
-        "email" in data.personalDetails &&
-        isString(data.personalDetails.email)
-      ) {
-        details.email = data.personalDetails.email;
-      }
-
-      if (
-        "phoneNumber" in data.personalDetails &&
-        isString(data.personalDetails.phoneNumber)
-      ) {
-        details.phoneNumber = data.personalDetails.phoneNumber;
-      }
-
-      if (
-        "websiteUrl" in data.personalDetails &&
-        isString(data.personalDetails.websiteUrl)
-      ) {
-        details.websiteUrl = data.personalDetails.websiteUrl;
-      }
-
-      if (
-        "location" in data.personalDetails &&
-        isString(data.personalDetails.location)
-      ) {
-        details.location = data.personalDetails.location;
-      }
-    }
+function extractString(data: unknown, key: string): string | undefined {
+  if (isObject(data) && key in data) {
+    return (data as any)[key];
   }
-  return details;
 }
 
 export default function useResume(
