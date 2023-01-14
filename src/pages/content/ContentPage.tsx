@@ -16,51 +16,52 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import {
+  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import SortableSectionItem from "./components/SortableSectionItem";
+import {
+  ResumeSectionId,
+  ResumeSectionItem,
+} from "../../common/interfaces/resume";
+import { useContextResume } from "../../AppShell";
 
-interface TabItem {
-  key: string;
-  name: string;
-  element: JSX.Element | null;
+function useSectionOrder(): [
+  ResumeSectionItem[] | null,
+  (experiences: ResumeSectionItem[]) => void
+] {
+  const [resume, setResume] = useContextResume();
+  return [
+    resume?.sectionOrder ?? null,
+    (sectionOrder) => setResume({ ...resume!, sectionOrder }),
+  ];
 }
 
-const navigation: TabItem[] = [
-  {
-    key: "personal-details",
-    name: "Personal details",
-    element: <PersonalDetailsSection />,
-  },
-  {
-    key: "work-history",
-    name: "Work history",
-    element: <WorkHistorySection />,
-  },
-  {
-    key: "education",
-    name: "Education",
-    element: <EducationSection />,
-  },
-  {
-    key: "projects",
-    name: "Projects",
-    element: <ProjectsSection />,
-  },
-  {
-    key: "skills",
-    name: "Skills",
-    element: <SkillsSection />,
-  },
-];
+const sectionElements: Record<ResumeSectionId, JSX.Element> = {
+  personal: <PersonalDetailsSection />,
+  work: <WorkHistorySection />,
+  education: <EducationSection />,
+  projects: <ProjectsSection />,
+  skills: <SkillsSection />,
+};
+
+const sectionLabels: Record<ResumeSectionId, string> = {
+  personal: "Personal details",
+  work: "Work experience",
+  education: "Education",
+  projects: "Projects",
+  skills: "Skills",
+};
 
 export default function ContentPage() {
-  const [selectedNavKey, setSelectedNavKey] = useLocalState<string>(
+  const [sectionOrder, setSectionOrder] = useSectionOrder();
+
+  const [selectedTab, setSelectedTab] = useLocalState<ResumeSectionId>(
     "selected-content-tab",
-    navigation[0].key
+    "personal"
   );
 
   const sensors = useSensors(
@@ -70,8 +71,9 @@ export default function ContentPage() {
     })
   );
 
-  const personalDetails = navigation[0];
-  const sectionIds = navigation.map((section) => section.key);
+  if (sectionOrder === null) return <p>Loading</p>;
+
+  const sectionIds = sectionOrder.map((section) => section.id);
 
   return (
     <>
@@ -81,12 +83,12 @@ export default function ContentPage() {
         <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:py-0 lg:px-0">
           <nav className="space-y-1 lg:fixed lg:w-[16rem]">
             <NavItem
-              label={personalDetails.name}
-              isSelected={selectedNavKey === personalDetails.key}
+              label={sectionLabels.personal}
+              isSelected={selectedTab === "personal"}
               isChecked={true}
               isCheckboxDisabled={true}
               isHandleShown={false}
-              onClick={() => setSelectedNavKey(personalDetails.key)}
+              onClick={() => setSelectedTab("personal")}
             />
 
             <DndContext
@@ -96,14 +98,18 @@ export default function ContentPage() {
                 const { active, over } = e;
 
                 if (active.id !== over?.id) {
-                  const oldIndex = sectionIds.indexOf(active.id as string);
-                  const newIndex = sectionIds.indexOf(over?.id as string);
-                  // const reorderedBullets = arrayMove(
-                  //   bullets,
-                  //   oldIndex,
-                  //   newIndex
-                  // );
-                  // onChange(reorderedBullets);
+                  const oldIndex = sectionIds.indexOf(
+                    active.id as ResumeSectionId
+                  );
+                  const newIndex = sectionIds.indexOf(
+                    over?.id as ResumeSectionId
+                  );
+                  const reorderedSections = arrayMove(
+                    sectionOrder,
+                    oldIndex,
+                    newIndex
+                  );
+                  setSectionOrder(reorderedSections);
                 }
               }}
               modifiers={[restrictToVerticalAxis]}
@@ -112,13 +118,13 @@ export default function ContentPage() {
                 items={sectionIds}
                 strategy={verticalListSortingStrategy}
               >
-                {navigation.slice(1).map((item) => (
-                  <SortableSectionItem key={item.key} id={item.key}>
+                {sectionOrder.map((section) => (
+                  <SortableSectionItem key={section.id} id={section.id}>
                     <NavItem
-                      label={item.name}
-                      isSelected={selectedNavKey === item.key}
-                      isChecked={true}
-                      onClick={() => setSelectedNavKey(item.key)}
+                      label={sectionLabels[section.id]}
+                      isSelected={selectedTab === section.id}
+                      isChecked={section.included}
+                      onClick={() => setSelectedTab(section.id)}
                     />
                   </SortableSectionItem>
                 ))}
@@ -128,9 +134,7 @@ export default function ContentPage() {
         </aside>
 
         <div className="space-y-6">
-          <Card>
-            {navigation.find((item) => item.key === selectedNavKey)?.element}
-          </Card>
+          <Card>{sectionElements[selectedTab]}</Card>
         </div>
       </div>
     </>
