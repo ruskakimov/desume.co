@@ -25,9 +25,9 @@ const SortableSectionItem: React.FC<{
     <div
       ref={setNodeRef}
       className={classNames(
-        "transition-shadow rounded-md relative cursor-auto",
+        "transition-shadow rounded-md relative cursor-auto hover:bg-gray-50",
         {
-          "z-10 ring-inset ring-2 ring-gray-400 shadow-lg": isDragging,
+          "z-10 shadow-lg": isDragging,
         }
       )}
       style={style}
