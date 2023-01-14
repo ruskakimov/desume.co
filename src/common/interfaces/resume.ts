@@ -6,6 +6,18 @@ export interface Resume {
   educationHistory: EducationExperience[];
   projectHistory: ProjectExperience[];
   skillGroups: SkillGroup[];
+  sectionOrder: ResumeSectionItem[];
+}
+
+type ResumeSectionId =
+  | "personal"
+  | "work"
+  | "education"
+  | "projects"
+  | "skills";
+
+export interface ResumeSectionItem extends Includable, Orderable {
+  id: ResumeSectionId;
 }
 
 export interface PersonalDetails {
