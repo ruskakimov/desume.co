@@ -59,22 +59,14 @@ const sectionLabels: Record<ResumeSectionId, string> = {
 
 export default function ContentPage() {
   const [sectionOrder, setSectionOrder] = useSectionOrder();
-
   const [selectedTab, setSelectedTab] = useLocalState<ResumeSectionId>(
     "selected-content-tab",
     "personal"
   );
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const isLoading = sectionOrder === null;
 
   if (sectionOrder === null) return <p>Loading</p>;
-
-  const sectionIds = sectionOrder.map((section) => section.id);
 
   return (
     <>
@@ -83,62 +75,12 @@ export default function ContentPage() {
       <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
         <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:py-0 lg:px-0">
           <nav className="space-y-1 lg:fixed lg:w-[16rem]">
-            <NavItem
-              label={sectionLabels.personal}
-              isSelected={selectedTab === "personal"}
-              isChecked={true}
-              isCheckboxDisabled={true}
-              isHandleShown={false}
-              onClick={() => setSelectedTab("personal")}
+            <SectionItemList
+              selectedTab={selectedTab}
+              sectionOrder={sectionOrder}
+              onTabChange={setSelectedTab}
+              onOrderChange={setSectionOrder}
             />
-
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(e) => {
-                const { active, over } = e;
-
-                if (active.id !== over?.id) {
-                  const oldIndex = sectionIds.indexOf(
-                    active.id as ResumeSectionId
-                  );
-                  const newIndex = sectionIds.indexOf(
-                    over?.id as ResumeSectionId
-                  );
-                  const reorderedSections = arrayMove(
-                    sectionOrder,
-                    oldIndex,
-                    newIndex
-                  );
-                  setSectionOrder(reorderedSections);
-                }
-              }}
-              modifiers={[restrictToVerticalAxis]}
-            >
-              <SortableContext
-                items={sectionIds}
-                strategy={verticalListSortingStrategy}
-              >
-                {sectionOrder.map((section, index) => (
-                  <SortableSectionItem key={section.id} id={section.id}>
-                    <NavItem
-                      label={sectionLabels[section.id]}
-                      isSelected={selectedTab === section.id}
-                      isChecked={section.included}
-                      onClick={() => setSelectedTab(section.id)}
-                      onCheck={(checked) => {
-                        setSectionOrder(
-                          withReplacedAt(sectionOrder, index, {
-                            ...section,
-                            included: checked,
-                          })
-                        );
-                      }}
-                    />
-                  </SortableSectionItem>
-                ))}
-              </SortableContext>
-            </DndContext>
           </nav>
         </aside>
 
@@ -149,3 +91,82 @@ export default function ContentPage() {
     </>
   );
 }
+
+interface SectionItemListProps {
+  selectedTab: ResumeSectionId;
+  sectionOrder: ResumeSectionItem[];
+  onTabChange: (tab: ResumeSectionId) => void;
+  onOrderChange: (order: ResumeSectionItem[]) => void;
+}
+
+const SectionItemList: React.FC<SectionItemListProps> = ({
+  selectedTab,
+  sectionOrder,
+  onTabChange,
+  onOrderChange,
+}) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  const sectionIds = sectionOrder.map((section) => section.id);
+
+  return (
+    <>
+      <NavItem
+        label={sectionLabels.personal}
+        isSelected={selectedTab === "personal"}
+        isChecked={true}
+        isCheckboxDisabled={true}
+        isHandleShown={false}
+        onClick={() => onTabChange("personal")}
+      />
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={(e) => {
+          const { active, over } = e;
+
+          if (active.id !== over?.id) {
+            const oldIndex = sectionIds.indexOf(active.id as ResumeSectionId);
+            const newIndex = sectionIds.indexOf(over?.id as ResumeSectionId);
+            const reorderedSections = arrayMove(
+              sectionOrder,
+              oldIndex,
+              newIndex
+            );
+            onOrderChange(reorderedSections);
+          }
+        }}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <SortableContext
+          items={sectionIds}
+          strategy={verticalListSortingStrategy}
+        >
+          {sectionOrder.map((section, index) => (
+            <SortableSectionItem key={section.id} id={section.id}>
+              <NavItem
+                label={sectionLabels[section.id]}
+                isSelected={selectedTab === section.id}
+                isChecked={section.included}
+                onClick={() => onTabChange(section.id)}
+                onCheck={(checked) => {
+                  onOrderChange(
+                    withReplacedAt(sectionOrder, index, {
+                      ...section,
+                      included: checked,
+                    })
+                  );
+                }}
+              />
+            </SortableSectionItem>
+          ))}
+        </SortableContext>
+      </DndContext>
+    </>
+  );
+};
