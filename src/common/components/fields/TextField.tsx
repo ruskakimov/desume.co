@@ -45,11 +45,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
             </div>
           )}
         </div>
-        {hasError && (
-          <p className="mt-2 text-sm text-red-600" id="email-error">
-            {error}
-          </p>
-        )}
+        {hasError && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
     );
   }

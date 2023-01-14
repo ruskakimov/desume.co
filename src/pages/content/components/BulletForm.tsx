@@ -2,6 +2,7 @@ import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import SecondaryButton from "../../../common/components/SecondaryButton";
 import { withReplacedAt } from "../../../common/functions/array";
+import { generateId } from "../../../common/functions/ids";
 import { BulletPoint } from "../../../common/interfaces/resume";
 
 export interface FormBullet extends BulletPoint {
@@ -89,9 +90,5 @@ const BulletForm: React.FC<BulletFormProps> = ({ bullets, onChange }) => {
     </div>
   );
 };
-
-function generateId(): string {
-  return new Date().getTime().toString();
-}
 
 export default BulletForm;

@@ -7,6 +7,7 @@ import {
   Experience,
   PersonalDetails,
   Resume,
+  SkillGroup,
 } from "../../common/interfaces/resume";
 import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
 
@@ -58,18 +59,22 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   function renderExperienceSectionBlocks<T extends Experience>(
     header: string,
     experiences: T[],
-    renderItem: (experience: T) => JSX.Element
+    renderItem: (experience: T, isLast: boolean) => JSX.Element
   ): JSX.Element[] {
     const includedExperiences = experiences.filter((exp) => exp.included);
     if (includedExperiences.length === 0) return [];
 
+    const lastIndex = includedExperiences.length - 1;
+
     return [
       // Prevent widow header by grouping it with the first item.
-      <div style={{ marginTop: pointsToPx(20) }}>
+      <div>
         <SectionHeader pointsToPx={pointsToPx} text={header} />
-        {renderItem(includedExperiences[0])}
+        {renderItem(includedExperiences[0], 0 === lastIndex)}
       </div>,
-      ...includedExperiences.slice(1).map(renderItem),
+      ...includedExperiences
+        .slice(1)
+        .map((exp, index) => renderItem(exp, index + 1 === lastIndex)),
     ];
   }
 
@@ -80,16 +85,25 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       pointsToPx={pointsToPx}
     />,
 
+    <div>
+      <SkillsSection
+        skillGroups={resume.skillGroups}
+        format={format}
+        pointsToPx={pointsToPx}
+      />
+    </div>,
+
     ...renderExperienceSectionBlocks(
       "Work experience",
       resume.workHistory,
-      (experience) => (
+      (experience, isLast) => (
         <ExperienceItem
           title={experience.companyName}
           subtitle={experience.jobTitle}
           experience={experience}
           format={format}
           pointsToPx={pointsToPx}
+          isLast={isLast}
         />
       )
     ),
@@ -97,13 +111,14 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     ...renderExperienceSectionBlocks(
       "Education",
       resume.educationHistory,
-      (education) => (
+      (education, isLast) => (
         <ExperienceItem
           title={education.schoolName}
           subtitle={education.degree}
           experience={education}
           format={format}
           pointsToPx={pointsToPx}
+          isLast={isLast}
         />
       )
     ),
@@ -111,12 +126,13 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     ...renderExperienceSectionBlocks(
       "Projects",
       resume.projectHistory,
-      (project) => (
+      (project, isLast) => (
         <ExperienceItem
           title={project.projectName}
           experience={project}
           format={format}
           pointsToPx={pointsToPx}
+          isLast={isLast}
         />
       )
     ),
@@ -228,6 +244,40 @@ const Footer: React.FC<{
   );
 };
 
+const SkillsSection: React.FC<{
+  skillGroups: SkillGroup[];
+  format: DocumentFormat;
+  pointsToPx: (points: number) => number;
+}> = ({ skillGroups, format, pointsToPx }) => {
+  return (
+    <div>
+      <SectionHeader pointsToPx={pointsToPx} text="Skills" />
+      <div
+        className="grid grid-cols-4"
+        style={{
+          fontSize: pointsToPx(format.fontSizes.body),
+          lineHeight: format.bulletLineHeight,
+          gap: "0.4em",
+        }}
+      >
+        {skillGroups
+          .filter((skillGroup) => skillGroup.included)
+          .map((skillGroup) => (
+            <>
+              <div className="font-bold">{skillGroup.groupName}</div>
+              <div className="col-span-3">
+                {skillGroup.skills
+                  .filter((skill) => skill.included)
+                  .map((skill) => skill.text)
+                  .join(", ")}
+              </div>
+            </>
+          ))}
+      </div>
+    </div>
+  );
+};
+
 const DetailsSection = React.forwardRef<
   HTMLDivElement,
   {
@@ -273,7 +323,7 @@ const SectionHeader = React.forwardRef<
   }
 >(({ pointsToPx, text }, ref) => {
   return (
-    <div ref={ref}>
+    <div ref={ref} style={{ paddingTop: pointsToPx(20) }}>
       <div
         className={classNames(rectMarkerClass, "bg-black")}
         style={{ height: pointsToPx(0.6) }}
@@ -301,15 +351,16 @@ const ExperienceItem = React.forwardRef<
     subtitle?: string;
     experience: Experience;
     format: DocumentFormat;
+    isLast: boolean;
   }
->(({ pointsToPx, title, subtitle, experience, format }, ref) => {
+>(({ pointsToPx, title, subtitle, experience, format, isLast }, ref) => {
   const start = monthYearToString(experience.startDate);
   const end = experience.endDate
     ? monthYearToString(experience.endDate)
-    : "Current";
+    : "Present";
 
   return (
-    <div ref={ref} style={{ marginBottom: pointsToPx(16) }}>
+    <div ref={ref} style={{ paddingBottom: isLast ? 0 : pointsToPx(16) }}>
       <div
         className="flex justify-between"
         style={{ fontSize: pointsToPx(format.fontSizes.header) }}
