@@ -29,6 +29,7 @@ import {
 } from "../../common/interfaces/resume";
 import { useContextResume } from "../../AppShell";
 import { withReplacedAt } from "../../common/functions/array";
+import ShimmerCards from "../../common/components/ShimmerCards";
 
 function useSectionOrder(): [
   ResumeSectionItem[] | null,
@@ -66,8 +67,6 @@ export default function ContentPage() {
 
   const isLoading = sectionOrder === null;
 
-  if (sectionOrder === null) return <p>Loading</p>;
-
   return (
     <>
       <PageHeader title="Content" />
@@ -75,12 +74,16 @@ export default function ContentPage() {
       <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
         <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:py-0 lg:px-0">
           <nav className="space-y-1 lg:fixed lg:w-[16rem]">
-            <SectionItemList
-              selectedTab={selectedTab}
-              sectionOrder={sectionOrder}
-              onTabChange={setSelectedTab}
-              onOrderChange={setSectionOrder}
-            />
+            {isLoading ? (
+              <ShimmerCards count={1} />
+            ) : (
+              <SectionItemList
+                selectedTab={selectedTab}
+                sectionOrder={sectionOrder}
+                onTabChange={setSelectedTab}
+                onOrderChange={setSectionOrder}
+              />
+            )}
           </nav>
         </aside>
 
