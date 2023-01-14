@@ -51,7 +51,6 @@ const SkillsSection: React.FC = () => {
   const [openAddSkillGroupPanel, addSkillGroupPanel] =
     useSkillGroupPanel("Add skill group");
 
-  // TODO: Add loading state
   const isLoading = skillGroups === null;
 
   const handleAdd = () => {
