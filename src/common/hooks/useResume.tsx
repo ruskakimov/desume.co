@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { firestore } from "../../App";
 import { extractString } from "../functions/defensive";
 import { sortExperiences } from "../functions/experiences";
-import { isObject, isString } from "../functions/type-guards";
 import { PersonalDetails, Resume, ResumeSectionId } from "../interfaces/resume";
 
 function getResumeDocRef(uid: string) {
@@ -27,7 +26,9 @@ function parseResume(data: unknown, user: User): Resume {
     educationHistory: sortExperiences((data as any)?.educationHistory ?? []),
     projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
     skillGroups: (data as any)?.skillGroups ?? [],
-    sectionOrder: defaultSectionOrder.map((id) => ({ id, included: true })),
+    sectionOrder:
+      (data as any)?.sectionOrder ??
+      defaultSectionOrder.map((id) => ({ id, included: true })),
   };
 
   return resume;
