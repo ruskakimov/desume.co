@@ -70,6 +70,7 @@ export default function ContentPage() {
     })
   );
 
+  const personalDetails = navigation[0];
   const sectionIds = navigation.map((section) => section.key);
 
   return (
@@ -79,6 +80,15 @@ export default function ContentPage() {
       <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
         <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:py-0 lg:px-0">
           <nav className="space-y-1 lg:fixed lg:w-[16rem]">
+            <NavItem
+              label={personalDetails.name}
+              isSelected={selectedNavKey === personalDetails.key}
+              isChecked={true}
+              isCheckboxDisabled={true}
+              isHandleShown={false}
+              onClick={() => setSelectedNavKey(personalDetails.key)}
+            />
+
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -102,11 +112,11 @@ export default function ContentPage() {
                 items={sectionIds}
                 strategy={verticalListSortingStrategy}
               >
-                {navigation.map((item) => (
+                {navigation.slice(1).map((item) => (
                   <SortableSectionItem key={item.key} id={item.key}>
                     <NavItem
                       label={item.name}
-                      isSelected={item.key === selectedNavKey}
+                      isSelected={selectedNavKey === item.key}
                       isChecked={true}
                       onClick={() => setSelectedNavKey(item.key)}
                     />
