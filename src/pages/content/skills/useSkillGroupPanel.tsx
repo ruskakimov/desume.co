@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
 import TextField from "../../../common/components/fields/TextField";
 import SlideOver from "../../../common/components/SlideOver";
-import { generateIds } from "../../../common/functions/ids";
+import { generateId, generateIds } from "../../../common/functions/ids";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
 
@@ -27,6 +27,7 @@ function convertFormDataToSkillGroup(
   const newIds = generateIds(parsedSkills.length);
 
   return {
+    id: oldSkillGroup?.id ?? generateId(),
     groupName: formData.groupName,
     included: oldSkillGroup?.included ?? true,
     skills: parsedSkills.map(

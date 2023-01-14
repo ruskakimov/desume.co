@@ -90,8 +90,7 @@ const SkillsSection: React.FC = () => {
         </div>
       );
 
-    // TODO: Replace with actual ids
-    const groupIds = skillGroups.map((skillGroup) => skillGroup.groupName);
+    const groupIds = skillGroups.map((skillGroup) => skillGroup.id);
 
     return (
       <DndContext
@@ -123,11 +122,7 @@ const SkillsSection: React.FC = () => {
             };
 
             return (
-              // TODO: Add ids to skill groups
-              <SortableCardItem
-                key={skillGroup.groupName}
-                id={skillGroup.groupName}
-              >
+              <SortableCardItem key={skillGroup.id} id={skillGroup.id}>
                 <SkillGroupCard
                   skillGroup={skillGroup}
                   onChange={updateSkillGroup}

@@ -45,16 +45,19 @@ export interface Experience extends Includable {
   bulletPoints: BulletPoint[];
 }
 
-export interface SkillGroup extends Includable {
+export interface SkillGroup extends Includable, Orderable {
   groupName: string;
   skills: BulletPoint[];
 }
 
-export interface BulletPoint extends Includable {
-  id: string;
+export interface BulletPoint extends Includable, Orderable {
   text: string;
 }
 
 export interface Includable {
   included: boolean;
+}
+
+export interface Orderable {
+  id: string;
 }
