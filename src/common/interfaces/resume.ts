@@ -9,7 +9,7 @@ export interface Resume {
   sectionOrder: ResumeSectionItem[];
 }
 
-type ResumeSectionId =
+export type ResumeSectionId =
   | "personal"
   | "work"
   | "education"

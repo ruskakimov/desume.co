@@ -4,10 +4,90 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { firestore } from "../../App";
 import { sortExperiences } from "../functions/experiences";
-import { Resume } from "../interfaces/resume";
+import { isObject, isString } from "../functions/type-guards";
+import { PersonalDetails, Resume, ResumeSectionId } from "../interfaces/resume";
 
 function getResumeDocRef(uid: string) {
   return doc(firestore, "resumes", uid);
+}
+
+const defaultSectionOrder: ResumeSectionId[] = [
+  "work",
+  "education",
+  "projects",
+  "skills",
+];
+
+function parseResume(data: unknown): Resume {
+  // TODO: Complete defensive programming
+  const resume: Resume = {
+    personalDetails: parseResumePersonalDetails(data),
+    workHistory: sortExperiences((data as any)?.workHistory ?? []),
+    educationHistory: sortExperiences((data as any)?.educationHistory ?? []),
+    projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
+    skillGroups: (data as any)?.skillGroups ?? [],
+    sectionOrder: defaultSectionOrder.map((id) => ({ id, included: true })),
+  };
+
+  return resume;
+}
+
+function parseResumePersonalDetails(data: unknown): PersonalDetails {
+  const details = {
+    fullName: "",
+    title: "",
+    email: "",
+    phoneNumber: "",
+    websiteUrl: "",
+    location: "",
+  };
+
+  if (isObject(data)) {
+    if ("personalDetails" in data && isObject(data.personalDetails)) {
+      if (
+        "fullName" in data.personalDetails &&
+        isString(data.personalDetails.fullName)
+      ) {
+        details.fullName = data.personalDetails.fullName;
+      }
+
+      if (
+        "title" in data.personalDetails &&
+        isString(data.personalDetails.title)
+      ) {
+        details.title = data.personalDetails.title;
+      }
+
+      if (
+        "email" in data.personalDetails &&
+        isString(data.personalDetails.email)
+      ) {
+        details.email = data.personalDetails.email;
+      }
+
+      if (
+        "phoneNumber" in data.personalDetails &&
+        isString(data.personalDetails.phoneNumber)
+      ) {
+        details.phoneNumber = data.personalDetails.phoneNumber;
+      }
+
+      if (
+        "websiteUrl" in data.personalDetails &&
+        isString(data.personalDetails.websiteUrl)
+      ) {
+        details.websiteUrl = data.personalDetails.websiteUrl;
+      }
+
+      if (
+        "location" in data.personalDetails &&
+        isString(data.personalDetails.location)
+      ) {
+        details.location = data.personalDetails.location;
+      }
+    }
+  }
+  return details;
 }
 
 export default function useResume(
@@ -19,22 +99,8 @@ export default function useResume(
     if (user) {
       getDoc(getResumeDocRef(user.uid))
         .then((snapshot) => {
-          // TODO: Defensive programming
-          const resume = snapshot.data() as Resume | undefined;
-          setResume({
-            personalDetails: resume?.personalDetails ?? {
-              fullName: user.displayName ?? "",
-              title: "",
-              email: user.email ?? "",
-              phoneNumber: user.phoneNumber ?? "",
-              websiteUrl: "",
-              location: "",
-            },
-            workHistory: sortExperiences(resume?.workHistory ?? []),
-            educationHistory: sortExperiences(resume?.educationHistory ?? []),
-            projectHistory: sortExperiences(resume?.projectHistory ?? []),
-            skillGroups: resume?.skillGroups ?? [],
-          });
+          const data = snapshot.data() as unknown;
+          setResume(parseResume(data));
         })
         .catch((reason) => {
           console.error(reason);
