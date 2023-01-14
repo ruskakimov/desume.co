@@ -3,9 +3,10 @@ import { CSS } from "@dnd-kit/utilities";
 import classNames from "classnames";
 import React from "react";
 
-const SortableItem: React.FC<{ id: string; children: React.ReactNode }> = (
-  props
-) => {
+const SortableBulletItem: React.FC<{
+  id: string;
+  children: React.ReactNode;
+}> = (props) => {
   const {
     isDragging,
     attributes,
@@ -43,4 +44,4 @@ const SortableItem: React.FC<{ id: string; children: React.ReactNode }> = (
   );
 };
 
-export default SortableItem;
+export default SortableBulletItem;
