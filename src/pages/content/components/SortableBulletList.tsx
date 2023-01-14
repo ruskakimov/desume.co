@@ -71,10 +71,13 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
                   }}
                 />
                 <span
-                  className={classNames("text-sm", {
-                    "text-gray-700": bullet.included,
-                    "text-gray-400": !bullet.included,
-                  })}
+                  className={classNames(
+                    "text-sm overflow-hidden text-ellipsis",
+                    {
+                      "text-gray-700": bullet.included,
+                      "text-gray-400": !bullet.included,
+                    }
+                  )}
                 >
                   {bullet.text}
                 </span>
