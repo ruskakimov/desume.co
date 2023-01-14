@@ -9,6 +9,7 @@ interface NavItemProps {
   isCheckboxDisabled?: boolean;
   isHandleShown?: boolean;
   onClick: () => void;
+  onCheck?: (checked: boolean) => void;
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -18,6 +19,7 @@ const NavItem: React.FC<NavItemProps> = ({
   isCheckboxDisabled = false,
   isHandleShown = true,
   onClick,
+  onCheck,
 }) => {
   return (
     <button
@@ -30,7 +32,11 @@ const NavItem: React.FC<NavItemProps> = ({
       aria-current={isSelected ? "page" : undefined}
       onClick={onClick}
     >
-      <Checkbox checked={isChecked} disabled={isCheckboxDisabled} />
+      <Checkbox
+        checked={isChecked}
+        disabled={isCheckboxDisabled}
+        onChange={(e) => onCheck?.(e.target.checked)}
+      />
 
       <span className="truncate select-none">{label}</span>
 

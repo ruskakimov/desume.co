@@ -28,6 +28,7 @@ import {
   ResumeSectionItem,
 } from "../../common/interfaces/resume";
 import { useContextResume } from "../../AppShell";
+import { withReplacedAt } from "../../common/functions/array";
 
 function useSectionOrder(): [
   ResumeSectionItem[] | null,
@@ -118,13 +119,21 @@ export default function ContentPage() {
                 items={sectionIds}
                 strategy={verticalListSortingStrategy}
               >
-                {sectionOrder.map((section) => (
+                {sectionOrder.map((section, index) => (
                   <SortableSectionItem key={section.id} id={section.id}>
                     <NavItem
                       label={sectionLabels[section.id]}
                       isSelected={selectedTab === section.id}
                       isChecked={section.included}
                       onClick={() => setSelectedTab(section.id)}
+                      onCheck={(checked) => {
+                        setSectionOrder(
+                          withReplacedAt(sectionOrder, index, {
+                            ...section,
+                            included: checked,
+                          })
+                        );
+                      }}
                     />
                   </SortableSectionItem>
                 ))}
