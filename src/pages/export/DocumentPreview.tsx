@@ -7,6 +7,7 @@ import {
   Experience,
   PersonalDetails,
   Resume,
+  ResumeSectionId,
   SkillGroup,
 } from "../../common/interfaces/resume";
 import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
@@ -78,65 +79,77 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     ];
   }
 
-  const blocks = [
-    <DetailsSection
-      details={resume.personalDetails}
-      format={format}
-      pointsToPx={pointsToPx}
-    />,
-
-    <div>
-      <SkillsSection
-        skillGroups={resume.skillGroups}
+  const renderBySectionId: Record<ResumeSectionId, () => JSX.Element[]> = {
+    personal: () => [
+      <DetailsSection
+        details={resume.personalDetails}
         format={format}
         pointsToPx={pointsToPx}
-      />
-    </div>,
-
-    ...renderExperienceSectionBlocks(
-      "Work experience",
-      resume.workHistory,
-      (experience, isLast) => (
-        <ExperienceItem
-          title={experience.companyName}
-          subtitle={experience.jobTitle}
-          experience={experience}
+      />,
+    ],
+    work: () =>
+      renderExperienceSectionBlocks(
+        "Work experience",
+        resume.workHistory,
+        (experience, isLast) => (
+          <ExperienceItem
+            title={experience.companyName}
+            subtitle={experience.jobTitle}
+            experience={experience}
+            format={format}
+            pointsToPx={pointsToPx}
+            isLast={isLast}
+          />
+        )
+      ),
+    education: () =>
+      renderExperienceSectionBlocks(
+        "Education",
+        resume.educationHistory,
+        (education, isLast) => (
+          <ExperienceItem
+            title={education.schoolName}
+            subtitle={education.degree}
+            experience={education}
+            format={format}
+            pointsToPx={pointsToPx}
+            isLast={isLast}
+          />
+        )
+      ),
+    projects: () =>
+      renderExperienceSectionBlocks(
+        "Projects",
+        resume.projectHistory,
+        (project, isLast) => (
+          <ExperienceItem
+            title={project.projectName}
+            experience={project}
+            format={format}
+            pointsToPx={pointsToPx}
+            isLast={isLast}
+          />
+        )
+      ),
+    skills: () => [
+      <div>
+        <SkillsSection
+          skillGroups={resume.skillGroups}
           format={format}
           pointsToPx={pointsToPx}
-          isLast={isLast}
         />
-      )
-    ),
+      </div>,
+    ],
+  };
 
-    ...renderExperienceSectionBlocks(
-      "Education",
-      resume.educationHistory,
-      (education, isLast) => (
-        <ExperienceItem
-          title={education.schoolName}
-          subtitle={education.degree}
-          experience={education}
-          format={format}
-          pointsToPx={pointsToPx}
-          isLast={isLast}
-        />
-      )
-    ),
-
-    ...renderExperienceSectionBlocks(
-      "Projects",
-      resume.projectHistory,
-      (project, isLast) => (
-        <ExperienceItem
-          title={project.projectName}
-          experience={project}
-          format={format}
-          pointsToPx={pointsToPx}
-          isLast={isLast}
-        />
-      )
-    ),
+  const sectionIds: ResumeSectionId[] = [
+    "personal",
+    ...resume.sectionOrder
+      .filter((section) => section.included)
+      .map((section) => section.id),
   ];
+
+  const blocks = sectionIds.map((id) => renderBySectionId[id]()).flat();
 
   const blocksWithRefs = blocks.map((block, index) =>
     React.cloneElement(block, {
