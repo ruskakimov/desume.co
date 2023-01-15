@@ -5,6 +5,9 @@ export function extractString(data: unknown, key: string): string | undefined {
   if (isString(value)) return value;
 }
 
-function extractProperty(data: unknown, key: string): unknown | undefined {
+export function extractProperty(
+  data: unknown,
+  key: string
+): unknown | undefined {
   if (isObject(data) && key in data) return (data as any)[key];
 }

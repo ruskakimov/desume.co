@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { firestore } from "../../App";
-import { extractString } from "../functions/defensive";
+import { extractProperty, extractString } from "../functions/defensive";
 import { sortExperiences } from "../functions/experiences";
 import { PersonalDetails, Resume, ResumeSectionId } from "../interfaces/resume";
 
@@ -38,13 +38,14 @@ function parseResumePersonalDetails(
   data: unknown,
   user: User
 ): PersonalDetails {
+  const details = extractProperty(data, "personalDetails");
   return {
-    fullName: extractString(data, "fullName") ?? user.displayName ?? "",
-    title: extractString(data, "title") ?? "",
-    email: extractString(data, "email") ?? user.email ?? "",
-    phoneNumber: extractString(data, "phoneNumber") ?? "",
-    websiteUrl: extractString(data, "websiteUrl") ?? "",
-    location: extractString(data, "location") ?? "",
+    fullName: extractString(details, "fullName") ?? user.displayName ?? "",
+    title: extractString(details, "title") ?? "",
+    email: extractString(details, "email") ?? user.email ?? "",
+    phoneNumber: extractString(details, "phoneNumber") ?? "",
+    websiteUrl: extractString(details, "websiteUrl") ?? "",
+    location: extractString(details, "location") ?? "",
   };
 }
 
