@@ -18,7 +18,7 @@ import classNames from "classnames";
 import Checkbox from "../../../common/components/Checkbox";
 import { withReplacedAt } from "../../../common/functions/array";
 import { BulletPoint } from "../../../common/interfaces/resume";
-import SortableItem from "./SortableItem";
+import SortableBulletItem from "./SortableBulletItem";
 
 interface SortableBulletListProps {
   bullets: BulletPoint[];
@@ -57,7 +57,7 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
       <SortableContext items={bulletIds} strategy={verticalListSortingStrategy}>
         <ul className="flex flex-col py-2">
           {bullets.map((bullet, index) => (
-            <SortableItem key={bullet.id} id={bullet.id}>
+            <SortableBulletItem key={bullet.id} id={bullet.id}>
               <li className="py-2 px-4 flex gap-4 items-center">
                 <Checkbox
                   checked={bullet.included}
@@ -86,7 +86,7 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
                   aria-hidden="true"
                 />
               </li>
-            </SortableItem>
+            </SortableBulletItem>
           ))}
         </ul>
       </SortableContext>

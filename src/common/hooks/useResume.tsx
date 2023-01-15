@@ -3,11 +3,49 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { firestore } from "../../App";
+import { extractString } from "../functions/defensive";
 import { sortExperiences } from "../functions/experiences";
-import { Resume } from "../interfaces/resume";
+import { PersonalDetails, Resume, ResumeSectionId } from "../interfaces/resume";
 
 function getResumeDocRef(uid: string) {
   return doc(firestore, "resumes", uid);
+}
+
+const defaultSectionOrder: ResumeSectionId[] = [
+  "work",
+  "education",
+  "projects",
+  "skills",
+];
+
+function parseResume(data: unknown, user: User): Resume {
+  // TODO: Complete defensive programming
+  const resume: Resume = {
+    personalDetails: parseResumePersonalDetails(data, user),
+    workHistory: sortExperiences((data as any)?.workHistory ?? []),
+    educationHistory: sortExperiences((data as any)?.educationHistory ?? []),
+    projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
+    skillGroups: (data as any)?.skillGroups ?? [],
+    sectionOrder:
+      (data as any)?.sectionOrder ??
+      defaultSectionOrder.map((id) => ({ id, included: true })),
+  };
+
+  return resume;
+}
+
+function parseResumePersonalDetails(
+  data: unknown,
+  user: User
+): PersonalDetails {
+  return {
+    fullName: extractString(data, "fullName") ?? user.displayName ?? "",
+    title: extractString(data, "title") ?? "",
+    email: extractString(data, "email") ?? user.email ?? "",
+    phoneNumber: extractString(data, "phoneNumber") ?? "",
+    websiteUrl: extractString(data, "websiteUrl") ?? "",
+    location: extractString(data, "location") ?? "",
+  };
 }
 
 export default function useResume(
@@ -19,22 +57,8 @@ export default function useResume(
     if (user) {
       getDoc(getResumeDocRef(user.uid))
         .then((snapshot) => {
-          // TODO: Defensive programming
-          const resume = snapshot.data() as Resume | undefined;
-          setResume({
-            personalDetails: resume?.personalDetails ?? {
-              fullName: user.displayName ?? "",
-              title: "",
-              email: user.email ?? "",
-              phoneNumber: user.phoneNumber ?? "",
-              websiteUrl: "",
-              location: "",
-            },
-            workHistory: sortExperiences(resume?.workHistory ?? []),
-            educationHistory: sortExperiences(resume?.educationHistory ?? []),
-            projectHistory: sortExperiences(resume?.projectHistory ?? []),
-            skillGroups: resume?.skillGroups ?? [],
-          });
+          const data = snapshot.data() as unknown;
+          setResume(parseResume(data, user));
         })
         .catch((reason) => {
           console.error(reason);
