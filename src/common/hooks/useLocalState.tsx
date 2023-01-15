@@ -2,11 +2,15 @@ import { useState } from "react";
 
 export default function useLocalState<T>(
   storageKey: string,
-  defaultValue: T
+  defaultValue: T,
+  validator?: (parsed: any) => boolean
 ): [T, (state: T) => void] {
   const [state, setState] = useState<T>(() => {
-    const restoredState = localStorage.getItem(storageKey);
-    return restoredState ? JSON.parse(restoredState) : defaultValue;
+    const stringified = localStorage.getItem(storageKey);
+    const parsed = stringified ? JSON.parse(stringified) : null;
+
+    if (!validator) return parsed ?? defaultValue;
+    return validator(parsed) ? parsed : defaultValue;
   });
 
   return [

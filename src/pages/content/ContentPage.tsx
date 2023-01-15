@@ -62,7 +62,8 @@ export default function ContentPage() {
   const [sectionOrder, setSectionOrder] = useSectionOrder();
   const [selectedTab, setSelectedTab] = useLocalState<ResumeSectionId>(
     "selected-content-tab",
-    "personal"
+    "personal",
+    (parsed) => Object.keys(sectionElements).includes(parsed)
   );
 
   const isLoading = sectionOrder === null;
