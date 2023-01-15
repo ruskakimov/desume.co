@@ -131,15 +131,18 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           />
         )
       ),
-    skills: () => [
-      <div>
-        <SkillsSection
-          skillGroups={resume.skillGroups}
-          format={format}
-          pointsToPx={pointsToPx}
-        />
-      </div>,
-    ],
+    skills: () =>
+      resume.skillGroups.length > 0
+        ? [
+            <div>
+              <SkillsSection
+                skillGroups={resume.skillGroups}
+                format={format}
+                pointsToPx={pointsToPx}
+              />
+            </div>,
+          ]
+        : [],
   };
 
   const sectionIds: ResumeSectionId[] = [
