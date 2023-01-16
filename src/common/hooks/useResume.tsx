@@ -12,10 +12,10 @@ function getResumeDocRef(uid: string) {
 }
 
 const defaultSectionOrder: ResumeSectionId[] = [
+  "skills",
   "work",
   "education",
   "projects",
-  "skills",
 ];
 
 function parseResume(data: unknown, user: User): Resume {
