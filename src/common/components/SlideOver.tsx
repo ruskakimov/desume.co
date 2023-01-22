@@ -11,6 +11,7 @@ interface SlideOverProps {
   onClose: () => void;
   onSubmit: () => void;
   onDelete?: () => void;
+  initialFocusRef?: React.MutableRefObject<HTMLElement | null>;
 }
 
 const SlideOver: React.FC<SlideOverProps> = ({
@@ -20,10 +21,16 @@ const SlideOver: React.FC<SlideOverProps> = ({
   onClose,
   onSubmit,
   onDelete,
+  initialFocusRef,
 }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={onClose}
+        initialFocus={initialFocusRef}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-200"

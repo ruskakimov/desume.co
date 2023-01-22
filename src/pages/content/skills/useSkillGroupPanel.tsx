@@ -73,6 +73,8 @@ export default function useSkillGroupPanel(
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
   const rejectCallbackRef = useRef<RejectCallback | null>(null);
 
+  const skillsTextareaRef = useRef<HTMLElement | null>(null);
+
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
 
   const openPanel = (
@@ -134,6 +136,8 @@ export default function useSkillGroupPanel(
     }
   };
 
+  const skillsProps = register("skillsCsv");
+
   return [
     (skillGroup) =>
       new Promise((resolve, reject) => {
@@ -145,6 +149,7 @@ export default function useSkillGroupPanel(
       onClose={onCancel}
       onSubmit={handleSubmit(onSubmit)}
       onDelete={hasDelete ? onDelete : undefined}
+      initialFocusRef={skillsTextareaRef}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-full">
@@ -160,7 +165,11 @@ export default function useSkillGroupPanel(
             label="Skills (comma separated)"
             placeholder="Ex: JavaScript, UI/UX design, Leadership"
             rows={5}
-            {...register("skillsCsv")}
+            {...skillsProps}
+            ref={(el) => {
+              skillsTextareaRef.current = el;
+              skillsProps.ref(el);
+            }}
           />
         </div>
       </div>
