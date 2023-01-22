@@ -26,7 +26,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
-          enter="ease-in-out duration-500"
+          enter="ease-in-out duration-200"
           enterFrom="opacity-0"
           enterTo="opacity-100"
           leave="ease-in-out duration-500"
@@ -43,7 +43,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
               <Transition.Child
                 as={Fragment}
-                enter="transform transition ease-in-out duration-500"
+                enter="transform transition ease-in-out duration-200"
                 enterFrom="translate-x-full"
                 enterTo="translate-x-0"
                 leave="transform transition ease-in-out duration-500"
