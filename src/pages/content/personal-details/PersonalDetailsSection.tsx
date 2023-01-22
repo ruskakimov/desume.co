@@ -59,8 +59,8 @@ const PersonalDetailsSection: React.FC = () => {
   const isLoading = details === null;
 
   useEffect(() => {
-    if (details) reset(convertDetailsToFormData(details));
-  }, [details]);
+    if (!isLoading) reset(convertDetailsToFormData(details));
+  }, [isLoading]);
 
   return (
     <>
