@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useContextResume } from "../../../AppShell";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
-import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
 import { PersonalDetails } from "../../../common/interfaces/resume";
 
@@ -19,8 +18,8 @@ function usePersonalDetails(): [
 }
 
 interface PersonalDetailsForm {
-  fullName: string;
-  title: string;
+  fullName?: string;
+  title?: string;
   email?: string;
   phoneNumber?: string;
   websiteUrl?: string;
@@ -33,10 +32,10 @@ function convertDetailsToFormData(
   return {
     fullName: details.fullName,
     title: details.title,
-    email: details.email ?? undefined,
-    phoneNumber: details.phoneNumber ?? undefined,
-    websiteUrl: details.websiteUrl ?? undefined,
-    location: details.location ?? undefined,
+    email: details.email,
+    phoneNumber: details.phoneNumber,
+    websiteUrl: details.websiteUrl,
+    location: details.location,
   };
 }
 
@@ -44,8 +43,8 @@ function convertFormDataToDetails(
   formData: PersonalDetailsForm
 ): PersonalDetails {
   return {
-    fullName: formData.fullName,
-    title: formData.title,
+    fullName: formData.fullName ?? "",
+    title: formData.title ?? "",
     email: formData.email ?? "",
     phoneNumber: formData.phoneNumber ?? "",
     websiteUrl: formData.websiteUrl ?? "",
@@ -55,26 +54,13 @@ function convertFormDataToDetails(
 
 const PersonalDetailsSection: React.FC = () => {
   const [details, setDetails] = usePersonalDetails();
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { isDirty, errors },
-  } = useForm<PersonalDetailsForm>();
+  const { register, reset, getValues } = useForm<PersonalDetailsForm>();
 
   const isLoading = details === null;
 
   useEffect(() => {
     if (details) reset(convertDetailsToFormData(details));
   }, [details]);
-
-  const onSubmit: SubmitHandler<PersonalDetailsForm> = (formData) => {
-    const details = convertFormDataToDetails(formData);
-    setDetails(details);
-  };
-
-  const onError: SubmitErrorHandler<PersonalDetailsForm> = (error) =>
-    console.error(error);
 
   return (
     <>
@@ -84,17 +70,17 @@ const PersonalDetailsSection: React.FC = () => {
         </h3>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <form
+        onChange={() => {
+          const formData = getValues();
+          const details = convertFormDataToDetails(formData);
+          setDetails(details);
+        }}
+      >
         <div className="mb-10 grid grid-cols-2 gap-6">
           <div className="col-span-full sm:col-span-1">
             <ShimmerOverlay loading={isLoading}>
-              <TextField
-                label="Full name"
-                error={errors.fullName?.message}
-                {...register("fullName", {
-                  required: "Full name is required.",
-                })}
-              />
+              <TextField label="Full name" {...register("fullName")} />
             </ShimmerOverlay>
           </div>
 
@@ -103,8 +89,7 @@ const PersonalDetailsSection: React.FC = () => {
               <TextField
                 label="Title"
                 placeholder="Ex: Software Engineer"
-                error={errors.title?.message}
-                {...register("title", { required: "Title is required." })}
+                {...register("title")}
               />
             </ShimmerOverlay>
           </div>
@@ -143,14 +128,6 @@ const PersonalDetailsSection: React.FC = () => {
               />
             </ShimmerOverlay>
           </div>
-        </div>
-
-        <div className="flex justify-end">
-          <ShimmerOverlay loading={isLoading}>
-            <PrimaryButton type="submit" disabled={!isDirty}>
-              Save details
-            </PrimaryButton>
-          </ShimmerOverlay>
         </div>
       </form>
     </>
