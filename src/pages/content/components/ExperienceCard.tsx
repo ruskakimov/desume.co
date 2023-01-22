@@ -59,10 +59,18 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
           />
         </div>
 
-        <SortableBulletList
-          bullets={experience.bulletPoints}
-          onChange={(bulletPoints) => onChange({ ...experience, bulletPoints })}
-        />
+        {experience.bulletPoints.length === 0 ? (
+          <div className="my-2 h-9 flex items-center justify-center">
+            <span className="text-sm text-gray-400">No bullet points</span>
+          </div>
+        ) : (
+          <SortableBulletList
+            bullets={experience.bulletPoints}
+            onChange={(bulletPoints) =>
+              onChange({ ...experience, bulletPoints })
+            }
+          />
+        )}
       </div>
     </>
   );
