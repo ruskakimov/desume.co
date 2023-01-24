@@ -66,8 +66,13 @@ export default function useSkillGroupPanel(
 ): [OpenSkillGroupPanel, React.ReactNode] {
   const [hasDelete, setHasDelete] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, reset, getValues } =
-    useForm<SkillGroupForm>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { isDirty },
+  } = useForm<SkillGroupForm>();
 
   const oldSkillGroupRef = useRef<SkillGroup | null>(null);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
@@ -109,9 +114,23 @@ export default function useSkillGroupPanel(
     closePanel();
   };
 
-  const onCancel = () => {
-    rejectCallbackRef.current?.(userCancelReason);
-    closePanel();
+  const onCancel = async () => {
+    const confirmed =
+      !isDirty ||
+      (await openConfirmationDialog({
+        title: "Discard changes",
+        body: (
+          <p className="text-sm text-gray-500">
+            Are you sure you want to discard the changes you made?
+          </p>
+        ),
+        action: "Discard",
+      }));
+
+    if (confirmed) {
+      rejectCallbackRef.current?.(userCancelReason);
+      closePanel();
+    }
   };
 
   const onDelete = async () => {
