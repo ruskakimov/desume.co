@@ -70,7 +70,7 @@ export default function ContentPage() {
 
   return (
     <>
-      <PageHeader title="Content" />
+      <PageHeader title="Edit" />
 
       <div className="lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
         <aside className="py-6 px-2 sm:pt-0 sm:pb-6 sm:px-0 lg:py-0 lg:px-0">
