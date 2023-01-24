@@ -1,8 +1,8 @@
 import Checkbox from "../../../common/components/Checkbox";
-import EllipsisMenu from "../../../common/components/EllipsisMenu";
 import { Experience } from "../../../common/interfaces/resume";
 import { monthYearToString } from "../../../common/functions/time";
 import SortableBulletList from "./SortableBulletList";
+import { PencilIcon } from "@heroicons/react/24/outline";
 
 interface ExperienceCardProps {
   title: string;
@@ -19,7 +19,6 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
   experience,
   onChange,
   onEdit,
-  onDelete,
 }) => {
   const start = monthYearToString(experience.startDate);
   const end = experience.endDate
@@ -45,18 +44,14 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
 
           <span className="ml-auto font-normal text-gray-500">{`${start} – ${end}`}</span>
 
-          <EllipsisMenu
-            menuItems={[
-              {
-                label: "Edit",
-                onClick: onEdit,
-              },
-              {
-                label: "Delete",
-                onClick: onDelete,
-              },
-            ]}
-          />
+          <button
+            type="button"
+            className="mx-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+            onClick={onEdit}
+          >
+            <span className="sr-only">Edit {title}</span>
+            <PencilIcon className="h-5 w-5" />
+          </button>
         </div>
 
         {experience.bulletPoints.length === 0 ? (
