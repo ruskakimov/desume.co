@@ -101,9 +101,6 @@ const SlideOver: React.FC<SlideOverProps> = ({
                           </SecondaryButton>
                         )}
 
-                        <SecondaryButton type="button" onClick={onClose}>
-                          Cancel
-                        </SecondaryButton>
                         <PrimaryButton type="submit">Save</PrimaryButton>
                       </div>
                     </div>
