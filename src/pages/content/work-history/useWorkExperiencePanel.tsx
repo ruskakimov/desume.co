@@ -5,6 +5,8 @@ import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
 import SlideOver from "../../../common/components/SlideOver";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
+import useDiscardChangesDialog from "../../../common/hooks/useDiscardChangesDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
 
@@ -71,14 +73,24 @@ export default function useWorkExperiencePanel(
   title: string
 ): [OpenWorkExperiencePanel, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, reset, watch } =
-    useForm<WorkExperienceForm>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isDirty },
+  } = useForm<WorkExperienceForm>();
   const [bullets, setBullets] = useState<FormBullet[]>([]);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
+  const rejectCallbackRef = useRef<RejectCallback | null>(null);
+
+  const [getDiscardConfirmation, discardConfirmationDialog] =
+    useDiscardChangesDialog();
 
   const openPanel = (
     experience: WorkExperience | null,
-    onResolve: ResolveCallback
+    onResolve: ResolveCallback,
+    onReject: RejectCallback
   ) => {
     if (experience) {
       // Edit experience
@@ -96,6 +108,7 @@ export default function useWorkExperiencePanel(
       setBullets([]);
     }
     resolveCallbackRef.current = onResolve;
+    rejectCallbackRef.current = onReject;
     setIsOpen(true);
   };
 
@@ -108,26 +121,25 @@ export default function useWorkExperiencePanel(
     closePanel();
   };
 
-  const onCancel = () => {
-    resolveCallbackRef.current?.(null);
-    closePanel();
+  const onCancel = async () => {
+    if (!isDirty || (await getDiscardConfirmation())) {
+      rejectCallbackRef.current?.(userCancelReason);
+      closePanel();
+    }
   };
-
-  const onError: SubmitErrorHandler<WorkExperienceForm> = (error) =>
-    console.error(error);
 
   const currentYear = new Date().getFullYear();
 
   return [
     (experience) =>
-      new Promise((resolve) => {
-        openPanel(experience, resolve);
+      new Promise((resolve, reject) => {
+        openPanel(experience, resolve, reject);
       }),
     <SlideOver
       isOpen={isOpen}
       title={title}
       onClose={onCancel}
-      onSubmit={handleSubmit(onSubmit, onError)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-6 sm:col-span-3">
@@ -186,8 +198,9 @@ export default function useWorkExperiencePanel(
           />
         </div>
       </div>
-
       <BulletForm bullets={bullets} onChange={setBullets} />
+
+      {discardConfirmationDialog}
     </SlideOver>,
   ];
 }
