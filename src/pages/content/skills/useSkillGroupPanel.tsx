@@ -6,6 +6,7 @@ import SlideOver from "../../../common/components/SlideOver";
 import { userCancelReason } from "../../../common/constants/reject-reasons";
 import { generateId, generateIds } from "../../../common/functions/ids";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
+import useDiscardChangesDialog from "../../../common/hooks/useDiscardChangesDialog";
 import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
 
 interface SkillGroupForm {
@@ -80,6 +81,8 @@ export default function useSkillGroupPanel(
   const skillsTextareaRef = useRef<HTMLElement | null>(null);
 
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
+  const [getDiscardConfirmation, discardConfirmationDialog] =
+    useDiscardChangesDialog();
 
   const openPanel = (
     skillGroup: SkillGroup | null,
@@ -114,19 +117,7 @@ export default function useSkillGroupPanel(
   };
 
   const onCancel = async () => {
-    const confirmed =
-      !isDirty ||
-      (await openConfirmationDialog({
-        title: "Discard changes",
-        body: (
-          <p className="text-sm text-gray-500">
-            Are you sure you want to discard the changes you made?
-          </p>
-        ),
-        action: "Discard",
-      }));
-
-    if (confirmed) {
+    if (!isDirty || (await getDiscardConfirmation())) {
       rejectCallbackRef.current?.(userCancelReason);
       closePanel();
     }
@@ -192,6 +183,7 @@ export default function useSkillGroupPanel(
         </div>
       </div>
 
+      {discardConfirmationDialog}
       {confirmationDialog}
     </SlideOver>,
   ];
