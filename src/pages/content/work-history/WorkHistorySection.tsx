@@ -4,7 +4,6 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import ExperienceCard from "../components/ExperienceCard";
@@ -31,8 +30,6 @@ const WorkHistorySection: React.FC = () => {
 
   const [openEditExperiencePanel, editExperiencePanel] =
     useWorkExperiencePanel("Edit experience");
-
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
 
   const addExperience = async () => {
     const newExperience = await openAddExperiencePanel(null);
@@ -107,7 +104,6 @@ const WorkHistorySection: React.FC = () => {
 
       {addExperiencePanel}
       {editExperiencePanel}
-      {confirmationDialog}
     </>
   );
 };
