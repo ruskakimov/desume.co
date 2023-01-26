@@ -9,8 +9,7 @@ interface ExperienceCardProps {
   subtitle: string;
   experience: Experience;
   onChange: (experience: Experience) => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEditClick: () => void;
 }
 
 const ExperienceCard: React.FC<ExperienceCardProps> = ({
@@ -18,7 +17,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
   subtitle,
   experience,
   onChange,
-  onEdit,
+  onEditClick,
 }) => {
   const start = monthYearToString(experience.startDate);
   const end = experience.endDate
@@ -47,7 +46,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
           <button
             type="button"
             className="mx-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
-            onClick={onEdit}
+            onClick={onEditClick}
           >
             <span className="sr-only">Edit {title}</span>
             <PencilIcon className="h-5 w-5" />

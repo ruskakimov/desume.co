@@ -69,7 +69,7 @@ const EducationSection: React.FC = () => {
             )
           );
         }}
-        onEdit={async () => {
+        onEditClick={async () => {
           const editedExperience = await openEditExperiencePanel(experience);
           if (editedExperience) {
             setExperiences(
@@ -77,22 +77,22 @@ const EducationSection: React.FC = () => {
             );
           }
         }}
-        onDelete={async () => {
-          const confirmed = await openConfirmationDialog({
-            title: "Delete education",
-            body: (
-              <p className="text-sm text-gray-500">
-                Delete{" "}
-                <b>
-                  {experience.degree} at {experience.schoolName}
-                </b>
-                ? This action cannot be undone.
-              </p>
-            ),
-            action: "Delete",
-          });
-          if (confirmed) setExperiences(withRemovedAt(experiences, index));
-        }}
+        // onDelete={async () => {
+        //   const confirmed = await openConfirmationDialog({
+        //     title: "Delete education",
+        //     body: (
+        //       <p className="text-sm text-gray-500">
+        //         Delete{" "}
+        //         <b>
+        //           {experience.degree} at {experience.schoolName}
+        //         </b>
+        //         ? This action cannot be undone.
+        //       </p>
+        //     ),
+        //     action: "Delete",
+        //   });
+        //   if (confirmed) setExperiences(withRemovedAt(experiences, index));
+        // }}
       />
     ));
   }

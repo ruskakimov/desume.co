@@ -69,29 +69,15 @@ const WorkHistorySection: React.FC = () => {
             )
           );
         }}
-        onEdit={async () => {
+        onEditClick={async () => {
           const editedExperience = await openEditExperiencePanel(experience);
           if (editedExperience) {
             setExperiences(
               withReplacedAt(experiences, index, editedExperience)
             );
+          } else {
+            setExperiences(withRemovedAt(experiences, index));
           }
-        }}
-        onDelete={async () => {
-          const confirmed = await openConfirmationDialog({
-            title: "Delete experience",
-            body: (
-              <p className="text-sm text-gray-500">
-                Delete{" "}
-                <b>
-                  {experience.jobTitle} at {experience.companyName}
-                </b>
-                ? This action cannot be undone.
-              </p>
-            ),
-            action: "Delete",
-          });
-          if (confirmed) setExperiences(withRemovedAt(experiences, index));
         }}
       />
     ));
