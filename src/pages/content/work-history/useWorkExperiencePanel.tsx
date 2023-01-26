@@ -58,16 +58,14 @@ function convertExperienceToFormData(
 
 /**
  * @param experience experience for edit or `null` for a new one.
- * @returns a promise of edited experience or `null` if user cancels.
+ * @returns a promise of edited experience or `null` if deleted. Promise is rejected if user cancels.
  */
 type OpenWorkExperiencePanel = (
   experience: WorkExperience | null
 ) => Promise<WorkExperience | null>;
 
-/**
- * @returns edited experience or `null` if user cancels.
- */
 type ResolveCallback = (experience: WorkExperience | null) => void;
+type RejectCallback = (reason: string) => void;
 
 export default function useWorkExperiencePanel(
   title: string

@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
 import TextField from "../../../common/components/fields/TextField";
 import SlideOver from "../../../common/components/SlideOver";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 import { generateId, generateIds } from "../../../common/functions/ids";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
@@ -58,8 +59,6 @@ type OpenSkillGroupPanel = (
 
 type ResolveCallback = (skillGroup: SkillGroup | null) => void;
 type RejectCallback = (reason: string) => void;
-
-export const userCancelReason = "Canceled by user";
 
 export default function useSkillGroupPanel(
   title: string

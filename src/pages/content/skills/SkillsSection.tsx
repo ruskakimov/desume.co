@@ -19,11 +19,12 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { SkillGroup } from "../../../common/interfaces/resume";
 import SortableBulletList from "../components/SortableBulletList";
 import SortableCardItem from "../components/SortableCardItem";
-import useSkillGroupPanel, { userCancelReason } from "./useSkillGroupPanel";
+import useSkillGroupPanel from "./useSkillGroupPanel";
 
 const maxSkillGroups = 3;
 
