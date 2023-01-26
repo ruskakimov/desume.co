@@ -6,6 +6,7 @@ import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
 import SlideOver from "../../../common/components/SlideOver";
 import { userCancelReason } from "../../../common/constants/reject-reasons";
+import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import useDiscardChangesDialog from "../../../common/hooks/useDiscardChangesDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
@@ -78,12 +79,15 @@ export default function useWorkExperiencePanel(
     handleSubmit,
     reset,
     watch,
+    getValues,
     formState: { isDirty },
   } = useForm<WorkExperienceForm>();
+  const [hasDelete, setHasDelete] = useState(false);
   const [bullets, setBullets] = useState<FormBullet[]>([]);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
   const rejectCallbackRef = useRef<RejectCallback | null>(null);
 
+  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
   const [getDiscardConfirmation, discardConfirmationDialog] =
     useDiscardChangesDialog();
 
@@ -102,10 +106,12 @@ export default function useWorkExperiencePanel(
           shouldDelete: false,
         }))
       );
+      setHasDelete(true);
     } else {
       // Add experience
       reset();
       setBullets([]);
+      setHasDelete(false);
     }
     resolveCallbackRef.current = onResolve;
     rejectCallbackRef.current = onReject;
@@ -128,6 +134,30 @@ export default function useWorkExperiencePanel(
     }
   };
 
+  const onDelete = async () => {
+    const jobTitle = getValues("jobTitle");
+    const companyName = getValues("companyName");
+
+    const confirmed = await openConfirmationDialog({
+      title: "Delete experience",
+      body: (
+        <p className="text-sm text-gray-500">
+          Delete{" "}
+          <b>
+            {jobTitle} at {companyName}
+          </b>
+          ? This action cannot be undone.
+        </p>
+      ),
+      action: "Delete",
+    });
+
+    if (confirmed) {
+      resolveCallbackRef.current?.(null);
+      closePanel();
+    }
+  };
+
   const currentYear = new Date().getFullYear();
 
   return [
@@ -139,6 +169,7 @@ export default function useWorkExperiencePanel(
       isOpen={isOpen}
       title={title}
       onClose={onCancel}
+      onDelete={hasDelete ? onDelete : undefined}
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="grid grid-cols-6 gap-6">
@@ -201,6 +232,7 @@ export default function useWorkExperiencePanel(
       <BulletForm bullets={bullets} onChange={setBullets} />
 
       {discardConfirmationDialog}
+      {confirmationDialog}
     </SlideOver>,
   ];
 }
