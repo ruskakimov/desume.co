@@ -10,6 +10,7 @@ import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
 import { sortExperiences } from "../../../common/functions/experiences";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 
 function useWorkHistory(): [
   WorkExperience[] | null,
@@ -31,11 +32,16 @@ const WorkHistorySection: React.FC = () => {
   const [openEditExperiencePanel, editExperiencePanel] =
     useWorkExperiencePanel("Edit experience");
 
-  const addExperience = async () => {
-    const newExperience = await openAddExperiencePanel(null);
-    if (newExperience && experiences) {
-      setExperiences(sortExperiences([newExperience, ...experiences]));
-    }
+  const handleAdd = async () => {
+    openAddExperiencePanel(null)
+      .then((newExperience) => {
+        if (newExperience && experiences) {
+          setExperiences(sortExperiences([newExperience, ...experiences]));
+        }
+      })
+      .catch((e) => {
+        if (e !== userCancelReason) console.error(e);
+      });
   };
 
   const isLoading = experiences === null;
@@ -48,7 +54,7 @@ const WorkHistorySection: React.FC = () => {
         <EmptyStateAddButton
           Icon={BriefcaseIcon}
           label="Add work experience"
-          onClick={addExperience}
+          onClick={handleAdd}
         />
       );
 
@@ -66,15 +72,20 @@ const WorkHistorySection: React.FC = () => {
             )
           );
         }}
-        onEditClick={async () => {
-          const editedExperience = await openEditExperiencePanel(experience);
-          if (editedExperience) {
-            setExperiences(
-              withReplacedAt(experiences, index, editedExperience)
-            );
-          } else {
-            setExperiences(withRemovedAt(experiences, index));
-          }
+        onEditClick={() => {
+          openEditExperiencePanel(experience)
+            .then((editedExperience) => {
+              if (editedExperience) {
+                setExperiences(
+                  withReplacedAt(experiences, index, editedExperience)
+                );
+              } else {
+                setExperiences(withRemovedAt(experiences, index));
+              }
+            })
+            .catch((e) => {
+              if (e !== userCancelReason) console.error(e);
+            });
         }}
       />
     ));
@@ -82,7 +93,7 @@ const WorkHistorySection: React.FC = () => {
 
   function buildTopAddButton(): React.ReactNode {
     const button = (
-      <PrimaryButton onClick={addExperience}>Add experience</PrimaryButton>
+      <PrimaryButton onClick={handleAdd}>Add experience</PrimaryButton>
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
