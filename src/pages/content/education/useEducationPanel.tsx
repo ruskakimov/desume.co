@@ -80,6 +80,7 @@ export default function useEducationPanel(
   const [bullets, setBullets] = useState<FormBullet[]>([]);
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
   const rejectCallbackRef = useRef<RejectCallback | null>(null);
+  const touchedBulletsRef = useRef<boolean>(false);
 
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
   const [getDiscardConfirmation, discardConfirmationDialog] =
@@ -109,6 +110,7 @@ export default function useEducationPanel(
     }
     resolveCallbackRef.current = onResolve;
     rejectCallbackRef.current = onReject;
+    touchedBulletsRef.current = false;
     setIsOpen(true);
   };
 
@@ -122,7 +124,8 @@ export default function useEducationPanel(
   };
 
   const onCancel = async () => {
-    if (!isDirty || (await getDiscardConfirmation())) {
+    const unchanged = !isDirty && !touchedBulletsRef.current;
+    if (unchanged || (await getDiscardConfirmation())) {
       rejectCallbackRef.current?.(userCancelReason);
       closePanel();
     }
@@ -212,7 +215,13 @@ export default function useEducationPanel(
         </div>
       </div>
 
-      <BulletForm bullets={bullets} onChange={setBullets} />
+      <BulletForm
+        bullets={bullets}
+        onChange={(bullets) => {
+          touchedBulletsRef.current = true;
+          setBullets(bullets);
+        }}
+      />
 
       {discardConfirmationDialog}
       {confirmationDialog}
