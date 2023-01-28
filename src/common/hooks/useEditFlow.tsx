@@ -26,7 +26,7 @@ type DialogPropsBuilder<T> = (
 ) => EditDialogProps;
 
 interface DialogOptions {
-  hasDelete: boolean;
+  isCreateNew: boolean;
 }
 
 export default function useEditFlow<T>(): {
@@ -35,7 +35,7 @@ export default function useEditFlow<T>(): {
   confirmationPopups: React.ReactNode;
 } {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasDelete, setHasDelete] = useState(true);
+  const [options, setOptions] = useState<DialogOptions>({ isCreateNew: false });
   const resolveCallbackRef = useRef<ResolveCallback<T> | null>(null);
   const rejectCallbackRef = useRef<RejectCallback | null>(null);
 
@@ -52,7 +52,7 @@ export default function useEditFlow<T>(): {
     resolveCallbackRef.current = onResolve;
     rejectCallbackRef.current = onReject;
     setIsOpen(true);
-    setHasDelete(options.hasDelete);
+    setOptions(options);
   };
 
   return {
@@ -80,7 +80,7 @@ export default function useEditFlow<T>(): {
           setIsOpen(false);
         }
       },
-      onDelete: hasDelete
+      onDelete: !options.isCreateNew
         ? async () => {
             const confirmed = await openConfirmationDialog({
               title: `Delete ${titleName}`,

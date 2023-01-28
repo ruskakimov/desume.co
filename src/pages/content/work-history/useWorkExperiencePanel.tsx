@@ -99,7 +99,7 @@ export default function useWorkExperiencePanel(
       setBullets([]);
     }
     touchedBulletsRef.current = false;
-    return openEditDialog({ hasDelete: experience !== null });
+    return openEditDialog({ isCreateNew: experience === null });
   };
 
   const currentYear = new Date().getFullYear();
