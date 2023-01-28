@@ -65,9 +65,10 @@ type OpenWorkExperiencePanel = (
   experience: WorkExperience | null
 ) => Promise<WorkExperience | null>;
 
-export default function useWorkExperiencePanel(
-  title: string
-): [OpenWorkExperiencePanel, React.ReactNode] {
+export default function useWorkExperiencePanel(): [
+  OpenWorkExperiencePanel,
+  React.ReactNode
+] {
   const {
     register,
     reset,

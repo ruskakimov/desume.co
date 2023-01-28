@@ -26,14 +26,11 @@ function useWorkHistory(): [
 const WorkHistorySection: React.FC = () => {
   const [experiences, setExperiences] = useWorkHistory();
 
-  const [openAddExperiencePanel, addExperiencePanel] =
-    useWorkExperiencePanel("Add experience");
-
   const [openEditExperiencePanel, editExperiencePanel] =
-    useWorkExperiencePanel("Edit experience");
+    useWorkExperiencePanel();
 
   const handleAdd = async () => {
-    openAddExperiencePanel(null)
+    openEditExperiencePanel(null)
       .then((newExperience) => {
         if (newExperience && experiences) {
           setExperiences(sortExperiences([newExperience, ...experiences]));
@@ -113,7 +110,6 @@ const WorkHistorySection: React.FC = () => {
 
       <div className="space-y-8 pb-4">{buildContent()}</div>
 
-      {addExperiencePanel}
       {editExperiencePanel}
     </>
   );
