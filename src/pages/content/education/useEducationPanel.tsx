@@ -90,7 +90,7 @@ export default function useEducationPanel(): [
       );
     } else {
       // Add experience
-      reset();
+      reset({});
       setBullets([]);
     }
     touchedBulletsRef.current = false;

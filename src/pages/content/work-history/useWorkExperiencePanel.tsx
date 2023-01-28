@@ -96,7 +96,7 @@ export default function useWorkExperiencePanel(): [
       );
     } else {
       // Add experience
-      reset();
+      reset({});
       setBullets([]);
     }
     touchedBulletsRef.current = false;

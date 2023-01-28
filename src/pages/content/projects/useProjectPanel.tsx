@@ -88,7 +88,7 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
       );
     } else {
       // Add experience
-      reset();
+      reset({});
       setBullets([]);
     }
     touchedBulletsRef.current = false;
