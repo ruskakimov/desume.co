@@ -1,13 +1,10 @@
 import React, { useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
 import SlideOver from "../../../common/components/SlideOver";
-import { userCancelReason } from "../../../common/constants/reject-reasons";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
-import useDiscardChangesDialog from "../../../common/hooks/useDiscardChangesDialog";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
@@ -67,9 +64,6 @@ function convertExperienceToFormData(
 type OpenWorkExperiencePanel = (
   experience: WorkExperience | null
 ) => Promise<WorkExperience | null>;
-
-type ResolveCallback = (experience: WorkExperience | null) => void;
-type RejectCallback = (reason: string) => void;
 
 export default function useWorkExperiencePanel(
   title: string
