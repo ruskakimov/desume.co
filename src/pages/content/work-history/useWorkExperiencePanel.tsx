@@ -74,33 +74,21 @@ type RejectCallback = (reason: string) => void;
 export default function useWorkExperiencePanel(
   title: string
 ): [OpenWorkExperiencePanel, React.ReactNode] {
-  const [isOpen, setIsOpen] = useState(false);
   const {
     register,
-    handleSubmit,
     reset,
     watch,
     getValues,
+    trigger,
     formState: { isDirty },
   } = useForm<WorkExperienceForm>();
-  const [hasDelete, setHasDelete] = useState(false);
   const [bullets, setBullets] = useState<FormBullet[]>([]);
-  const resolveCallbackRef = useRef<ResolveCallback | null>(null);
-  const rejectCallbackRef = useRef<RejectCallback | null>(null);
   const touchedBulletsRef = useRef<boolean>(false);
 
   const { openEditDialog, buildDialueProps, confirmationPopups } =
     useEditFlow<WorkExperience>();
 
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
-  const [getDiscardConfirmation, discardConfirmationDialog] =
-    useDiscardChangesDialog();
-
-  const openPanel = (
-    experience: WorkExperience | null,
-    onResolve: ResolveCallback,
-    onReject: RejectCallback
-  ) => {
+  const openPanel = (experience: WorkExperience | null) => {
     if (experience) {
       // Edit experience
       const prefilledForm = convertExperienceToFormData(experience);
@@ -111,73 +99,34 @@ export default function useWorkExperiencePanel(
           shouldDelete: false,
         }))
       );
-      setHasDelete(true);
     } else {
       // Add experience
       reset();
       setBullets([]);
-      setHasDelete(false);
     }
-    resolveCallbackRef.current = onResolve;
-    rejectCallbackRef.current = onReject;
     touchedBulletsRef.current = false;
-    setIsOpen(true);
-  };
-
-  const closePanel = () => setIsOpen(false);
-
-  const onSubmit: SubmitHandler<WorkExperienceForm> = (formData) => {
-    const newExperience = convertFormDataToExperience(formData);
-    newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
-    resolveCallbackRef.current?.(newExperience);
-    closePanel();
-  };
-
-  const onCancel = async () => {
-    const unchanged = !isDirty && !touchedBulletsRef.current;
-    if (unchanged || (await getDiscardConfirmation())) {
-      rejectCallbackRef.current?.(userCancelReason);
-      closePanel();
-    }
-  };
-
-  const onDelete = async () => {
-    const jobTitle = getValues("jobTitle");
-    const companyName = getValues("companyName");
-
-    const confirmed = await openConfirmationDialog({
-      title: "Delete experience",
-      body: (
-        <p className="text-sm text-gray-500">
-          Delete{" "}
-          <b>
-            {jobTitle} at {companyName}
-          </b>
-          ? This action cannot be undone.
-        </p>
-      ),
-      action: "Delete",
-    });
-
-    if (confirmed) {
-      resolveCallbackRef.current?.(null);
-      closePanel();
-    }
+    return openEditDialog();
   };
 
   const currentYear = new Date().getFullYear();
 
   return [
-    (experience) =>
-      new Promise((resolve, reject) => {
-        openPanel(experience, resolve, reject);
-      }),
+    openPanel,
     <SlideOver
-      isOpen={isOpen}
       title={title}
-      onClose={onCancel}
-      onDelete={hasDelete ? onDelete : undefined}
-      onSubmit={handleSubmit(onSubmit)}
+      {...buildDialueProps({
+        titleName: "experience",
+        getIsDirty: () => isDirty || touchedBulletsRef.current,
+        getIsValid: () => trigger(),
+        getDeleteName: () =>
+          `${getValues("jobTitle")} at ${getValues("companyName")}`,
+        getData: () => {
+          const formData = getValues();
+          const newExperience = convertFormDataToExperience(formData);
+          newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
+          return newExperience;
+        },
+      })}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-6 sm:col-span-3">
@@ -244,8 +193,7 @@ export default function useWorkExperiencePanel(
         }}
       />
 
-      {discardConfirmationDialog}
-      {confirmationDialog}
+      {confirmationPopups}
     </SlideOver>,
   ];
 }
