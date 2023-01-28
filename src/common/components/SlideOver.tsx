@@ -6,7 +6,6 @@ import SecondaryButton from "./SecondaryButton";
 import { EditDialogProps } from "../hooks/useEditFlow";
 
 interface SlideOverProps extends EditDialogProps {
-  title: string;
   children: React.ReactNode;
   initialFocusRef?: React.MutableRefObject<HTMLElement | null>;
 }

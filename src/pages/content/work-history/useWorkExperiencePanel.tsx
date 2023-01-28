@@ -107,7 +107,6 @@ export default function useWorkExperiencePanel(
   return [
     openPanel,
     <SlideOver
-      title={title}
       {...buildDialogProps({
         titleName: "experience",
         getIsDirty: () => isDirty || touchedBulletsRef.current,

@@ -4,6 +4,7 @@ import useConfirmationDialog from "./useConfirmationDialog";
 import useDiscardChangesDialog from "./useDiscardChangesDialog";
 
 export interface EditDialogProps {
+  title: string;
   isOpen: boolean;
   onCancel: () => void;
   onSubmit: () => void;
@@ -67,6 +68,7 @@ export default function useEditFlow<T>(): {
       getIsDirty,
       getDeleteName,
     }) => ({
+      title: `${options.isCreateNew ? "Add" : "Edit"} ${titleName}`,
       isOpen,
       onCancel: async () => {
         if (!getIsDirty() || (await getDiscardConfirmation())) {
