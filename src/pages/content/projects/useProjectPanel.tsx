@@ -164,7 +164,13 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
         </div>
       </div>
 
-      <BulletForm bullets={bullets} onChange={setBullets} />
+      <BulletForm
+        bullets={bullets}
+        onChange={(bullets) => {
+          touchedBulletsRef.current = true;
+          setBullets(bullets);
+        }}
+      />
 
       {confirmationPopups}
     </SlideOver>,
