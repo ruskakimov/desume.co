@@ -92,6 +92,7 @@ export default function useSkillGroupPanel(): [
   return [
     openPanel,
     <SlideOver
+      initialFocusRef={skillsTextareaRef}
       {...buildDialogProps({
         titleName: "skill group",
         getIsDirty: () => isDirty,
