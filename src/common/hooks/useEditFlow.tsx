@@ -25,8 +25,12 @@ type DialogPropsBuilder<T> = (
   options: DialogBuilderOptions<T>
 ) => EditDialogProps;
 
+interface DialogOptions {
+  hasDelete: boolean;
+}
+
 export default function useEditFlow<T>(): {
-  openEditDialog: () => Promise<T | null>;
+  openEditDialog: (options: DialogOptions) => Promise<T | null>;
   buildDialogProps: DialogPropsBuilder<T>;
   confirmationPopups: React.ReactNode;
 } {
@@ -40,19 +44,22 @@ export default function useEditFlow<T>(): {
   const [getDiscardConfirmation, discardConfirmationDialog] =
     useDiscardChangesDialog();
 
-  // TODO: Pass 'hasDelete' option
   const openEditDialog = (
+    options: DialogOptions,
     onResolve: ResolveCallback<T>,
     onReject: RejectCallback
   ) => {
     resolveCallbackRef.current = onResolve;
     rejectCallbackRef.current = onReject;
     setIsOpen(true);
+    setHasDelete(options.hasDelete);
   };
 
   return {
-    openEditDialog: () =>
-      new Promise((resolve, reject) => openEditDialog(resolve, reject)),
+    openEditDialog: (options) =>
+      new Promise((resolve, reject) =>
+        openEditDialog(options, resolve, reject)
+      ),
     buildDialogProps: ({
       titleName,
       getData,
@@ -73,22 +80,24 @@ export default function useEditFlow<T>(): {
           setIsOpen(false);
         }
       },
-      onDelete: async () => {
-        const confirmed = await openConfirmationDialog({
-          title: `Delete ${titleName}`,
-          body: (
-            <p className="text-sm text-gray-500">
-              Delete <b>{getDeleteName()}</b>? This action cannot be undone.
-            </p>
-          ),
-          action: "Delete",
-        });
+      onDelete: hasDelete
+        ? async () => {
+            const confirmed = await openConfirmationDialog({
+              title: `Delete ${titleName}`,
+              body: (
+                <p className="text-sm text-gray-500">
+                  Delete <b>{getDeleteName()}</b>? This action cannot be undone.
+                </p>
+              ),
+              action: "Delete",
+            });
 
-        if (confirmed) {
-          resolveCallbackRef.current?.(null);
-          setIsOpen(false);
-        }
-      },
+            if (confirmed) {
+              resolveCallbackRef.current?.(null);
+              setIsOpen(false);
+            }
+          }
+        : undefined,
     }),
     confirmationPopups: (
       <>
