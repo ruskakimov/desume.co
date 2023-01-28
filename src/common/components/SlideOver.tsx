@@ -3,9 +3,9 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 import SecondaryButton from "./SecondaryButton";
-import { EditDialogueProps } from "../hooks/useEditFlow";
+import { EditDialogProps } from "../hooks/useEditFlow";
 
-interface SlideOverProps extends EditDialogueProps {
+interface SlideOverProps extends EditDialogProps {
   title: string;
   children: React.ReactNode;
   initialFocusRef?: React.MutableRefObject<HTMLElement | null>;

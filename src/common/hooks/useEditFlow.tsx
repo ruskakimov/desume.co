@@ -3,7 +3,7 @@ import { userCancelReason } from "../constants/reject-reasons";
 import useConfirmationDialog from "./useConfirmationDialog";
 import useDiscardChangesDialog from "./useDiscardChangesDialog";
 
-export interface EditDialogueProps {
+export interface EditDialogProps {
   isOpen: boolean;
   onClose: () => void; // TODO: Rename to cancel
   onSubmit: () => void;
@@ -13,7 +13,7 @@ export interface EditDialogueProps {
 type ResolveCallback<T> = (data: T | null) => void;
 type RejectCallback = (reason: string) => void;
 
-interface DialogueBuilderOptions<T> {
+interface DialogBuilderOptions<T> {
   titleName: string;
   getIsValid: () => Promise<boolean>;
   getIsDirty: () => boolean;
@@ -21,13 +21,13 @@ interface DialogueBuilderOptions<T> {
   getDeleteName: () => string;
 }
 
-type DialoguePropsBuilder<T> = (
-  options: DialogueBuilderOptions<T>
-) => EditDialogueProps;
+type DialogPropsBuilder<T> = (
+  options: DialogBuilderOptions<T>
+) => EditDialogProps;
 
 export default function useEditFlow<T>(): {
   openEditDialog: () => Promise<T | null>;
-  buildDialueProps: DialoguePropsBuilder<T>;
+  buildDialogProps: DialogPropsBuilder<T>;
   confirmationPopups: React.ReactNode;
 } {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +53,7 @@ export default function useEditFlow<T>(): {
   return {
     openEditDialog: () =>
       new Promise((resolve, reject) => openEditDialog(resolve, reject)),
-    buildDialueProps: ({
+    buildDialogProps: ({
       titleName,
       getData,
       getIsValid,

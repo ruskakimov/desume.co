@@ -79,7 +79,7 @@ export default function useWorkExperiencePanel(
   const [bullets, setBullets] = useState<FormBullet[]>([]);
   const touchedBulletsRef = useRef<boolean>(false);
 
-  const { openEditDialog, buildDialueProps, confirmationPopups } =
+  const { openEditDialog, buildDialogProps, confirmationPopups } =
     useEditFlow<WorkExperience>();
 
   const openPanel = (experience: WorkExperience | null) => {
@@ -108,7 +108,7 @@ export default function useWorkExperiencePanel(
     openPanel,
     <SlideOver
       title={title}
-      {...buildDialueProps({
+      {...buildDialogProps({
         titleName: "experience",
         getIsDirty: () => isDirty || touchedBulletsRef.current,
         getIsValid: () => trigger(),
