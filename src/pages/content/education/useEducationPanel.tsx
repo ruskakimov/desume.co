@@ -1,12 +1,10 @@
 import React, { useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
 import SlideOver from "../../../common/components/SlideOver";
-import { userCancelReason } from "../../../common/constants/reject-reasons";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
-import useDiscardChangesDialog from "../../../common/hooks/useDiscardChangesDialog";
+import useEditFlow from "../../../common/hooks/useEditFlow";
 import { EducationExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
 
@@ -62,35 +60,24 @@ type OpenEducationPanel = (
   experience: EducationExperience | null
 ) => Promise<EducationExperience | null>;
 
-type ResolveCallback = (experience: EducationExperience | null) => void;
-type RejectCallback = (reason: string) => void;
-
-export default function useEducationPanel(
-  title: string
-): [OpenEducationPanel, React.ReactNode] {
-  const [isOpen, setIsOpen] = useState(false);
+export default function useEducationPanel(): [
+  OpenEducationPanel,
+  React.ReactNode
+] {
   const {
     register,
-    handleSubmit,
     reset,
     getValues,
+    trigger,
     formState: { isDirty },
   } = useForm<EducationForm>();
-  const [hasDelete, setHasDelete] = useState(false);
   const [bullets, setBullets] = useState<FormBullet[]>([]);
-  const resolveCallbackRef = useRef<ResolveCallback | null>(null);
-  const rejectCallbackRef = useRef<RejectCallback | null>(null);
   const touchedBulletsRef = useRef<boolean>(false);
 
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
-  const [getDiscardConfirmation, discardConfirmationDialog] =
-    useDiscardChangesDialog();
+  const { openEditDialog, buildDialogProps, confirmationPopups } =
+    useEditFlow<EducationExperience>();
 
-  const openPanel = (
-    experience: EducationExperience | null,
-    onResolve: ResolveCallback,
-    onReject: RejectCallback
-  ) => {
+  const openPanel = (experience: EducationExperience | null) => {
     if (experience) {
       // Edit experience
       const prefilledForm = convertExperienceToFormData(experience);
@@ -101,70 +88,33 @@ export default function useEducationPanel(
           shouldDelete: false,
         }))
       );
-      setHasDelete(true);
     } else {
       // Add experience
       reset();
       setBullets([]);
-      setHasDelete(false);
     }
-    resolveCallbackRef.current = onResolve;
-    rejectCallbackRef.current = onReject;
     touchedBulletsRef.current = false;
-    setIsOpen(true);
-  };
-
-  const closePanel = () => setIsOpen(false);
-
-  const onSubmit: SubmitHandler<EducationForm> = (formData) => {
-    const newExperience = convertFormDataToExperience(formData);
-    newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
-    resolveCallbackRef.current?.(newExperience);
-    closePanel();
-  };
-
-  const onCancel = async () => {
-    const unchanged = !isDirty && !touchedBulletsRef.current;
-    if (unchanged || (await getDiscardConfirmation())) {
-      rejectCallbackRef.current?.(userCancelReason);
-      closePanel();
-    }
-  };
-
-  const onDelete = async () => {
-    const confirmed = await openConfirmationDialog({
-      title: "Delete experience",
-      body: (
-        <p className="text-sm text-gray-500">
-          Delete{" "}
-          <b>
-            {getValues("degree")} at {getValues("schoolName")}
-          </b>
-          ? This action cannot be undone.
-        </p>
-      ),
-      action: "Delete",
-    });
-
-    if (confirmed) {
-      resolveCallbackRef.current?.(null);
-      closePanel();
-    }
+    return openEditDialog({ isCreateNew: experience === null });
   };
 
   const currentYear = new Date().getFullYear();
 
   return [
-    (experience) =>
-      new Promise((resolve, reject) => {
-        openPanel(experience, resolve, reject);
-      }),
+    openPanel,
     <SlideOver
-      isOpen={isOpen}
-      title={title}
-      onCancel={onCancel}
-      onDelete={hasDelete ? onDelete : undefined}
-      onSubmit={handleSubmit(onSubmit)}
+      {...buildDialogProps({
+        titleName: "education",
+        getIsDirty: () => isDirty || touchedBulletsRef.current,
+        getIsValid: () => trigger(undefined, { shouldFocus: true }),
+        getDeleteName: () =>
+          `${getValues("degree")} at ${getValues("schoolName")}`,
+        getData: () => {
+          const formData = getValues();
+          const newExperience = convertFormDataToExperience(formData);
+          newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
+          return newExperience;
+        },
+      })}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-6 sm:col-span-3">
@@ -223,8 +173,7 @@ export default function useEducationPanel(
         }}
       />
 
-      {discardConfirmationDialog}
-      {confirmationDialog}
+      {confirmationPopups}
     </SlideOver>,
   ];
 }

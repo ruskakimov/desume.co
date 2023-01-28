@@ -25,7 +25,6 @@ function useWorkHistory(): [
 
 const WorkHistorySection: React.FC = () => {
   const [experiences, setExperiences] = useWorkHistory();
-
   const [openEditExperiencePanel, editExperiencePanel] =
     useWorkExperiencePanel();
 

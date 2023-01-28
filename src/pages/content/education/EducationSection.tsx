@@ -4,7 +4,6 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { EducationExperience } from "../../../common/interfaces/resume";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
@@ -26,15 +25,10 @@ function useEducation(): [
 
 const EducationSection: React.FC = () => {
   const [experiences, setExperiences] = useEducation();
-
-  const [openAddExperiencePanel, addExperiencePanel] =
-    useEducationPanel("Add education");
-
-  const [openEditExperiencePanel, editExperiencePanel] =
-    useEducationPanel("Edit education");
+  const [openEditExperiencePanel, editExperiencePanel] = useEducationPanel();
 
   const handleAdd = async () => {
-    openAddExperiencePanel(null)
+    openEditExperiencePanel(null)
       .then((newExperience) => {
         if (newExperience && experiences) {
           setExperiences(sortExperiences([newExperience, ...experiences]));
@@ -114,7 +108,6 @@ const EducationSection: React.FC = () => {
 
       <div className="space-y-8 pb-4">{buildContent()}</div>
 
-      {addExperiencePanel}
       {editExperiencePanel}
     </>
   );
