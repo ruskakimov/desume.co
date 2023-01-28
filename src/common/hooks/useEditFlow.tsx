@@ -5,7 +5,7 @@ import useDiscardChangesDialog from "./useDiscardChangesDialog";
 
 export interface EditDialogProps {
   isOpen: boolean;
-  onClose: () => void; // TODO: Rename to cancel
+  onCancel: () => void;
   onSubmit: () => void;
   onDelete?: () => void;
 }
@@ -68,7 +68,7 @@ export default function useEditFlow<T>(): {
       getDeleteName,
     }) => ({
       isOpen,
-      onClose: async () => {
+      onCancel: async () => {
         if (!getIsDirty() || (await getDiscardConfirmation())) {
           rejectCallbackRef.current?.(userCancelReason);
           setIsOpen(false);

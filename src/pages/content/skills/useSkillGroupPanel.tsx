@@ -155,7 +155,7 @@ export default function useSkillGroupPanel(
     <SlideOver
       isOpen={isOpen}
       title={title}
-      onClose={onCancel}
+      onCancel={onCancel}
       onSubmit={handleSubmit(onSubmit)}
       onDelete={hasDelete ? onDelete : undefined}
       initialFocusRef={skillsTextareaRef}

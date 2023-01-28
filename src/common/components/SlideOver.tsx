@@ -15,7 +15,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
   isOpen,
   title,
   children,
-  onClose,
+  onCancel,
   onSubmit,
   onDelete,
   initialFocusRef,
@@ -25,7 +25,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
       <Dialog
         as="div"
         className="relative z-10"
-        onClose={onClose}
+        onClose={onCancel}
         initialFocus={initialFocusRef}
       >
         <Transition.Child
@@ -73,7 +73,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
                               <button
                                 type="button"
                                 className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 no-mouse-focus-ring"
-                                onClick={onClose}
+                                onClick={onCancel}
                               >
                                 <span className="sr-only">Close panel</span>
                                 <XMarkIcon

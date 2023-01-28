@@ -162,7 +162,7 @@ export default function useEducationPanel(
     <SlideOver
       isOpen={isOpen}
       title={title}
-      onClose={onCancel}
+      onCancel={onCancel}
       onDelete={hasDelete ? onDelete : undefined}
       onSubmit={handleSubmit(onSubmit)}
     >

@@ -122,7 +122,7 @@ export default function useProjectPanel(
     <SlideOver
       isOpen={isOpen}
       title={title}
-      onClose={onCancel}
+      onCancel={onCancel}
       onSubmit={handleSubmit(onSubmit, onError)}
     >
       <div className="grid grid-cols-6 gap-6">
