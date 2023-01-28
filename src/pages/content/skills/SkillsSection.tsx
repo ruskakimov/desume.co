@@ -49,8 +49,7 @@ const SkillsSection: React.FC = () => {
     })
   );
 
-  const [openAddSkillGroupPanel, addSkillGroupPanel] =
-    useSkillGroupPanel("Add skill group");
+  const [openAddSkillGroupPanel, addSkillGroupPanel] = useSkillGroupPanel();
 
   const isLoading = skillGroups === null;
 
@@ -158,8 +157,7 @@ const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
   skillGroup,
   onChange,
 }) => {
-  const [openEditSkillGroupPanel, editSkillGroupPanel] =
-    useSkillGroupPanel("Edit skill group");
+  const [openEditSkillGroupPanel, editSkillGroupPanel] = useSkillGroupPanel();
 
   return (
     <>

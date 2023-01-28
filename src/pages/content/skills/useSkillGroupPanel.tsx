@@ -1,12 +1,10 @@
-import React, { useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import React, { useRef } from "react";
+import { useForm } from "react-hook-form";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
 import TextField from "../../../common/components/fields/TextField";
 import SlideOver from "../../../common/components/SlideOver";
-import { userCancelReason } from "../../../common/constants/reject-reasons";
 import { generateId, generateIds } from "../../../common/functions/ids";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
-import useDiscardChangesDialog from "../../../common/hooks/useDiscardChangesDialog";
+import useEditFlow from "../../../common/hooks/useEditFlow";
 import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
 
 interface SkillGroupForm {
@@ -58,107 +56,59 @@ type OpenSkillGroupPanel = (
   skillGroup: SkillGroup | null
 ) => Promise<SkillGroup | null>;
 
-type ResolveCallback = (skillGroup: SkillGroup | null) => void;
-type RejectCallback = (reason: string) => void;
-
-export default function useSkillGroupPanel(
-  title: string
-): [OpenSkillGroupPanel, React.ReactNode] {
-  const [hasDelete, setHasDelete] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+export default function useSkillGroupPanel(): [
+  OpenSkillGroupPanel,
+  React.ReactNode
+] {
   const {
     register,
-    handleSubmit,
     reset,
     getValues,
+    trigger,
     formState: { isDirty },
   } = useForm<SkillGroupForm>();
 
   const oldSkillGroupRef = useRef<SkillGroup | null>(null);
-  const resolveCallbackRef = useRef<ResolveCallback | null>(null);
-  const rejectCallbackRef = useRef<RejectCallback | null>(null);
-
   const skillsTextareaRef = useRef<HTMLElement | null>(null);
 
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
-  const [getDiscardConfirmation, discardConfirmationDialog] =
-    useDiscardChangesDialog();
+  const { openEditDialog, buildDialogProps, confirmationPopups } =
+    useEditFlow<SkillGroup>();
 
-  const openPanel = (
-    skillGroup: SkillGroup | null,
-    onResolve: ResolveCallback,
-    onReject: RejectCallback
-  ) => {
+  const openPanel = (skillGroup: SkillGroup | null) => {
     if (skillGroup) {
       // Edit skill group
       const prefilledForm = convertSkillGroupToFormData(skillGroup);
       reset(prefilledForm);
-      setHasDelete(true);
     } else {
       // Add a new skill group
-      reset();
-      setHasDelete(false);
+      reset({});
     }
     oldSkillGroupRef.current = skillGroup;
-    resolveCallbackRef.current = onResolve;
-    rejectCallbackRef.current = onReject;
-    setIsOpen(true);
-  };
-
-  const closePanel = () => setIsOpen(false);
-
-  const onSubmit: SubmitHandler<SkillGroupForm> = (formData) => {
-    const newExperience = convertFormDataToSkillGroup(
-      formData,
-      oldSkillGroupRef.current
-    );
-    resolveCallbackRef.current?.(newExperience);
-    closePanel();
-  };
-
-  const onCancel = async () => {
-    if (!isDirty || (await getDiscardConfirmation())) {
-      rejectCallbackRef.current?.(userCancelReason);
-      closePanel();
-    }
-  };
-
-  const onDelete = async () => {
-    const groupName = getValues("groupName");
-    const skillCount = convertFormDataToSkillGroup(getValues(), null).skills
-      .length;
-
-    const confirmed = await openConfirmationDialog({
-      title: "Delete skill group",
-      body: (
-        <p className="text-sm text-gray-500">
-          Delete <b>{groupName}</b> with <b>{skillCount} skills</b>? This action
-          cannot be undone.
-        </p>
-      ),
-      action: "Delete",
-    });
-
-    if (confirmed) {
-      resolveCallbackRef.current?.(null);
-      closePanel();
-    }
+    return openEditDialog({ isCreateNew: skillGroup === null });
   };
 
   const skillsProps = register("skillsCsv");
 
   return [
-    (skillGroup) =>
-      new Promise((resolve, reject) => {
-        openPanel(skillGroup, resolve, reject);
-      }),
+    openPanel,
     <SlideOver
-      isOpen={isOpen}
-      title={title}
-      onCancel={onCancel}
-      onSubmit={handleSubmit(onSubmit)}
-      onDelete={hasDelete ? onDelete : undefined}
-      initialFocusRef={skillsTextareaRef}
+      {...buildDialogProps({
+        titleName: "skill group",
+        getIsDirty: () => isDirty,
+        getIsValid: () => trigger(undefined, { shouldFocus: true }),
+        getDeleteName: () => {
+          const skillCount = convertFormDataToSkillGroup(getValues(), null)
+            .skills.length;
+          return `${getValues("groupName")} (${skillCount} skills)`;
+        },
+        getData: () => {
+          const formData = getValues();
+          return convertFormDataToSkillGroup(
+            formData,
+            oldSkillGroupRef.current
+          );
+        },
+      })}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-full">
@@ -183,8 +133,7 @@ export default function useSkillGroupPanel(
         </div>
       </div>
 
-      {discardConfirmationDialog}
-      {confirmationDialog}
+      {confirmationPopups}
     </SlideOver>,
   ];
 }
