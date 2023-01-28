@@ -8,6 +8,7 @@ import SlideOver from "../../../common/components/SlideOver";
 import { userCancelReason } from "../../../common/constants/reject-reasons";
 import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import useDiscardChangesDialog from "../../../common/hooks/useDiscardChangesDialog";
+import useEditFlow from "../../../common/hooks/useEditFlow";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
 
@@ -87,6 +88,9 @@ export default function useWorkExperiencePanel(
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
   const rejectCallbackRef = useRef<RejectCallback | null>(null);
   const touchedBulletsRef = useRef<boolean>(false);
+
+  const { openEditDialog, buildDialueProps, confirmationPopups } =
+    useEditFlow<WorkExperience>();
 
   const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
   const [getDiscardConfirmation, discardConfirmationDialog] =

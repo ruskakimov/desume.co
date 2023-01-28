@@ -25,11 +25,11 @@ type DialoguePropsBuilder<T> = (
   options: DialogueBuilderOptions<T>
 ) => EditDialogueProps;
 
-export default function useEditFlow<T>(): [
-  () => Promise<T | null>,
-  DialoguePropsBuilder<T>,
-  React.ReactNode
-] {
+export default function useEditFlow<T>(): {
+  openEditDialog: () => Promise<T | null>;
+  buildDialueProps: DialoguePropsBuilder<T>;
+  confirmationPopups: React.ReactNode;
+} {
   const [isOpen, setIsOpen] = useState(false);
   const [hasDelete, setHasDelete] = useState(true);
   const resolveCallbackRef = useRef<ResolveCallback<T> | null>(null);
@@ -50,9 +50,16 @@ export default function useEditFlow<T>(): [
     setIsOpen(true);
   };
 
-  return [
-    () => new Promise((resolve, reject) => openEditDialog(resolve, reject)),
-    ({ titleName, getData, getIsValid, getIsDirty, getDeleteName }) => ({
+  return {
+    openEditDialog: () =>
+      new Promise((resolve, reject) => openEditDialog(resolve, reject)),
+    buildDialueProps: ({
+      titleName,
+      getData,
+      getIsValid,
+      getIsDirty,
+      getDeleteName,
+    }) => ({
       isOpen,
       onClose: async () => {
         if (!getIsDirty() || (await getDiscardConfirmation())) {
@@ -83,9 +90,11 @@ export default function useEditFlow<T>(): [
         }
       },
     }),
-    <>
-      {discardConfirmationDialog}
-      {deleteConfirmationDialog}
-    </>,
-  ];
+    confirmationPopups: (
+      <>
+        {discardConfirmationDialog}
+        {deleteConfirmationDialog}
+      </>
+    ),
+  };
 }
