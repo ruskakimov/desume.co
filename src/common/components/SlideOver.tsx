@@ -3,14 +3,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 import SecondaryButton from "./SecondaryButton";
+import { EditDialogueProps } from "../hooks/useEditFlow";
 
-interface SlideOverProps {
-  isOpen: boolean;
+interface SlideOverProps extends EditDialogueProps {
   title: string;
   children: React.ReactNode;
-  onClose: () => void;
-  onSubmit: () => void;
-  onDelete?: () => void;
   initialFocusRef?: React.MutableRefObject<HTMLElement | null>;
 }
 
