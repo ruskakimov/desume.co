@@ -110,7 +110,7 @@ export default function useWorkExperiencePanel(
       {...buildDialogProps({
         titleName: "experience",
         getIsDirty: () => isDirty || touchedBulletsRef.current,
-        getIsValid: () => trigger(),
+        getIsValid: () => trigger(undefined, { shouldFocus: true }),
         getDeleteName: () =>
           `${getValues("jobTitle")} at ${getValues("companyName")}`,
         getData: () => {
