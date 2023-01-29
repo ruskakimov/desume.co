@@ -42,7 +42,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
-          <div className="flex min-h-full items-center justify-center">
+          <div className="flex h-full max-h-full items-center justify-center sm:p-12">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -52,7 +52,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl">
+              <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl h-full">
                 <form
                   className="h-full"
                   onSubmit={(e) => {
@@ -60,7 +60,7 @@ const SlideOver: React.FC<SlideOverProps> = ({
                     onSubmit();
                   }}
                 >
-                  <div className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl rounded-lg">
+                  <div className="flex h-full flex-col divide-y divide-gray-200 bg-white sm:shadow-xl sm:rounded-lg">
                     <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between">
