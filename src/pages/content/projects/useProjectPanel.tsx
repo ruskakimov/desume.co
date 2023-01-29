@@ -4,7 +4,7 @@ import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
-import SlideOver from "../../../common/components/SlideOver";
+import FormModal from "../../../common/components/FormModal";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { ProjectExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
@@ -99,7 +99,7 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
 
   return [
     openPanel,
-    <SlideOver
+    <FormModal
       {...buildDialogProps({
         titleName: "project",
         getIsDirty: () => isDirty || touchedBulletsRef.current,
@@ -173,6 +173,6 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
       />
 
       {confirmationPopups}
-    </SlideOver>,
+    </FormModal>,
   ];
 }

@@ -5,12 +5,12 @@ import PrimaryButton from "./PrimaryButton";
 import SecondaryButton from "./SecondaryButton";
 import { EditDialogProps } from "../hooks/useEditFlow";
 
-interface SlideOverProps extends EditDialogProps {
+interface FormModalProps extends EditDialogProps {
   children: React.ReactNode;
   initialFocusRef?: React.MutableRefObject<HTMLElement | null>;
 }
 
-const SlideOver: React.FC<SlideOverProps> = ({
+const FormModal: React.FC<FormModalProps> = ({
   isOpen,
   title,
   children,
@@ -104,4 +104,4 @@ const SlideOver: React.FC<SlideOverProps> = ({
   );
 };
 
-export default SlideOver;
+export default FormModal;

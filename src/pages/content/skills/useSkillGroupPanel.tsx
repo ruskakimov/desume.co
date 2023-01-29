@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
 import TextField from "../../../common/components/fields/TextField";
-import SlideOver from "../../../common/components/SlideOver";
+import FormModal from "../../../common/components/FormModal";
 import { generateId, generateIds } from "../../../common/functions/ids";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
@@ -91,7 +91,7 @@ export default function useSkillGroupPanel(): [
 
   return [
     openPanel,
-    <SlideOver
+    <FormModal
       initialFocusRef={skillsTextareaRef}
       {...buildDialogProps({
         titleName: "skill group",
@@ -135,6 +135,6 @@ export default function useSkillGroupPanel(): [
       </div>
 
       {confirmationPopups}
-    </SlideOver>,
+    </FormModal>,
   ];
 }

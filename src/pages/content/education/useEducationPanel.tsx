@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
-import SlideOver from "../../../common/components/SlideOver";
+import FormModal from "../../../common/components/FormModal";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { EducationExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
@@ -101,7 +101,7 @@ export default function useEducationPanel(): [
 
   return [
     openPanel,
-    <SlideOver
+    <FormModal
       {...buildDialogProps({
         titleName: "education",
         getIsDirty: () => isDirty || touchedBulletsRef.current,
@@ -174,6 +174,6 @@ export default function useEducationPanel(): [
       />
 
       {confirmationPopups}
-    </SlideOver>,
+    </FormModal>,
   ];
 }
