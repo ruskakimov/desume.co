@@ -61,32 +61,27 @@ const SlideOver: React.FC<SlideOverProps> = ({
                   }}
                 >
                   <div className="flex h-full flex-col divide-y divide-gray-200 bg-white sm:shadow-xl sm:rounded-lg">
-                    <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
-                      <div className="px-4 sm:px-6">
-                        <div className="flex items-start justify-between">
-                          <Dialog.Title className="text-lg font-medium text-gray-900">
-                            {title}
-                          </Dialog.Title>
-                          <div className="ml-3 flex h-7 items-center">
-                            <button
-                              type="button"
-                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 no-mouse-focus-ring"
-                              onClick={onCancel}
-                            >
-                              <span className="sr-only">Close panel</span>
-                              <XMarkIcon
-                                className="h-6 w-6"
-                                aria-hidden="true"
-                              />
-                            </button>
-                          </div>
-                        </div>
+                    <div className="flex items-start justify-between px-4 sm:px-6 py-4">
+                      <Dialog.Title className="text-lg font-medium text-gray-900">
+                        {title}
+                      </Dialog.Title>
+                      <div className="ml-3 flex h-7 items-center">
+                        <button
+                          type="button"
+                          className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 no-mouse-focus-ring"
+                          onClick={onCancel}
+                        >
+                          <span className="sr-only">Close panel</span>
+                          <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                        </button>
                       </div>
-                      <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                    </div>
+                    <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
+                      <div className="relative flex-1 px-4 sm:px-6">
                         {children}
                       </div>
                     </div>
-                    <div className="flex flex-shrink-0 justify-end gap-4 px-4 py-4">
+                    <div className="flex flex-shrink-0 justify-end gap-4 px-4 sm:px-6 py-4">
                       {onDelete && (
                         <SecondaryButton
                           className="text-red-600 mr-auto"
