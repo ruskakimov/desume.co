@@ -305,7 +305,9 @@ const DetailsSection = React.forwardRef<
   return (
     <div ref={ref} className="flex justify-between">
       <div>
-        <h1 style={{ fontSize: pointsToPx(16) }}>{details.fullName}</h1>
+        <h1 className="font-bold" style={{ fontSize: pointsToPx(16) }}>
+          {details.fullName}
+        </h1>
         <h2 style={{ fontSize: pointsToPx(format.fontSizes.header) }}>
           {details.title}
         </h2>
