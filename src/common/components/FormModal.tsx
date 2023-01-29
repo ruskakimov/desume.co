@@ -42,7 +42,7 @@ const FormModal: React.FC<FormModalProps> = ({
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
-          <div className="flex h-full max-h-full items-center justify-center sm:p-12">
+          <div className="flex h-full max-h-full items-center justify-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -52,7 +52,7 @@ const FormModal: React.FC<FormModalProps> = ({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl h-full">
+              <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl h-full sm:h-auto">
                 <form
                   className="h-full"
                   onSubmit={(e) => {
@@ -60,7 +60,7 @@ const FormModal: React.FC<FormModalProps> = ({
                     onSubmit();
                   }}
                 >
-                  <div className="flex h-full flex-col divide-y divide-gray-200 bg-white sm:shadow-xl sm:rounded-lg">
+                  <div className="flex h-full sm:max-h-[calc(100vh-6rem)] flex-col divide-y divide-gray-200 bg-white sm:shadow-xl sm:rounded-lg">
                     <div className="flex items-start justify-between px-4 sm:px-6 py-4">
                       <Dialog.Title className="text-lg font-medium text-gray-900">
                         {title}
