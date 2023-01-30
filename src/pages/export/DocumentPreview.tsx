@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { groupIntoStacks } from "../../common/functions/layout";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
@@ -50,6 +50,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     format.margins.right,
     format.margins.bottom,
   ]);
+  const [loadedFont, setLoadedFont] = useState("Times");
 
   const blocksRef = useRef<HTMLDivElement[]>([]);
 
@@ -166,6 +167,12 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
   const [pageBlockRanges, setPageBlockRanges] = useState<number[][]>([[0, 0]]);
 
+  useEffect(() => {
+    document.fonts
+      .load("italic bold 16px Charter")
+      .then(() => setLoadedFont("Charter"));
+  }, []);
+
   useLayoutEffect(() => {
     const blockHeights = blocksRef.current.map((el) => {
       const margins =
@@ -188,7 +195,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     } else {
       setPageBlockRanges(pagesWithFooter);
     }
-  }, [containerSize, format]);
+  }, [containerSize, format, loadedFont]);
 
   const pageStyle = {
     aspectRatio: aspectRatio,
