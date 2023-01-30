@@ -4,13 +4,13 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { WorkExperience } from "../../../common/interfaces/resume";
 import useWorkExperiencePanel from "./useWorkExperiencePanel";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
 import { sortExperiences } from "../../../common/functions/experiences";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 
 function useWorkHistory(): [
   WorkExperience[] | null,
@@ -25,20 +25,19 @@ function useWorkHistory(): [
 
 const WorkHistorySection: React.FC = () => {
   const [experiences, setExperiences] = useWorkHistory();
-
-  const [openAddExperiencePanel, addExperiencePanel] =
-    useWorkExperiencePanel("Add experience");
-
   const [openEditExperiencePanel, editExperiencePanel] =
-    useWorkExperiencePanel("Edit experience");
+    useWorkExperiencePanel();
 
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
-
-  const addExperience = async () => {
-    const newExperience = await openAddExperiencePanel(null);
-    if (newExperience && experiences) {
-      setExperiences(sortExperiences([newExperience, ...experiences]));
-    }
+  const handleAdd = async () => {
+    openEditExperiencePanel(null)
+      .then((newExperience) => {
+        if (newExperience && experiences) {
+          setExperiences(sortExperiences([newExperience, ...experiences]));
+        }
+      })
+      .catch((e) => {
+        if (e !== userCancelReason) console.error(e);
+      });
   };
 
   const isLoading = experiences === null;
@@ -51,7 +50,7 @@ const WorkHistorySection: React.FC = () => {
         <EmptyStateAddButton
           Icon={BriefcaseIcon}
           label="Add work experience"
-          onClick={addExperience}
+          onClick={handleAdd}
         />
       );
 
@@ -69,29 +68,20 @@ const WorkHistorySection: React.FC = () => {
             )
           );
         }}
-        onEdit={async () => {
-          const editedExperience = await openEditExperiencePanel(experience);
-          if (editedExperience) {
-            setExperiences(
-              withReplacedAt(experiences, index, editedExperience)
-            );
-          }
-        }}
-        onDelete={async () => {
-          const confirmed = await openConfirmationDialog({
-            title: "Delete experience",
-            body: (
-              <p className="text-sm text-gray-500">
-                Delete{" "}
-                <b>
-                  {experience.jobTitle} at {experience.companyName}
-                </b>
-                ? This action cannot be undone.
-              </p>
-            ),
-            action: "Delete",
-          });
-          if (confirmed) setExperiences(withRemovedAt(experiences, index));
+        onEditClick={() => {
+          openEditExperiencePanel(experience)
+            .then((editedExperience) => {
+              if (editedExperience) {
+                setExperiences(
+                  withReplacedAt(experiences, index, editedExperience)
+                );
+              } else {
+                setExperiences(withRemovedAt(experiences, index));
+              }
+            })
+            .catch((e) => {
+              if (e !== userCancelReason) console.error(e);
+            });
         }}
       />
     ));
@@ -99,7 +89,7 @@ const WorkHistorySection: React.FC = () => {
 
   function buildTopAddButton(): React.ReactNode {
     const button = (
-      <PrimaryButton onClick={addExperience}>Add experience</PrimaryButton>
+      <PrimaryButton onClick={handleAdd}>Add experience</PrimaryButton>
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
@@ -119,9 +109,7 @@ const WorkHistorySection: React.FC = () => {
 
       <div className="space-y-8 pb-4">{buildContent()}</div>
 
-      {addExperiencePanel}
       {editExperiencePanel}
-      {confirmationDialog}
     </>
   );
 };

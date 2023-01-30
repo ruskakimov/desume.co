@@ -1,16 +1,15 @@
 import Checkbox from "../../../common/components/Checkbox";
-import EllipsisMenu from "../../../common/components/EllipsisMenu";
 import { Experience } from "../../../common/interfaces/resume";
 import { monthYearToString } from "../../../common/functions/time";
 import SortableBulletList from "./SortableBulletList";
+import { PencilIcon } from "@heroicons/react/24/outline";
 
 interface ExperienceCardProps {
   title: string;
   subtitle: string;
   experience: Experience;
   onChange: (experience: Experience) => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEditClick: () => void;
 }
 
 const ExperienceCard: React.FC<ExperienceCardProps> = ({
@@ -18,8 +17,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
   subtitle,
   experience,
   onChange,
-  onEdit,
-  onDelete,
+  onEditClick,
 }) => {
   const start = monthYearToString(experience.startDate);
   const end = experience.endDate
@@ -28,7 +26,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
 
   return (
     <>
-      <div className="w-full border sm:rounded-md">
+      <div className="w-full border sm:rounded-md shadow-sm">
         <div className="sm:rounded-t-md px-2 h-14 flex flex-row items-center gap-2 border-b bg-gray-50">
           <div className="mx-2 h-6 flex items-center">
             <Checkbox
@@ -45,24 +43,28 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
 
           <span className="ml-auto font-normal text-gray-500">{`${start} – ${end}`}</span>
 
-          <EllipsisMenu
-            menuItems={[
-              {
-                label: "Edit",
-                onClick: onEdit,
-              },
-              {
-                label: "Delete",
-                onClick: onDelete,
-              },
-            ]}
-          />
+          <button
+            type="button"
+            className="mx-2 flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-mouse-focus-ring"
+            onClick={onEditClick}
+          >
+            <span className="sr-only">Edit {title}</span>
+            <PencilIcon className="h-5 w-5" />
+          </button>
         </div>
 
-        <SortableBulletList
-          bullets={experience.bulletPoints}
-          onChange={(bulletPoints) => onChange({ ...experience, bulletPoints })}
-        />
+        {experience.bulletPoints.length === 0 ? (
+          <div className="my-2 h-9 flex items-center justify-center">
+            <span className="text-sm text-gray-400">No bullet points</span>
+          </div>
+        ) : (
+          <SortableBulletList
+            bullets={experience.bulletPoints}
+            onChange={(bulletPoints) =>
+              onChange({ ...experience, bulletPoints })
+            }
+          />
+        )}
       </div>
     </>
   );

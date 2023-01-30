@@ -4,13 +4,13 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
-import useConfirmationDialog from "../../../common/hooks/useConfirmationDialog";
 import { EducationExperience } from "../../../common/interfaces/resume";
 import ExperienceCard from "../components/ExperienceCard";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import useEducationPanel from "./useEducationPanel";
 import { AcademicCapIcon } from "@heroicons/react/24/outline";
 import { sortExperiences } from "../../../common/functions/experiences";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 
 function useEducation(): [
   EducationExperience[] | null,
@@ -25,20 +25,18 @@ function useEducation(): [
 
 const EducationSection: React.FC = () => {
   const [experiences, setExperiences] = useEducation();
+  const [openEditExperiencePanel, editExperiencePanel] = useEducationPanel();
 
-  const [openAddExperiencePanel, addExperiencePanel] =
-    useEducationPanel("Add education");
-
-  const [openEditExperiencePanel, editExperiencePanel] =
-    useEducationPanel("Edit education");
-
-  const [openConfirmationDialog, confirmationDialog] = useConfirmationDialog();
-
-  const addExperience = async () => {
-    const newExperience = await openAddExperiencePanel(null);
-    if (newExperience && experiences) {
-      setExperiences(sortExperiences([newExperience, ...experiences]));
-    }
+  const handleAdd = async () => {
+    openEditExperiencePanel(null)
+      .then((newExperience) => {
+        if (newExperience && experiences) {
+          setExperiences(sortExperiences([newExperience, ...experiences]));
+        }
+      })
+      .catch((e) => {
+        if (e !== userCancelReason) console.error(e);
+      });
   };
 
   const isLoading = experiences === null;
@@ -51,7 +49,7 @@ const EducationSection: React.FC = () => {
         <EmptyStateAddButton
           Icon={AcademicCapIcon}
           label="Add education"
-          onClick={addExperience}
+          onClick={handleAdd}
         />
       );
 
@@ -69,29 +67,20 @@ const EducationSection: React.FC = () => {
             )
           );
         }}
-        onEdit={async () => {
-          const editedExperience = await openEditExperiencePanel(experience);
-          if (editedExperience) {
-            setExperiences(
-              withReplacedAt(experiences, index, editedExperience)
-            );
-          }
-        }}
-        onDelete={async () => {
-          const confirmed = await openConfirmationDialog({
-            title: "Delete education",
-            body: (
-              <p className="text-sm text-gray-500">
-                Delete{" "}
-                <b>
-                  {experience.degree} at {experience.schoolName}
-                </b>
-                ? This action cannot be undone.
-              </p>
-            ),
-            action: "Delete",
-          });
-          if (confirmed) setExperiences(withRemovedAt(experiences, index));
+        onEditClick={async () => {
+          openEditExperiencePanel(experience)
+            .then((editedExperience) => {
+              if (editedExperience) {
+                setExperiences(
+                  withReplacedAt(experiences, index, editedExperience)
+                );
+              } else {
+                setExperiences(withRemovedAt(experiences, index));
+              }
+            })
+            .catch((e) => {
+              if (e !== userCancelReason) console.error(e);
+            });
         }}
       />
     ));
@@ -99,7 +88,7 @@ const EducationSection: React.FC = () => {
 
   function buildTopAddButton(): React.ReactNode {
     const button = (
-      <PrimaryButton onClick={addExperience}>Add education</PrimaryButton>
+      <PrimaryButton onClick={handleAdd}>Add education</PrimaryButton>
     );
 
     if (isLoading) return <ShimmerOverlay>{button}</ShimmerOverlay>;
@@ -119,9 +108,7 @@ const EducationSection: React.FC = () => {
 
       <div className="space-y-8 pb-4">{buildContent()}</div>
 
-      {addExperiencePanel}
       {editExperiencePanel}
-      {confirmationDialog}
     </>
   );
 };

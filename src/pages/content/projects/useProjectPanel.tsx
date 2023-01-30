@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
-import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
-import SlideOver from "../../../common/components/SlideOver";
+import FormModal from "../../../common/components/FormModal";
+import useEditFlow from "../../../common/hooks/useEditFlow";
 import { ProjectExperience } from "../../../common/interfaces/resume";
 import BulletForm, { FormBullet } from "../components/BulletForm";
 
@@ -53,29 +54,28 @@ function convertExperienceToFormData(
 
 /**
  * @param experience experience for edit or `null` for a new one.
- * @returns a promise of edited experience or `null` if user cancels.
+ * @returns a promise of edited experience or `null` if deleted. Promise is rejected if user cancels.
  */
 type OpenProjectPanel = (
   experience: ProjectExperience | null
 ) => Promise<ProjectExperience | null>;
 
-/**
- * @returns edited experience or `null` if user cancels.
- */
-type ResolveCallback = (experience: ProjectExperience | null) => void;
-
-export default function useProjectPanel(
-  title: string
-): [OpenProjectPanel, React.ReactNode] {
-  const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, reset, watch } = useForm<ProjectForm>();
+export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
+  const {
+    register,
+    reset,
+    watch,
+    getValues,
+    trigger,
+    formState: { isDirty },
+  } = useForm<ProjectForm>();
   const [bullets, setBullets] = useState<FormBullet[]>([]);
-  const resolveCallbackRef = useRef<ResolveCallback | null>(null);
+  const touchedBulletsRef = useRef<boolean>(false);
 
-  const openPanel = (
-    experience: ProjectExperience | null,
-    onResolve: ResolveCallback
-  ) => {
+  const { openEditDialog, buildDialogProps, confirmationPopups } =
+    useEditFlow<ProjectExperience>();
+
+  const openPanel = (experience: ProjectExperience | null) => {
     if (experience) {
       // Edit experience
       const prefilledForm = convertExperienceToFormData(experience);
@@ -88,42 +88,30 @@ export default function useProjectPanel(
       );
     } else {
       // Add experience
-      reset();
+      reset({});
       setBullets([]);
     }
-    resolveCallbackRef.current = onResolve;
-    setIsOpen(true);
+    touchedBulletsRef.current = false;
+    return openEditDialog({ isCreateNew: experience === null });
   };
-
-  const closePanel = () => setIsOpen(false);
-
-  const onSubmit: SubmitHandler<ProjectForm> = (formData) => {
-    const newExperience = convertFormDataToExperience(formData);
-    newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
-    resolveCallbackRef.current?.(newExperience);
-    closePanel();
-  };
-
-  const onCancel = () => {
-    resolveCallbackRef.current?.(null);
-    closePanel();
-  };
-
-  const onError: SubmitErrorHandler<ProjectForm> = (error) =>
-    console.error(error);
 
   const currentYear = new Date().getFullYear();
 
   return [
-    (experience) =>
-      new Promise((resolve) => {
-        openPanel(experience, resolve);
-      }),
-    <SlideOver
-      isOpen={isOpen}
-      title={title}
-      onClose={onCancel}
-      onSubmit={handleSubmit(onSubmit, onError)}
+    openPanel,
+    <FormModal
+      {...buildDialogProps({
+        titleName: "project",
+        getIsDirty: () => isDirty || touchedBulletsRef.current,
+        getIsValid: () => trigger(undefined, { shouldFocus: true }),
+        getDeleteName: () => `${getValues("projectName")}`,
+        getData: () => {
+          const formData = getValues();
+          const newExperience = convertFormDataToExperience(formData);
+          newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
+          return newExperience;
+        },
+      })}
     >
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-6 sm:col-span-3">
@@ -176,7 +164,15 @@ export default function useProjectPanel(
         </div>
       </div>
 
-      <BulletForm bullets={bullets} onChange={setBullets} />
-    </SlideOver>,
+      <BulletForm
+        bullets={bullets}
+        onChange={(bullets) => {
+          touchedBulletsRef.current = true;
+          setBullets(bullets);
+        }}
+      />
+
+      {confirmationPopups}
+    </FormModal>,
   ];
 }

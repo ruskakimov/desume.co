@@ -19,11 +19,12 @@ import EmptyStateAddButton from "../../../common/components/EmptyStateAddButton"
 import PrimaryButton from "../../../common/components/PrimaryButton";
 import ShimmerCards from "../../../common/components/ShimmerCards";
 import ShimmerOverlay from "../../../common/components/ShimmerOverlay";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { SkillGroup } from "../../../common/interfaces/resume";
 import SortableBulletList from "../components/SortableBulletList";
 import SortableCardItem from "../components/SortableCardItem";
-import useSkillGroupPanel, { userCancelReason } from "./useSkillGroupPanel";
+import useSkillGroupPanel from "./useSkillGroupPanel";
 
 const maxSkillGroups = 3;
 
@@ -48,8 +49,7 @@ const SkillsSection: React.FC = () => {
     })
   );
 
-  const [openAddSkillGroupPanel, addSkillGroupPanel] =
-    useSkillGroupPanel("Add skill group");
+  const [openAddSkillGroupPanel, addSkillGroupPanel] = useSkillGroupPanel();
 
   const isLoading = skillGroups === null;
 
@@ -157,12 +157,11 @@ const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
   skillGroup,
   onChange,
 }) => {
-  const [openEditSkillGroupPanel, editSkillGroupPanel] =
-    useSkillGroupPanel("Edit skill group");
+  const [openEditSkillGroupPanel, editSkillGroupPanel] = useSkillGroupPanel();
 
   return (
     <>
-      <div className="rounded-t-md h-14 px-2 flex flex-row gap-2 items-center border-b border-gray-300 bg-gray-50">
+      <div className="rounded-t-md h-14 px-2 flex flex-row gap-2 items-center border-b bg-gray-50">
         <div className="mx-2 h-6 flex items-center">
           <Checkbox
             checked={skillGroup.included}
