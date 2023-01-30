@@ -19,7 +19,8 @@ function useWorkHistory(): [
   const [resume, setResume] = useContextResume();
   return [
     resume?.workHistory ?? null,
-    (experiences) => setResume({ ...resume!, workHistory: experiences }),
+    (experiences) =>
+      setResume({ ...resume!, workHistory: sortExperiences(experiences) }),
   ];
 }
 
@@ -32,7 +33,7 @@ const WorkHistorySection: React.FC = () => {
     openEditExperiencePanel(null)
       .then((newExperience) => {
         if (newExperience && experiences) {
-          setExperiences(sortExperiences([newExperience, ...experiences]));
+          setExperiences([newExperience, ...experiences]);
         }
       })
       .catch((e) => {

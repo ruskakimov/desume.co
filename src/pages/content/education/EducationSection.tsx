@@ -19,7 +19,8 @@ function useEducation(): [
   const [resume, setResume] = useContextResume();
   return [
     resume?.educationHistory ?? null,
-    (experiences) => setResume({ ...resume!, educationHistory: experiences }),
+    (experiences) =>
+      setResume({ ...resume!, educationHistory: sortExperiences(experiences) }),
   ];
 }
 
@@ -31,7 +32,7 @@ const EducationSection: React.FC = () => {
     openEditExperiencePanel(null)
       .then((newExperience) => {
         if (newExperience && experiences) {
-          setExperiences(sortExperiences([newExperience, ...experiences]));
+          setExperiences([newExperience, ...experiences]);
         }
       })
       .catch((e) => {

@@ -19,7 +19,8 @@ function useProjects(): [
   const [resume, setResume] = useContextResume();
   return [
     resume?.projectHistory ?? null,
-    (experiences) => setResume({ ...resume!, projectHistory: experiences }),
+    (experiences) =>
+      setResume({ ...resume!, projectHistory: sortExperiences(experiences) }),
   ];
 }
 
@@ -31,7 +32,7 @@ const ProjectsSection: React.FC = () => {
     openEditExperiencePanel(null)
       .then((newExperience) => {
         if (newExperience && experiences) {
-          setExperiences(sortExperiences([newExperience, ...experiences]));
+          setExperiences([newExperience, ...experiences]);
         }
       })
       .catch((e) => {
