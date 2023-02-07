@@ -24,15 +24,18 @@ const SortableBulletItem: React.FC<{
   return (
     <div
       ref={setNodeRef}
-      className={classNames("transition-shadow relative cursor-auto", {
-        "z-10 shadow-lg ring-inset ring-2 ring-gray-400 bg-white": isDragging,
-      })}
+      className={classNames(
+        "transition-shadow relative cursor-auto hover:bg-gray-50",
+        {
+          "z-10 shadow-lg ring-inset ring-2 ring-gray-400 bg-white": isDragging,
+        }
+      )}
       style={style}
       {...attributes}
     >
       <div
         className={classNames(
-          "absolute inset-0 left-12 cursor-grab touch-none",
+          "absolute inset-y-0 w-16 right-0 cursor-grab touch-none",
           {
             "cursor-grabbing": isDragging,
           }
