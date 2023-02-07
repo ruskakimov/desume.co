@@ -58,7 +58,7 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
         <ul className="flex flex-col py-2">
           {bullets.map((bullet, index) => (
             <SortableBulletItem key={bullet.id} id={bullet.id}>
-              <li className="py-2 px-4 flex gap-4 items-center">
+              <li className="px-4 flex gap-4 items-center">
                 <Checkbox
                   checked={bullet.included}
                   onChange={(e) => {
@@ -72,12 +72,13 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
                 />
                 <span
                   className={classNames(
-                    "text-sm overflow-hidden text-ellipsis",
+                    "py-2 text-sm overflow-hidden text-ellipsis cursor-pointer",
                     {
                       "text-gray-700": bullet.included,
                       "text-gray-400": !bullet.included,
                     }
                   )}
+                  onClick={() => alert("edit!")}
                 >
                   {bullet.text}
                 </span>
