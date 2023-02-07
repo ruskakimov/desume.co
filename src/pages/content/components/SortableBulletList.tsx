@@ -56,39 +56,40 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
     >
       <SortableContext items={bulletIds} strategy={verticalListSortingStrategy}>
         <ul className="flex flex-col py-2">
-          {bullets.map((bullet, index) => (
-            <SortableBulletItem key={bullet.id} id={bullet.id}>
-              <li className="px-4 flex gap-4 items-center">
-                <Checkbox
-                  checked={bullet.included}
-                  onChange={(e) => {
-                    onChange(
-                      withReplacedAt(bullets, index, {
-                        ...bullet,
-                        included: e.target.checked,
-                      })
-                    );
-                  }}
-                />
-                <span
-                  className={classNames(
-                    "py-2 text-sm overflow-hidden text-ellipsis cursor-pointer",
-                    {
-                      "text-gray-700": bullet.included,
-                      "text-gray-400": !bullet.included,
+          {bullets.map((bullet, index) => {
+            const updateBullet = (newBullet: BulletPoint) => {
+              onChange(withReplacedAt(bullets, index, newBullet));
+            };
+
+            return (
+              <SortableBulletItem key={bullet.id} id={bullet.id}>
+                <li className="px-4 flex gap-4 items-center">
+                  <Checkbox
+                    checked={bullet.included}
+                    onChange={(e) =>
+                      updateBullet({ ...bullet, included: e.target.checked })
                     }
-                  )}
-                  onClick={() => alert("edit!")}
-                >
-                  {bullet.text}
-                </span>
-                <Bars2Icon
-                  className="text-gray-400 flex-shrink-0 ml-auto h-4 w-8"
-                  aria-hidden="true"
-                />
-              </li>
-            </SortableBulletItem>
-          ))}
+                  />
+                  <span
+                    className={classNames(
+                      "py-2 text-sm overflow-hidden text-ellipsis cursor-pointer",
+                      {
+                        "text-gray-700": bullet.included,
+                        "text-gray-400": !bullet.included,
+                      }
+                    )}
+                    onClick={() => alert("edit!")}
+                  >
+                    {bullet.text}
+                  </span>
+                  <Bars2Icon
+                    className="text-gray-400 flex-shrink-0 ml-auto h-4 w-8"
+                    aria-hidden="true"
+                  />
+                </li>
+              </SortableBulletItem>
+            );
+          })}
         </ul>
       </SortableContext>
     </DndContext>
