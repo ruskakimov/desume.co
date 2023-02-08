@@ -23,7 +23,7 @@ import SortableBulletItem from "./SortableBulletItem";
 interface SortableBulletListProps {
   bullets: BulletPoint[];
   onChange: (bullets: BulletPoint[]) => void;
-  onClick?: (bullet: BulletPoint) => void;
+  onClick?: (bullet: BulletPoint, index: number) => void;
 }
 
 const SortableBulletList: React.FC<SortableBulletListProps> = ({
@@ -81,7 +81,7 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
                         "cursor-pointer": !!onClick,
                       }
                     )}
-                    onClick={() => onClick?.(bullet)}
+                    onClick={() => onClick?.(bullet, index)}
                   >
                     {bullet.text}
                   </span>

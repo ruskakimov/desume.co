@@ -3,6 +3,9 @@ import { Experience } from "../../../common/interfaces/resume";
 import { monthYearToString } from "../../../common/functions/time";
 import SortableBulletList from "./SortableBulletList";
 import { PencilIcon } from "@heroicons/react/24/outline";
+import useBulletModal from "./useBulletModal";
+import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 
 interface ExperienceCardProps {
   title: string;
@@ -23,6 +26,8 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
   const end = experience.endDate
     ? monthYearToString(experience.endDate)
     : "Present";
+
+  const [openBulletModal, bulletModal] = useBulletModal();
 
   return (
     <>
@@ -63,9 +68,37 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
             onChange={(bulletPoints) =>
               onChange({ ...experience, bulletPoints })
             }
+            onClick={(bullet, index) => {
+              openBulletModal(bullet)
+                .then((editedBullet) => {
+                  if (editedBullet) {
+                    onChange({
+                      ...experience,
+                      bulletPoints: withReplacedAt(
+                        experience.bulletPoints,
+                        index,
+                        editedBullet
+                      ),
+                    });
+                  } else {
+                    onChange({
+                      ...experience,
+                      bulletPoints: withRemovedAt(
+                        experience.bulletPoints,
+                        index
+                      ),
+                    });
+                  }
+                })
+                .catch((e) => {
+                  if (e !== userCancelReason) console.error(e);
+                });
+            }}
           />
         )}
       </div>
+
+      {bulletModal}
     </>
   );
 };
