@@ -87,7 +87,23 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
         />
 
         <div className="mx-4 mb-4">
-          <button className="w-full h-10 rounded bg-gray-50 flex justify-center items-center gap-1 font-medium hover:bg-gray-100">
+          <button
+            className="w-full h-10 rounded bg-gray-50 flex justify-center items-center gap-1 font-medium hover:bg-gray-100"
+            onClick={() => {
+              openBulletModal(null)
+                .then((newBullet) => {
+                  if (newBullet) {
+                    onChange({
+                      ...experience,
+                      bulletPoints: [...experience.bulletPoints, newBullet],
+                    });
+                  }
+                })
+                .catch((e) => {
+                  if (e !== userCancelReason) console.error(e);
+                });
+            }}
+          >
             <PlusSmallIcon className="h-6 w-6 text-gray-400" />
             <span className="text-sm text-gray-600">Add accomplishment</span>
           </button>
