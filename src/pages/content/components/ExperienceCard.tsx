@@ -58,44 +58,33 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
           </button>
         </div>
 
-        {experience.bulletPoints.length === 0 ? (
-          <div className="my-2 h-9 flex items-center justify-center">
-            <span className="text-sm text-gray-400">No bullet points</span>
-          </div>
-        ) : (
-          <SortableBulletList
-            bullets={experience.bulletPoints}
-            onChange={(bulletPoints) =>
-              onChange({ ...experience, bulletPoints })
-            }
-            onClick={(bullet, index) => {
-              openBulletModal(bullet)
-                .then((editedBullet) => {
-                  if (editedBullet) {
-                    onChange({
-                      ...experience,
-                      bulletPoints: withReplacedAt(
-                        experience.bulletPoints,
-                        index,
-                        editedBullet
-                      ),
-                    });
-                  } else {
-                    onChange({
-                      ...experience,
-                      bulletPoints: withRemovedAt(
-                        experience.bulletPoints,
-                        index
-                      ),
-                    });
-                  }
-                })
-                .catch((e) => {
-                  if (e !== userCancelReason) console.error(e);
-                });
-            }}
-          />
-        )}
+        <SortableBulletList
+          bullets={experience.bulletPoints}
+          onChange={(bulletPoints) => onChange({ ...experience, bulletPoints })}
+          onClick={(bullet, index) => {
+            openBulletModal(bullet)
+              .then((editedBullet) => {
+                if (editedBullet) {
+                  onChange({
+                    ...experience,
+                    bulletPoints: withReplacedAt(
+                      experience.bulletPoints,
+                      index,
+                      editedBullet
+                    ),
+                  });
+                } else {
+                  onChange({
+                    ...experience,
+                    bulletPoints: withRemovedAt(experience.bulletPoints, index),
+                  });
+                }
+              })
+              .catch((e) => {
+                if (e !== userCancelReason) console.error(e);
+              });
+          }}
+        />
 
         <div className="mx-4 mb-4">
           <button className="w-full h-10 rounded bg-gray-50 flex justify-center items-center gap-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100">
