@@ -2,7 +2,7 @@ import Checkbox from "../../../common/components/Checkbox";
 import { Experience } from "../../../common/interfaces/resume";
 import { monthYearToString } from "../../../common/functions/time";
 import SortableBulletList from "./SortableBulletList";
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, PlusIcon } from "@heroicons/react/24/outline";
 import useBulletModal from "./useBulletModal";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { userCancelReason } from "../../../common/constants/reject-reasons";
@@ -96,6 +96,13 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
             }}
           />
         )}
+
+        <div className="mx-4 mb-4">
+          <button className="w-full h-10 rounded bg-gray-50 flex justify-center items-center gap-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100">
+            <span className="text-sm">Add accomplishment</span>
+            <PlusIcon className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {bulletModal}
