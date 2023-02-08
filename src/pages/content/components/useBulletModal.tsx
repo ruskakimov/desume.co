@@ -83,7 +83,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-full">
           <TextAreaField
-            label="Accomplishment description"
+            label="Accomplishment"
             rows={3}
             {...textareaProps}
             ref={(el) => {
