@@ -23,11 +23,13 @@ import SortableBulletItem from "./SortableBulletItem";
 interface SortableBulletListProps {
   bullets: BulletPoint[];
   onChange: (bullets: BulletPoint[]) => void;
+  onClick?: (bullet: BulletPoint) => void;
 }
 
 const SortableBulletList: React.FC<SortableBulletListProps> = ({
   bullets,
   onChange,
+  onClick,
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -72,13 +74,14 @@ const SortableBulletList: React.FC<SortableBulletListProps> = ({
                   />
                   <span
                     className={classNames(
-                      "py-2 text-sm overflow-hidden text-ellipsis cursor-pointer",
+                      "py-2 text-sm overflow-hidden text-ellipsis select-none",
                       {
                         "text-gray-700": bullet.included,
                         "text-gray-400": !bullet.included,
+                        "cursor-pointer": !!onClick,
                       }
                     )}
-                    onClick={() => alert("edit!")}
+                    onClick={() => onClick?.(bullet)}
                   >
                     {bullet.text}
                   </span>
