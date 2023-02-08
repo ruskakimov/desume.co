@@ -7,7 +7,7 @@ import useEditFlow from "../../../common/hooks/useEditFlow";
 import { BulletPoint } from "../../../common/interfaces/resume";
 
 interface SingleBulletForm {
-  included: boolean;
+  included?: boolean;
   text: string;
 }
 
@@ -24,7 +24,7 @@ function convertFormDataToBullet(
 ): BulletPoint {
   return {
     id: oldBullet?.id ?? generateId(),
-    included: formData.included,
+    included: formData.included ?? true,
     text: formData.text,
   };
 }
