@@ -19,7 +19,7 @@ interface DialogBuilderOptions<T> {
   getIsValid: () => Promise<boolean>;
   getIsDirty: () => boolean;
   getData: () => T;
-  getDeleteName: () => string;
+  getDeleteName?: () => string;
 }
 
 type DialogPropsBuilder<T> = (
@@ -88,7 +88,13 @@ export default function useEditFlow<T>(): {
               title: `Delete ${titleName}`,
               body: (
                 <p className="text-sm text-gray-500">
-                  Delete <b>{getDeleteName()}</b>? This action cannot be undone.
+                  Delete{" "}
+                  {getDeleteName ? (
+                    <b>{getDeleteName()}</b>
+                  ) : (
+                    `this ${titleName}`
+                  )}
+                  ? This action cannot be undone.
                 </p>
               ),
               action: "Delete",

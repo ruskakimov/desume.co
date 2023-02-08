@@ -72,7 +72,6 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         titleName: "accomplishment",
         getIsDirty: () => isDirty,
         getIsValid: () => trigger(undefined, { shouldFocus: true }),
-        getDeleteName: () => `this accomplishment`,
         getData: () => {
           const formData = getValues();
           const newBullet = convertFormDataToBullet(formData, oldBullet);
