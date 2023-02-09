@@ -1,5 +1,5 @@
 import { diffWords } from "diff";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
@@ -151,29 +151,17 @@ const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
     (parsed) => typeof parsed === "boolean"
   );
 
-  const chunks = diffWords(oldText, newText);
+  const [oldFormatted, newFormatted] = showDiff
+    ? buildRichDiff(oldText, newText)
+    : [oldText, newText];
 
   return (
     <div className="col-span-full">
       <div className="text-sm font-medium text-gray-400">Old</div>
-      <div className="text-sm text-gray-900">
-        {chunks.map((chunk) => {
-          if (chunk.added) return null;
-          if (chunk.removed)
-            return <span className="bg-red-200">{chunk.value}</span>;
-          return <span>{chunk.value}</span>;
-        })}
-      </div>
+      <div className="text-sm text-gray-900">{oldFormatted}</div>
 
       <div className="mt-4 text-sm font-medium text-gray-400">New</div>
-      <div className="text-sm text-gray-900">
-        {chunks.map((chunk) => {
-          if (chunk.removed) return null;
-          if (chunk.added)
-            return <span className="bg-green-200">{chunk.value}</span>;
-          return <span>{chunk.value}</span>;
-        })}
-      </div>
+      <div className="text-sm text-gray-900">{newFormatted}</div>
 
       <div className="mt-6">
         <CheckboxField
@@ -185,3 +173,37 @@ const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
     </div>
   );
 };
+
+function buildRichDiff(
+  oldText: string,
+  newText: string
+): [React.ReactElement, React.ReactElement] {
+  const chunks = diffWords(oldText, newText);
+
+  return [
+    <>
+      {chunks.map((chunk, i) => {
+        if (chunk.added) return null;
+        if (chunk.removed)
+          return (
+            <span key={i} className="bg-red-200">
+              {chunk.value}
+            </span>
+          );
+        return <span key={i}>{chunk.value}</span>;
+      })}
+    </>,
+    <>
+      {chunks.map((chunk, i) => {
+        if (chunk.removed) return null;
+        if (chunk.added)
+          return (
+            <span key={i} className="bg-green-200">
+              {chunk.value}
+            </span>
+          );
+        return <span key={i}>{chunk.value}</span>;
+      })}
+    </>,
+  ];
+}
