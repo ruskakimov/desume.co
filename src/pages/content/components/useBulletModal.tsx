@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import CheckboxField from "../../../common/components/fields/CheckboxField";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
 import FormModal from "../../../common/components/FormModal";
 import { generateId } from "../../../common/functions/ids";
@@ -90,6 +91,10 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
               textareaProps.ref(el);
             }}
           />
+        </div>
+
+        <div className="col-span-full -mt-2">
+          <CheckboxField label="Include in export" {...register("included")} />
         </div>
       </div>
 
