@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
@@ -7,7 +7,6 @@ import WebsiteField from "../../../common/components/fields/WebsiteField";
 import FormModal from "../../../common/components/FormModal";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { ProjectExperience } from "../../../common/interfaces/resume";
-import BulletForm, { FormBullet } from "../components/BulletForm";
 
 interface ProjectForm {
   projectName: string;
