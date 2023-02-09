@@ -1,3 +1,4 @@
+import { diffWords } from "diff";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
@@ -150,13 +151,29 @@ const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
     (parsed) => typeof parsed === "boolean"
   );
 
+  const chunks = diffWords(oldText, newText);
+
   return (
     <div className="col-span-full">
       <div className="text-sm font-medium text-gray-400">Old</div>
-      <div className="text-sm text-gray-900">{oldText}</div>
+      <div className="text-sm text-gray-900">
+        {chunks.map((chunk) => {
+          if (chunk.added) return null;
+          if (chunk.removed)
+            return <span className="bg-red-200">{chunk.value}</span>;
+          return <span>{chunk.value}</span>;
+        })}
+      </div>
 
       <div className="mt-4 text-sm font-medium text-gray-400">New</div>
-      <div className="text-sm text-gray-900">{newText}</div>
+      <div className="text-sm text-gray-900">
+        {chunks.map((chunk) => {
+          if (chunk.removed) return null;
+          if (chunk.added)
+            return <span className="bg-green-200">{chunk.value}</span>;
+          return <span>{chunk.value}</span>;
+        })}
+      </div>
 
       <div className="mt-6">
         <CheckboxField
