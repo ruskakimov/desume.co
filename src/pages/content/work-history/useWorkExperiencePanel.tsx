@@ -172,7 +172,7 @@ export default function useWorkExperiencePanel(): [
           />
         </div>
 
-        <div className="col-span-6 flex -mt-2">
+        <div className="col-span-6 -mt-2">
           <CheckboxField
             label="This is my current position"
             {...register("isCurrentPosition")}

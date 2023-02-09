@@ -93,7 +93,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
           />
         </div>
 
-        <div className="col-span-full -mt-2">
+        <div className="col-span-full -mt-4">
           <CheckboxField label="Include in export" {...register("included")} />
         </div>
       </div>
