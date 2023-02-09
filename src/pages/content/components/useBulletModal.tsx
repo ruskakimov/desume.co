@@ -66,6 +66,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       reset({});
     }
     setOldBullet(bullet);
+    setIsCompare(false);
     return openEditDialog({ isCreateNew: bullet === null });
   };
 
@@ -86,9 +87,11 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         },
       })}
       secondaryButton={
-        <SecondaryButton onClick={() => setIsCompare((state) => !state)}>
-          {isCompare ? "Edit" : "Compare"}
-        </SecondaryButton>
+        isDirty ? (
+          <SecondaryButton onClick={() => setIsCompare((state) => !state)}>
+            {isCompare ? "Edit" : "Compare"}
+          </SecondaryButton>
+        ) : undefined
       }
     >
       <div className="grid grid-cols-6 gap-6">
