@@ -1,3 +1,4 @@
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { diffWords } from "diff";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -100,6 +101,17 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         <CompareView oldText={oldBullet?.text ?? ""} newText={watch("text")} />
       ) : (
         <div className="grid grid-cols-6 gap-6">
+          <div className="col-span-3 space-y-3">
+            <Check passed={true} label="Starts with an action verb" />
+            <Check passed={true} label="Includes quantitative data" />
+          </div>
+
+          <div className="col-span-3 space-y-3">
+            <Check passed={true} label="2 lines in export" />
+            {/* Starts with a capital, ends with a dot, one space between words. */}
+            <Check passed={true} label="Correct format" />
+          </div>
+
           <div className="col-span-full">
             <TextAreaField
               label="Accomplishment"
@@ -134,12 +146,29 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
   ];
 }
 
-interface CompareViewProps {
+const Check: React.FC<{
+  passed: boolean;
+  label: string;
+}> = ({ passed, label }) => {
+  return (
+    <div className="flex gap-2">
+      {passed ? (
+        <CheckCircleIcon
+          className="h-5 w-5 text-green-600"
+          aria-hidden="true"
+        />
+      ) : (
+        <XCircleIcon className="h-5 w-5 text-red-600" aria-hidden="true" />
+      )}
+      <span className="text-sm">{label}</span>
+    </div>
+  );
+};
+
+const CompareView: React.FC<{
   oldText: string;
   newText: string;
-}
-
-const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
+}> = ({ oldText, newText }) => {
   const [showDiff, setShowDiff] = useLocalState(
     "show-compare-diff",
     true,
