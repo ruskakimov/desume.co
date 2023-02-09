@@ -6,6 +6,7 @@ import FormModal from "../../../common/components/FormModal";
 import SecondaryButton from "../../../common/components/SecondaryButton";
 import { generateId } from "../../../common/functions/ids";
 import useEditFlow from "../../../common/hooks/useEditFlow";
+import useLocalState from "../../../common/hooks/useLocalState";
 import { BulletPoint } from "../../../common/interfaces/resume";
 
 const bulletMaxLength = 200;
@@ -143,6 +144,12 @@ interface CompareViewProps {
 }
 
 const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
+  const [showDiff, setShowDiff] = useLocalState(
+    "show-compare-diff",
+    true,
+    (parsed) => typeof parsed === "boolean"
+  );
+
   return (
     <div className="col-span-full">
       <div className="text-sm font-medium text-gray-400">Old</div>
@@ -150,6 +157,14 @@ const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
 
       <div className="mt-4 text-sm font-medium text-gray-400">New</div>
       <div className="text-sm text-gray-900">{newText}</div>
+
+      <div className="mt-6">
+        <CheckboxField
+          label="Show difference"
+          checked={showDiff}
+          onChange={(e) => setShowDiff(e.target.checked)}
+        />
+      </div>
     </div>
   );
 };
