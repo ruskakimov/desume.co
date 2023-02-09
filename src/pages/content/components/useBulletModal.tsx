@@ -96,13 +96,10 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
     >
       <div className="grid grid-cols-6 gap-6">
         {isCompare ? (
-          <div className="col-span-full">
-            <div className="text-sm font-medium text-gray-400">Old</div>
-            <div className="text-sm text-gray-900">{oldBullet?.text}</div>
-
-            <div className="mt-4 text-sm font-medium text-gray-400">New</div>
-            <div className="text-sm text-gray-900">{watch("text")}</div>
-          </div>
+          <CompareView
+            oldText={oldBullet?.text ?? ""}
+            newText={watch("text")}
+          />
         ) : (
           <>
             <div className="col-span-full">
@@ -139,3 +136,20 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
     </FormModal>,
   ];
 }
+
+interface CompareViewProps {
+  oldText: string;
+  newText: string;
+}
+
+const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
+  return (
+    <div className="col-span-full">
+      <div className="text-sm font-medium text-gray-400">Old</div>
+      <div className="text-sm text-gray-900">{oldText}</div>
+
+      <div className="mt-4 text-sm font-medium text-gray-400">New</div>
+      <div className="text-sm text-gray-900">{newText}</div>
+    </div>
+  );
+};
