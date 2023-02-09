@@ -7,6 +7,8 @@ import { generateId } from "../../../common/functions/ids";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { BulletPoint } from "../../../common/interfaces/resume";
 
+const bulletMaxLength = 200;
+
 interface SingleBulletForm {
   included?: boolean;
   text: string;
@@ -38,6 +40,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
   const {
     register,
     reset,
+    watch,
     getValues,
     trigger,
     formState: { isDirty },
@@ -85,6 +88,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
           <TextAreaField
             label="Accomplishment"
             rows={3}
+            maxLength={bulletMaxLength}
             {...textareaProps}
             ref={(el) => {
               textareaRef.current = el;
@@ -93,8 +97,15 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
           />
         </div>
 
-        <div className="col-span-full -mt-4">
+        <div className="col-span-3 -mt-4">
           <CheckboxField label="Include in export" {...register("included")} />
+        </div>
+
+        <div className="col-span-3 -mt-4 flex justify-end">
+          <span className="text-sm text-gray-900">
+            {watch("text")?.length ?? 0}
+            <span className="text-gray-500">/{bulletMaxLength}</span>
+          </span>
         </div>
       </div>
 
