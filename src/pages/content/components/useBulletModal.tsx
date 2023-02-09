@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
 import FormModal from "../../../common/components/FormModal";
+import SecondaryButton from "../../../common/components/SecondaryButton";
 import { generateId } from "../../../common/functions/ids";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { BulletPoint } from "../../../common/interfaces/resume";
@@ -37,6 +38,8 @@ type OpenBulletModal = (
 ) => Promise<BulletPoint | null>;
 
 export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
+  const [isCompare, setIsCompare] = useState(false);
+
   const {
     register,
     reset,
@@ -82,31 +85,51 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
           return newBullet;
         },
       })}
+      secondaryButton={
+        <SecondaryButton onClick={() => setIsCompare((state) => !state)}>
+          {isCompare ? "Edit" : "Compare"}
+        </SecondaryButton>
+      }
     >
       <div className="grid grid-cols-6 gap-6">
-        <div className="col-span-full">
-          <TextAreaField
-            label="Accomplishment"
-            rows={3}
-            maxLength={bulletMaxLength}
-            {...textareaProps}
-            ref={(el) => {
-              textareaRef.current = el;
-              textareaProps.ref(el);
-            }}
-          />
-        </div>
+        {isCompare ? (
+          <div className="col-span-full">
+            <div className="text-sm font-medium text-gray-400">Old</div>
+            <div className="text-sm text-gray-900">{oldBullet?.text}</div>
 
-        <div className="col-span-3 -mt-4">
-          <CheckboxField label="Include in export" {...register("included")} />
-        </div>
+            <div className="mt-4 text-sm font-medium text-gray-400">New</div>
+            <div className="text-sm text-gray-900">{watch("text")}</div>
+          </div>
+        ) : (
+          <>
+            <div className="col-span-full">
+              <TextAreaField
+                label="Accomplishment"
+                rows={3}
+                maxLength={bulletMaxLength}
+                {...textareaProps}
+                ref={(el) => {
+                  textareaRef.current = el;
+                  textareaProps.ref(el);
+                }}
+              />
+            </div>
 
-        <div className="col-span-3 -mt-4 flex justify-end">
-          <span className="text-sm text-gray-900">
-            {watch("text")?.length ?? 0}
-            <span className="text-gray-500">/{bulletMaxLength}</span>
-          </span>
-        </div>
+            <div className="col-span-3 -mt-4">
+              <CheckboxField
+                label="Include in export"
+                {...register("included")}
+              />
+            </div>
+
+            <div className="col-span-3 -mt-4 flex justify-end">
+              <span className="text-sm text-gray-900">
+                {watch("text")?.length ?? 0}
+                <span className="text-gray-500">/{bulletMaxLength}</span>
+              </span>
+            </div>
+          </>
+        )}
       </div>
 
       {confirmationPopups}

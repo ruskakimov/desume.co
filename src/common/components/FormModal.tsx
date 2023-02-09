@@ -7,6 +7,7 @@ import { EditDialogProps } from "../hooks/useEditFlow";
 
 interface FormModalProps extends EditDialogProps {
   children: React.ReactNode;
+  secondaryButton?: React.ReactNode;
   initialFocusRef?: React.MutableRefObject<HTMLElement | null>;
 }
 
@@ -17,6 +18,7 @@ const FormModal: React.FC<FormModalProps> = ({
   onCancel,
   onSubmit,
   onDelete,
+  secondaryButton,
   initialFocusRef,
 }) => {
   return (
@@ -91,6 +93,7 @@ const FormModal: React.FC<FormModalProps> = ({
                         </SecondaryButton>
                       )}
 
+                      {secondaryButton}
                       <PrimaryButton type="submit">Save</PrimaryButton>
                     </div>
                   </div>
