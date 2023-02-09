@@ -96,43 +96,38 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         ) : undefined
       }
     >
-      <div className="grid grid-cols-6 gap-6">
-        {isCompare ? (
-          <CompareView
-            oldText={oldBullet?.text ?? ""}
-            newText={watch("text")}
-          />
-        ) : (
-          <>
-            <div className="col-span-full">
-              <TextAreaField
-                label="Accomplishment"
-                rows={3}
-                maxLength={bulletMaxLength}
-                {...textareaProps}
-                ref={(el) => {
-                  textareaRef.current = el;
-                  textareaProps.ref(el);
-                }}
-              />
-            </div>
+      {isCompare ? (
+        <CompareView oldText={oldBullet?.text ?? ""} newText={watch("text")} />
+      ) : (
+        <div className="grid grid-cols-6 gap-6">
+          <div className="col-span-full">
+            <TextAreaField
+              label="Accomplishment"
+              rows={3}
+              maxLength={bulletMaxLength}
+              {...textareaProps}
+              ref={(el) => {
+                textareaRef.current = el;
+                textareaProps.ref(el);
+              }}
+            />
+          </div>
 
-            <div className="col-span-3 -mt-4">
-              <CheckboxField
-                label="Include in export"
-                {...register("included")}
-              />
-            </div>
+          <div className="col-span-3 -mt-4">
+            <CheckboxField
+              label="Include in export"
+              {...register("included")}
+            />
+          </div>
 
-            <div className="col-span-3 -mt-4 flex justify-end">
-              <span className="text-sm text-gray-900">
-                {watch("text")?.length ?? 0}
-                <span className="text-gray-500">/{bulletMaxLength}</span>
-              </span>
-            </div>
-          </>
-        )}
-      </div>
+          <div className="col-span-3 -mt-4 flex justify-end">
+            <span className="text-sm text-gray-900">
+              {watch("text")?.length ?? 0}
+              <span className="text-gray-500">/{bulletMaxLength}</span>
+            </span>
+          </div>
+        </div>
+      )}
 
       {confirmationPopups}
     </FormModal>,
@@ -156,7 +151,7 @@ const CompareView: React.FC<CompareViewProps> = ({ oldText, newText }) => {
     : [oldText, newText];
 
   return (
-    <div className="col-span-full">
+    <div>
       <div className="text-sm font-medium text-gray-400">Old</div>
       <div className="text-sm text-gray-900">{oldFormatted}</div>
 
