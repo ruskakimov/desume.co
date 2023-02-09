@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
@@ -7,7 +7,6 @@ import WebsiteField from "../../../common/components/fields/WebsiteField";
 import FormModal from "../../../common/components/FormModal";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { WorkExperience } from "../../../common/interfaces/resume";
-import BulletForm, { FormBullet } from "../components/BulletForm";
 
 interface WorkExperienceForm {
   companyName: string;
@@ -21,7 +20,8 @@ interface WorkExperienceForm {
 }
 
 function convertFormDataToExperience(
-  formData: WorkExperienceForm
+  formData: WorkExperienceForm,
+  oldExperience: WorkExperience | null
 ): WorkExperience {
   return {
     companyName: formData.companyName,
@@ -37,7 +37,7 @@ function convertFormDataToExperience(
           month: parseInt(formData.endDateMonth!),
           year: parseInt(formData.endDateYear!),
         },
-    bulletPoints: [],
+    bulletPoints: oldExperience?.bulletPoints ?? [],
     included: true,
   };
 }
@@ -77,8 +77,7 @@ export default function useWorkExperiencePanel(): [
     trigger,
     formState: { isDirty },
   } = useForm<WorkExperienceForm>();
-  const [bullets, setBullets] = useState<FormBullet[]>([]);
-  const touchedBulletsRef = useRef<boolean>(false);
+  const oldExperienceRef = useRef<WorkExperience | null>(null);
 
   const { openEditDialog, buildDialogProps, confirmationPopups } =
     useEditFlow<WorkExperience>();
@@ -88,18 +87,11 @@ export default function useWorkExperiencePanel(): [
       // Edit experience
       const prefilledForm = convertExperienceToFormData(experience);
       reset(prefilledForm);
-      setBullets(
-        experience.bulletPoints.map((bulletPoint) => ({
-          ...bulletPoint,
-          shouldDelete: false,
-        }))
-      );
     } else {
       // Add experience
       reset({});
-      setBullets([]);
     }
-    touchedBulletsRef.current = false;
+    oldExperienceRef.current = experience;
     return openEditDialog({ isCreateNew: experience === null });
   };
 
@@ -110,14 +102,16 @@ export default function useWorkExperiencePanel(): [
     <FormModal
       {...buildDialogProps({
         titleName: "experience",
-        getIsDirty: () => isDirty || touchedBulletsRef.current,
+        getIsDirty: () => isDirty,
         getIsValid: () => trigger(undefined, { shouldFocus: true }),
         getDeleteName: () =>
           `${getValues("jobTitle")} at ${getValues("companyName")}`,
         getData: () => {
           const formData = getValues();
-          const newExperience = convertFormDataToExperience(formData);
-          newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
+          const newExperience = convertFormDataToExperience(
+            formData,
+            oldExperienceRef.current
+          );
           return newExperience;
         },
       })}
@@ -179,13 +173,6 @@ export default function useWorkExperiencePanel(): [
           />
         </div>
       </div>
-      <BulletForm
-        bullets={bullets}
-        onChange={(bullets) => {
-          touchedBulletsRef.current = true;
-          setBullets(bullets);
-        }}
-      />
 
       {confirmationPopups}
     </FormModal>,
