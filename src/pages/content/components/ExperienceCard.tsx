@@ -3,7 +3,7 @@ import { Experience } from "../../../common/interfaces/resume";
 import { monthYearToString } from "../../../common/functions/time";
 import SortableBulletList from "./SortableBulletList";
 import { PencilIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import useBulletModal from "./useBulletModal";
+import useBulletModal from "./bullet-modal/useBulletModal";
 import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
 import { userCancelReason } from "../../../common/constants/reject-reasons";
 

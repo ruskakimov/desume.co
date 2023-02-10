@@ -6,14 +6,14 @@ import {
 import { diffWords } from "diff";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import CheckboxField from "../../../common/components/fields/CheckboxField";
-import TextAreaField from "../../../common/components/fields/TextAreaField";
-import FormModal from "../../../common/components/FormModal";
-import SecondaryButton from "../../../common/components/SecondaryButton";
-import { generateId } from "../../../common/functions/ids";
-import useEditFlow from "../../../common/hooks/useEditFlow";
-import useLocalState from "../../../common/hooks/useLocalState";
-import { BulletPoint } from "../../../common/interfaces/resume";
+import CheckboxField from "../../../../common/components/fields/CheckboxField";
+import TextAreaField from "../../../../common/components/fields/TextAreaField";
+import FormModal from "../../../../common/components/FormModal";
+import SecondaryButton from "../../../../common/components/SecondaryButton";
+import { generateId } from "../../../../common/functions/ids";
+import useEditFlow from "../../../../common/hooks/useEditFlow";
+import useLocalState from "../../../../common/hooks/useLocalState";
+import { BulletPoint } from "../../../../common/interfaces/resume";
 
 const bulletMaxLength = 200;
 
