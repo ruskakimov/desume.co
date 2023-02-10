@@ -127,10 +127,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
               label="Doesn't include quantitative data"
             />
 
-            {/* Success: Correct format */}
-            {/* Failure: Incorrect format */}
-            <ValidationItem icon="success" label="Correct format" />
-            {/* Starts with a capital, ends with a dot, one space between words. */}
+            <ValidationItem {...validateFormat(watch("text"))} />
           </div>
 
           <div className="col-span-full">
@@ -167,6 +164,27 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
   ];
 }
 
+function validateFormat(text: string | undefined): ValidationItemProps {
+  const success: ValidationItemProps = {
+    icon: "success",
+    label: "Correct format",
+  };
+  const failure: ValidationItemProps = {
+    icon: "failure",
+    label: "Incorrect format",
+  };
+
+  if (!text) return failure;
+
+  const startsWithCapitalLetter = /^[A-Z]/.test(text);
+  const endsWithSingleDot = /[A-Za-z0-9]\.$/.test(text);
+  const singleSpaceBetweenWords = !text.split(" ").includes("");
+
+  return startsWithCapitalLetter && endsWithSingleDot && singleSpaceBetweenWords
+    ? success
+    : failure;
+}
+
 type ValidationIcon = "success" | "warning" | "failure";
 
 const iconMap: Record<ValidationIcon, React.ReactElement> = {
@@ -182,10 +200,12 @@ const iconMap: Record<ValidationIcon, React.ReactElement> = {
   failure: <XCircleIcon className="h-5 w-5 text-red-600" aria-hidden="true" />,
 };
 
-const ValidationItem: React.FC<{
+interface ValidationItemProps {
   icon: ValidationIcon;
   label: string;
-}> = ({ icon, label }) => {
+}
+
+const ValidationItem: React.FC<ValidationItemProps> = ({ icon, label }) => {
   return (
     <div className="flex gap-2">
       {iconMap[icon]}
