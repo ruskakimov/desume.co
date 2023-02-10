@@ -105,20 +105,11 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         <CompareView oldText={oldBullet?.text ?? ""} newText={watch("text")} />
       ) : (
         <div className="grid grid-cols-6 gap-6">
-          <div className="col-span-3 space-y-3">
+          <div className="col-span-full grid grid-cols-2 gap-3">
             {/* Success: Starts with an action verb */}
             {/* Failure: Doesn't start with an action verb */}
             <ValidationItem icon="success" label="Starts with an action verb" />
 
-            {/* Success: Includes quantitative data */}
-            {/* Warning: Doesn't include quantitative data */}
-            <ValidationItem
-              icon="warning"
-              label="Doesn't include quantitative data"
-            />
-          </div>
-
-          <div className="col-span-3 space-y-3">
             {/* Success: Optimal length (1 line in PDF) */}
             {/* Warning: A bit short (1 line in PDF) */}
             {/* Warning: A bit long (2 lines in PDF) */}
@@ -127,6 +118,13 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
             <ValidationItem
               icon="warning"
               label="A bit long (2 lines in PDF)"
+            />
+
+            {/* Success: Includes quantitative data */}
+            {/* Warning: Doesn't include quantitative data */}
+            <ValidationItem
+              icon="warning"
+              label="Doesn't include quantitative data"
             />
 
             {/* Success: Correct format */}
