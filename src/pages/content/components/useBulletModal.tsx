@@ -1,4 +1,8 @@
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import { diffWords } from "diff";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -102,14 +106,18 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       ) : (
         <div className="grid grid-cols-6 gap-6">
           <div className="col-span-3 space-y-3">
-            <Check passed={true} label="Starts with an action verb" />
-            <Check passed={true} label="Includes quantitative data" />
+            <ValidationItem icon="success" label="Starts with an action verb" />
+            <ValidationItem
+              icon="warning"
+              label="Doesn't include quantitative data"
+            />
           </div>
 
           <div className="col-span-3 space-y-3">
-            <Check passed={true} label="2 lines in export" />
+            <ValidationItem icon="warning" label="A bit long (2 lines)" />
             {/* Starts with a capital, ends with a dot, one space between words. */}
-            <Check passed={true} label="Correct format" />
+            <ValidationItem icon="success" label="Correctly formatted" />
+            {/* <Check passed={false} label="Optimal length" /> */}
           </div>
 
           <div className="col-span-full">
@@ -146,20 +154,28 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
   ];
 }
 
-const Check: React.FC<{
-  passed: boolean;
+type ValidationIcon = "success" | "warning" | "failure";
+
+const iconMap: Record<ValidationIcon, React.ReactElement> = {
+  success: (
+    <CheckCircleIcon className="h-5 w-5 text-green-600" aria-hidden="true" />
+  ),
+  warning: (
+    <ExclamationTriangleIcon
+      className="h-5 w-5 text-orange-500"
+      aria-hidden="true"
+    />
+  ),
+  failure: <XCircleIcon className="h-5 w-5 text-red-600" aria-hidden="true" />,
+};
+
+const ValidationItem: React.FC<{
+  icon: ValidationIcon;
   label: string;
-}> = ({ passed, label }) => {
+}> = ({ icon, label }) => {
   return (
     <div className="flex gap-2">
-      {passed ? (
-        <CheckCircleIcon
-          className="h-5 w-5 text-green-600"
-          aria-hidden="true"
-        />
-      ) : (
-        <XCircleIcon className="h-5 w-5 text-red-600" aria-hidden="true" />
-      )}
+      {iconMap[icon]}
       <span className="text-sm">{label}</span>
     </div>
   );
