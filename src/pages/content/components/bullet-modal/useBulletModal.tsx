@@ -90,6 +90,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         getIsValid: () => trigger(undefined, { shouldFocus: true }),
         getData: () => {
           const formData = getValues();
+          formData.text = fixFormat(formData.text);
           const newBullet = convertFormDataToBullet(formData, oldBullet);
           return newBullet;
         },
