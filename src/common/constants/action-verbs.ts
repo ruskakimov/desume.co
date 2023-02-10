@@ -57,7 +57,6 @@ export const actionVerbs = [
   "Counseled",
   "Crafted",
   "Created",
-  "Critiqued",
   "Cultivated",
   "Customized",
   "Decreased",
