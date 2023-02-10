@@ -11,7 +11,7 @@ import useLocalState from "../../../../common/hooks/useLocalState";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
 import { ValidationItem } from "./ValidationItem";
-import { validateFormat, validateQuantitativeData } from "./validators";
+import { validateQuantitativeData } from "./validators";
 
 const bulletMaxLength = 200;
 
