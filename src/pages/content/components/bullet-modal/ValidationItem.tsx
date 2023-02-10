@@ -22,26 +22,16 @@ const iconMap: Record<ValidationIcon, React.ReactElement> = {
 export interface ValidationItemProps {
   icon: ValidationIcon;
   label: string;
-  onFix?: () => void;
 }
 
 export const ValidationItem: React.FC<ValidationItemProps> = ({
   icon,
   label,
-  onFix,
 }) => {
   return (
     <div className="flex gap-2">
       {iconMap[icon]}
       <span className="text-sm">{label}</span>
-      {onFix && (
-        <button
-          type="button"
-          className="px-4 rounded shadow-sm border text-xs text-gray-900"
-        >
-          Fix
-        </button>
-      )}
     </div>
   );
 };

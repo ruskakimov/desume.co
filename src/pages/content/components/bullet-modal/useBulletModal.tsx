@@ -9,6 +9,7 @@ import { generateId } from "../../../../common/functions/ids";
 import useEditFlow from "../../../../common/hooks/useEditFlow";
 import useLocalState from "../../../../common/hooks/useLocalState";
 import { BulletPoint } from "../../../../common/interfaces/resume";
+import { fixFormat } from "./format";
 import { ValidationItem } from "./ValidationItem";
 import { validateFormat, validateQuantitativeData } from "./validators";
 
@@ -76,7 +77,8 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
 
   const textareaProps = register("text");
 
-  const formatValidationResult = validateFormat(watch("text"));
+  const formatted = fixFormat(watch("text") ?? "");
+  const canSave = formatted !== "";
 
   return [
     openModal,
@@ -120,12 +122,6 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
             />
 
             <ValidationItem {...validateQuantitativeData(watch("text"))} />
-            <ValidationItem
-              {...formatValidationResult}
-              onFix={
-                formatValidationResult.icon === "failure" ? () => {} : undefined
-              }
-            />
           </div>
 
           <div className="col-span-full">
