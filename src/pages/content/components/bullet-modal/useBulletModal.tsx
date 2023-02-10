@@ -11,7 +11,7 @@ import useLocalState from "../../../../common/hooks/useLocalState";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
 import { ValidationItem } from "./ValidationItem";
-import { validateQuantitativeData } from "./validators";
+import { validateActionVerb, validateQuantitativeData } from "./validators";
 
 const bulletMaxLength = 200;
 
@@ -108,9 +108,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       ) : (
         <div className="grid grid-cols-6 gap-6">
           <div className="col-span-full grid grid-cols-2 gap-3">
-            {/* Success: Starts with an action verb */}
-            {/* Failure: Doesn't start with an action verb */}
-            <ValidationItem icon="success" label="Starts with an action verb" />
+            <ValidationItem {...validateActionVerb(watch("text"))} />
 
             {/* Success: Optimal length (1 line in PDF) */}
             {/* Warning: A bit short (1 line in PDF) */}

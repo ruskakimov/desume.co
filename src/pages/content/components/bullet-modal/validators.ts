@@ -1,5 +1,19 @@
 import { ValidationItemProps } from "./ValidationItem";
 
+export function validateActionVerb(text: string | undefined) {
+  const found: ValidationItemProps = {
+    icon: "success",
+    label: "Starts with an action verb",
+  };
+  const notFound: ValidationItemProps = {
+    icon: "failure",
+    label: "Doesn't start with an action verb",
+  };
+
+  if (!text) return notFound;
+  return found;
+}
+
 export function validateQuantitativeData(
   text: string | undefined
 ): ValidationItemProps {
