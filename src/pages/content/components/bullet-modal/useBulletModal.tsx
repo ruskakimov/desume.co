@@ -76,6 +76,8 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
 
   const textareaProps = register("text");
 
+  const formatValidationResult = validateFormat(watch("text"));
+
   return [
     openModal,
     <FormModal
@@ -118,7 +120,12 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
             />
 
             <ValidationItem {...validateQuantitativeData(watch("text"))} />
-            <ValidationItem {...validateFormat(watch("text"))} />
+            <ValidationItem
+              {...formatValidationResult}
+              onFix={
+                formatValidationResult.icon === "failure" ? () => {} : undefined
+              }
+            />
           </div>
 
           <div className="col-span-full">
