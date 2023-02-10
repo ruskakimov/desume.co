@@ -1,8 +1,3 @@
-import {
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
 import { diffWords } from "diff";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,6 +9,8 @@ import { generateId } from "../../../../common/functions/ids";
 import useEditFlow from "../../../../common/hooks/useEditFlow";
 import useLocalState from "../../../../common/hooks/useLocalState";
 import { BulletPoint } from "../../../../common/interfaces/resume";
+import { ValidationItem } from "./ValidationItem";
+import { validateFormat } from "./validators";
 
 const bulletMaxLength = 200;
 
@@ -163,56 +160,6 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
     </FormModal>,
   ];
 }
-
-function validateFormat(text: string | undefined): ValidationItemProps {
-  const success: ValidationItemProps = {
-    icon: "success",
-    label: "Correct format",
-  };
-  const failure: ValidationItemProps = {
-    icon: "failure",
-    label: "Incorrect format",
-  };
-
-  if (!text) return failure;
-
-  const startsWithCapitalLetter = /^[A-Z]/.test(text);
-  const endsWithSingleDot = /[A-Za-z0-9]\.$/.test(text);
-  const singleSpaceBetweenWords = !text.split(" ").includes("");
-
-  return startsWithCapitalLetter && endsWithSingleDot && singleSpaceBetweenWords
-    ? success
-    : failure;
-}
-
-type ValidationIcon = "success" | "warning" | "failure";
-
-const iconMap: Record<ValidationIcon, React.ReactElement> = {
-  success: (
-    <CheckCircleIcon className="h-5 w-5 text-green-600" aria-hidden="true" />
-  ),
-  warning: (
-    <ExclamationTriangleIcon
-      className="h-5 w-5 text-orange-500"
-      aria-hidden="true"
-    />
-  ),
-  failure: <XCircleIcon className="h-5 w-5 text-red-600" aria-hidden="true" />,
-};
-
-interface ValidationItemProps {
-  icon: ValidationIcon;
-  label: string;
-}
-
-const ValidationItem: React.FC<ValidationItemProps> = ({ icon, label }) => {
-  return (
-    <div className="flex gap-2">
-      {iconMap[icon]}
-      <span className="text-sm">{label}</span>
-    </div>
-  );
-};
 
 const CompareView: React.FC<{
   oldText: string;
