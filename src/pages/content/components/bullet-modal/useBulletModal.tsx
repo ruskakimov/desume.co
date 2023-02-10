@@ -11,7 +11,11 @@ import useLocalState from "../../../../common/hooks/useLocalState";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
 import { ValidationItem } from "./ValidationItem";
-import { validateActionVerb, validateQuantitativeData } from "./validators";
+import {
+  validateActionVerb,
+  validateLength,
+  validateQuantitativeData,
+} from "./validators";
 
 const bulletMaxLength = 250;
 
@@ -109,17 +113,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         <div className="grid grid-cols-6 gap-6">
           <div className="col-span-full grid grid-cols-2 gap-3">
             <ValidationItem {...validateActionVerb(watch("text"))} />
-
-            {/* Success: Optimal length (1 line in PDF) */}
-            {/* Warning: A bit short (1 line in PDF) */}
-            {/* Warning: A bit long (2 lines in PDF) */}
-            {/* Failure: Too short (1 line in PDF) */}
-            {/* Failure: Too long (3 lines in PDF) */}
-            <ValidationItem
-              icon="warning"
-              label="A bit long (2 lines in PDF)"
-            />
-
+            <ValidationItem {...validateLength(watch("text"))} />
             <ValidationItem {...validateQuantitativeData(watch("text"))} />
           </div>
 

@@ -36,3 +36,34 @@ export function validateQuantitativeData(
   const containsNumbers = text && /[0-9]/.test(text);
   return containsNumbers ? found : notFound;
 }
+
+export function validateLength(text: string | undefined): ValidationItemProps {
+  const justRight: ValidationItemProps = {
+    icon: "success",
+    label: "Optimal length",
+  };
+  const bitShort: ValidationItemProps = {
+    icon: "warning",
+    label: "A bit short",
+  };
+  const bitLong: ValidationItemProps = {
+    icon: "warning",
+    label: "A bit long",
+  };
+  const tooShort: ValidationItemProps = {
+    icon: "failure",
+    label: "Too short",
+  };
+  const tooLong: ValidationItemProps = {
+    icon: "failure",
+    label: "Too long",
+  };
+
+  const formatted = fixFormat(text ?? "");
+
+  if (formatted.length < 40) return tooShort;
+  if (formatted.length < 70) return bitShort;
+  if (formatted.length < 150) return justRight;
+  if (formatted.length < 200) return bitLong;
+  return tooLong;
+}
