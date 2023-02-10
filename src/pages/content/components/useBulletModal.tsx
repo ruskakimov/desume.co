@@ -106,7 +106,12 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       ) : (
         <div className="grid grid-cols-6 gap-6">
           <div className="col-span-3 space-y-3">
+            {/* Success: Starts with an action verb */}
+            {/* Failure: Doesn't start with an action verb */}
             <ValidationItem icon="success" label="Starts with an action verb" />
+
+            {/* Success: Includes quantitative data */}
+            {/* Warning: Doesn't include quantitative data */}
             <ValidationItem
               icon="warning"
               label="Doesn't include quantitative data"
@@ -114,10 +119,20 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
           </div>
 
           <div className="col-span-3 space-y-3">
-            <ValidationItem icon="warning" label="A bit long (2 lines)" />
+            {/* Success: Optimal length (1 line in PDF) */}
+            {/* Warning: A bit short (1 line in PDF) */}
+            {/* Warning: A bit long (2 lines in PDF) */}
+            {/* Failure: Too short (1 line in PDF) */}
+            {/* Failure: Too long (3 lines in PDF) */}
+            <ValidationItem
+              icon="warning"
+              label="A bit long (2 lines in PDF)"
+            />
+
+            {/* Success: Correct format */}
+            {/* Failure: Incorrect format */}
+            <ValidationItem icon="success" label="Correct format" />
             {/* Starts with a capital, ends with a dot, one space between words. */}
-            <ValidationItem icon="success" label="Correctly formatted" />
-            {/* <Check passed={false} label="Optimal length" /> */}
           </div>
 
           <div className="col-span-full">
