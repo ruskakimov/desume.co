@@ -10,7 +10,7 @@ import useEditFlow from "../../../../common/hooks/useEditFlow";
 import useLocalState from "../../../../common/hooks/useLocalState";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { ValidationItem } from "./ValidationItem";
-import { validateFormat } from "./validators";
+import { validateFormat, validateQuantitativeData } from "./validators";
 
 const bulletMaxLength = 200;
 
@@ -117,13 +117,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
               label="A bit long (2 lines in PDF)"
             />
 
-            {/* Success: Includes quantitative data */}
-            {/* Warning: Doesn't include quantitative data */}
-            <ValidationItem
-              icon="warning"
-              label="Doesn't include quantitative data"
-            />
-
+            <ValidationItem {...validateQuantitativeData(watch("text"))} />
             <ValidationItem {...validateFormat(watch("text"))} />
           </div>
 
