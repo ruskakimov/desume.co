@@ -68,7 +68,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       reset(prefilledForm);
     } else {
       // Add new bullet
-      reset({});
+      reset({ included: true });
     }
     setOldBullet(bullet);
     setIsCompare(false);
