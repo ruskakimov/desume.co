@@ -1,3 +1,5 @@
+import { actionVerbs } from "../../../../common/constants/action-verbs";
+import { fixFormat } from "./format";
 import { ValidationItemProps } from "./ValidationItem";
 
 export function validateActionVerb(text: string | undefined) {
@@ -11,7 +13,13 @@ export function validateActionVerb(text: string | undefined) {
   };
 
   if (!text) return notFound;
-  return found;
+
+  const formatted = fixFormat(text);
+  const firstWord = formatted.split(" ").at(0);
+
+  const startsWithActionVerb = actionVerbs.includes(firstWord ?? "");
+
+  return startsWithActionVerb ? found : notFound;
 }
 
 export function validateQuantitativeData(
