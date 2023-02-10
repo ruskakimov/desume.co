@@ -13,7 +13,7 @@ import { fixFormat } from "./format";
 import { ValidationItem } from "./ValidationItem";
 import { validateActionVerb, validateQuantitativeData } from "./validators";
 
-const bulletMaxLength = 200;
+const bulletMaxLength = 250;
 
 interface SingleBulletForm {
   included?: boolean;
