@@ -83,6 +83,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
 
   const formatted = fixFormat(watch("text") ?? "");
   const canSave = formatted !== "";
+  const showCompareButton = oldBullet?.text !== watch("text");
 
   return [
     openModal,
@@ -100,7 +101,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
         },
       })}
       secondaryButton={
-        isDirty ? (
+        showCompareButton ? (
           <SecondaryButton onClick={() => setIsCompare((state) => !state)}>
             {isCompare ? "Edit" : "Compare"}
           </SecondaryButton>
