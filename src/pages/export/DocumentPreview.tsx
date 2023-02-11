@@ -416,7 +416,11 @@ const ExperienceItem = React.forwardRef<
         {experience.bulletPoints
           .filter((bullet) => bullet.included)
           .map((bullet) => (
-            <li key={bullet.id} className="flex" style={{ marginTop: "0.4em" }}>
+            <li
+              key={bullet.id}
+              className="flex cursor-pointer rounded hover:bg-yellow-100"
+              style={{ marginTop: "0.4em" }}
+            >
               <span
                 style={{
                   marginRight: pointsToPx(8),
