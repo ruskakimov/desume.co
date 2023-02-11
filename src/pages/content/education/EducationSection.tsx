@@ -12,7 +12,7 @@ import { AcademicCapIcon } from "@heroicons/react/24/outline";
 import { sortExperiences } from "../../../common/functions/experiences";
 import { userCancelReason } from "../../../common/constants/reject-reasons";
 
-function useEducation(): [
+export function useEducation(): [
   EducationExperience[] | null,
   (experiences: EducationExperience[]) => void
 ] {
