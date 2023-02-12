@@ -61,6 +61,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
   const { openEditDialog, buildDialogProps, confirmationPopups } =
     useEditFlow<BulletPoint>();
 
+  const formRef = useRef<HTMLFormElement | null>(null);
   const textareaRef = useRef<HTMLElement | null>(null);
 
   const openModal = (bullet: BulletPoint | null) => {
@@ -90,6 +91,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
   return [
     openModal,
     <FormModal
+      formRef={formRef}
       initialFocusRef={textareaRef}
       {...buildDialogProps({
         titleName: "accomplishment",
@@ -129,6 +131,12 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
               ref={(el) => {
                 textareaRef.current = el;
                 textareaProps.ref(el);
+              }}
+              onKeyDown={(e) => {
+                if (e.code === "Enter") {
+                  e.preventDefault();
+                  formRef.current?.requestSubmit();
+                }
               }}
             />
           </div>
