@@ -77,7 +77,11 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
     return openEditDialog({ isCreateNew: bullet === null });
   };
 
-  const textareaProps = register("text", { required: true });
+  const textareaProps = register("text", {
+    required: true,
+    minLength: 1,
+    maxLength: bulletMaxLength,
+  });
 
   const formatted = fixFormat(watch("text") ?? "");
   const isEmpty = formatted === "";
@@ -121,7 +125,6 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
             <TextAreaField
               label="Accomplishment"
               rows={3}
-              maxLength={bulletMaxLength}
               {...textareaProps}
               ref={(el) => {
                 textareaRef.current = el;
