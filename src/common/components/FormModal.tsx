@@ -20,6 +20,7 @@ const FormModal: React.FC<FormModalProps> = ({
   onDelete,
   secondaryButton,
   initialFocusRef,
+  canSubmit,
 }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -94,7 +95,9 @@ const FormModal: React.FC<FormModalProps> = ({
                       )}
 
                       {secondaryButton}
-                      <PrimaryButton type="submit">Save</PrimaryButton>
+                      <PrimaryButton disabled={!canSubmit} type="submit">
+                        Save
+                      </PrimaryButton>
                     </div>
                   </div>
                 </form>

@@ -6,6 +6,7 @@ import useDiscardChangesDialog from "./useDiscardChangesDialog";
 export interface EditDialogProps {
   title: string;
   isOpen: boolean;
+  canSubmit: boolean;
   onCancel: () => void;
   onSubmit: () => void;
   onDelete?: () => void;
@@ -70,6 +71,7 @@ export default function useEditFlow<T>(): {
     }) => ({
       title: `${options.isCreateNew ? "Add" : "Edit"} ${titleName}`,
       isOpen,
+      canSubmit: getIsDirty(),
       onCancel: async () => {
         if (!getIsDirty() || (await getDiscardConfirmation())) {
           rejectCallbackRef.current?.(userCancelReason);
