@@ -129,6 +129,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
             <TextAreaField
               label="Accomplishment"
               rows={3}
+              maxLength={bulletMaxLength}
               {...textareaProps}
               ref={(el) => {
                 textareaRef.current = el;
