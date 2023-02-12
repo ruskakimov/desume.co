@@ -84,9 +84,11 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
     maxLength: bulletMaxLength,
   });
 
-  const formatted = fixFormat(watch("text") ?? "");
-  const isEmpty = formatted === "";
-  const showCompareButton = oldBullet?.text !== watch("text");
+  const oldText = oldBullet?.text ?? "";
+  const newText = watch("text") ?? "";
+
+  const isEmpty = fixFormat(newText) === "";
+  const showCompareButton = oldText !== newText;
 
   return [
     openModal,
@@ -114,13 +116,13 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       }
     >
       {isCompare ? (
-        <CompareView oldText={oldBullet?.text ?? ""} newText={watch("text")} />
+        <CompareView oldText={oldText} newText={newText} />
       ) : (
         <div className="grid grid-cols-6 gap-6">
           <div className="col-span-full grid grid-cols-2 gap-3">
-            <ValidationItem {...validateActionVerb(watch("text"))} />
-            <ValidationItem {...validateLength(watch("text"))} />
-            <ValidationItem {...validateQuantitativeData(watch("text"))} />
+            <ValidationItem {...validateActionVerb(newText)} />
+            <ValidationItem {...validateLength(newText)} />
+            <ValidationItem {...validateQuantitativeData(newText)} />
           </div>
 
           <div className="col-span-full">
@@ -143,7 +145,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
 
           <div className="col-span-full -mt-4 flex justify-end">
             <span className="text-sm text-gray-900">
-              {watch("text")?.length ?? 0}
+              {newText.length}
               <span className="text-gray-500">/{bulletMaxLength}</span>
             </span>
           </div>
