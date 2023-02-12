@@ -77,10 +77,10 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
     return openEditDialog({ isCreateNew: bullet === null });
   };
 
-  const textareaProps = register("text");
+  const textareaProps = register("text", { required: true });
 
   const formatted = fixFormat(watch("text") ?? "");
-  const canSave = formatted !== "";
+  const isEmpty = formatted === "";
   const showCompareButton = oldBullet?.text !== watch("text");
 
   return [
@@ -98,6 +98,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
           return newBullet;
         },
       })}
+      canSubmit={isDirty && !isEmpty}
       secondaryButton={
         showCompareButton ? (
           <SecondaryButton onClick={() => setIsCompare((state) => !state)}>
