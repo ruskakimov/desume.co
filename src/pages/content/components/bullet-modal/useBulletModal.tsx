@@ -20,13 +20,11 @@ import {
 const bulletMaxLength = 250;
 
 interface SingleBulletForm {
-  included?: boolean;
   text: string;
 }
 
 function convertBulletToFormData(bullet: BulletPoint): SingleBulletForm {
   return {
-    included: bullet.included,
     text: bullet.text,
   };
 }
@@ -37,7 +35,7 @@ function convertFormDataToBullet(
 ): BulletPoint {
   return {
     id: oldBullet?.id ?? generateId(),
-    included: formData.included ?? true,
+    included: oldBullet?.included ?? true,
     text: formData.text,
   };
 }
@@ -72,7 +70,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       reset(prefilledForm);
     } else {
       // Add new bullet
-      reset({ included: true });
+      reset({});
     }
     setOldBullet(bullet);
     setIsCompare(false);
@@ -131,14 +129,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
             />
           </div>
 
-          <div className="col-span-3 -mt-4">
-            <CheckboxField
-              label="Include in export"
-              {...register("included")}
-            />
-          </div>
-
-          <div className="col-span-3 -mt-4 flex justify-end">
+          <div className="col-span-full -mt-4 flex justify-end">
             <span className="text-sm text-gray-900">
               {watch("text")?.length ?? 0}
               <span className="text-gray-500">/{bulletMaxLength}</span>
