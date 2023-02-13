@@ -17,7 +17,7 @@ export function validateActionVerb(
   if (!text) return notFound;
 
   const formatted = fixFormat(text);
-  const firstWord = formatted.match(/^[\w]+/)?.[0];
+  const firstWord = formatted.split(" ")[0];
   const startsWithActionVerb = actionVerbs.includes(firstWord ?? "");
 
   return startsWithActionVerb ? found : notFound;
