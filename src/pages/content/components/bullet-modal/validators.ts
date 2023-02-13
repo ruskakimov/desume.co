@@ -2,7 +2,9 @@ import { actionVerbs } from "../../../../common/constants/action-verbs";
 import { fixFormat } from "./format";
 import { ValidationItemProps } from "./ValidationItem";
 
-export function validateActionVerb(text: string | undefined) {
+export function validateActionVerb(
+  text: string | undefined
+): ValidationItemProps {
   const found: ValidationItemProps = {
     icon: "success",
     label: "Starts with an action verb",
