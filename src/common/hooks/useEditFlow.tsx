@@ -6,6 +6,7 @@ import useDiscardChangesDialog from "./useDiscardChangesDialog";
 export interface EditDialogProps {
   title: string;
   isOpen: boolean;
+  canSubmit: boolean;
   onCancel: () => void;
   onSubmit: () => void;
   onDelete?: () => void;
@@ -19,7 +20,7 @@ interface DialogBuilderOptions<T> {
   getIsValid: () => Promise<boolean>;
   getIsDirty: () => boolean;
   getData: () => T;
-  getDeleteName: () => string;
+  getDeleteName?: () => string;
 }
 
 type DialogPropsBuilder<T> = (
@@ -70,6 +71,7 @@ export default function useEditFlow<T>(): {
     }) => ({
       title: `${options.isCreateNew ? "Add" : "Edit"} ${titleName}`,
       isOpen,
+      canSubmit: getIsDirty(),
       onCancel: async () => {
         if (!getIsDirty() || (await getDiscardConfirmation())) {
           rejectCallbackRef.current?.(userCancelReason);
@@ -88,7 +90,13 @@ export default function useEditFlow<T>(): {
               title: `Delete ${titleName}`,
               body: (
                 <p className="text-sm text-gray-500">
-                  Delete <b>{getDeleteName()}</b>? This action cannot be undone.
+                  Delete{" "}
+                  {getDeleteName ? (
+                    <b>{getDeleteName()}</b>
+                  ) : (
+                    `this ${titleName}`
+                  )}
+                  ? This action cannot be undone.
                 </p>
               ),
               action: "Delete",

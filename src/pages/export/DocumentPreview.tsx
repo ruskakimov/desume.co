@@ -1,16 +1,25 @@
 import classNames from "classnames";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { userCancelReason } from "../../common/constants/reject-reasons";
+import { withRemovedAt, withReplacedAt } from "../../common/functions/array";
 import { groupIntoStacks } from "../../common/functions/layout";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
 import {
+  EducationExperience,
   Experience,
   PersonalDetails,
+  ProjectExperience,
   Resume,
   ResumeSectionId,
   SkillGroup,
+  WorkExperience,
 } from "../../common/interfaces/resume";
 import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
+import useBulletModal from "../content/components/bullet-modal/useBulletModal";
+import { useEducation } from "../content/education/EducationSection";
+import { useProjects } from "../content/projects/ProjectsSection";
+import { useWorkHistory } from "../content/work-history/WorkHistorySection";
 
 interface DocumentPreviewProps {
   resume: Resume;
@@ -42,6 +51,10 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   format,
   pagesRef,
 }) => {
+  const [_, setWorkHistory] = useWorkHistory();
+  const [__, setEducation] = useEducation();
+  const [___, setProjects] = useProjects();
+
   const aspectRatio = format.width / format.height;
 
   const [containerRef, containerSize] = useElementSize([
@@ -61,7 +74,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   function renderExperienceSectionBlocks<T extends Experience>(
     header: string,
     experiences: T[],
-    renderItem: (experience: T, isLast: boolean) => JSX.Element
+    renderItem: (experience: T, index: number, isLast: boolean) => JSX.Element
   ): JSX.Element[] {
     const includedExperiences = experiences.filter((exp) => exp.included);
     if (includedExperiences.length === 0) return [];
@@ -72,11 +85,13 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       // Prevent widow header by grouping it with the first item.
       <div>
         <SectionHeader pointsToPx={pointsToPx} text={header} />
-        {renderItem(includedExperiences[0], 0 === lastIndex)}
+        {renderItem(includedExperiences[0], 0, 0 === lastIndex)}
       </div>,
       ...includedExperiences
         .slice(1)
-        .map((exp, index) => renderItem(exp, index + 1 === lastIndex)),
+        .map((exp, index) =>
+          renderItem(exp, index + 1, index + 1 === lastIndex)
+        ),
     ];
   }
 
@@ -92,11 +107,20 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       renderExperienceSectionBlocks(
         "Work experience",
         resume.workHistory,
-        (experience, isLast) => (
+        (experience, index, isLast) => (
           <ExperienceItem
             title={experience.companyName}
             subtitle={experience.jobTitle}
             experience={experience}
+            onChange={(editedExperience) => {
+              setWorkHistory(
+                withReplacedAt(
+                  resume.workHistory,
+                  index,
+                  editedExperience as WorkExperience
+                )
+              );
+            }}
             format={format}
             pointsToPx={pointsToPx}
             isLast={isLast}
@@ -107,11 +131,20 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       renderExperienceSectionBlocks(
         "Education",
         resume.educationHistory,
-        (education, isLast) => (
+        (education, index, isLast) => (
           <ExperienceItem
             title={education.schoolName}
             subtitle={education.degree}
             experience={education}
+            onChange={(editedEducation) => {
+              setEducation(
+                withReplacedAt(
+                  resume.educationHistory,
+                  index,
+                  editedEducation as EducationExperience
+                )
+              );
+            }}
             format={format}
             pointsToPx={pointsToPx}
             isLast={isLast}
@@ -122,10 +155,19 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       renderExperienceSectionBlocks(
         "Projects",
         resume.projectHistory,
-        (project, isLast) => (
+        (project, index, isLast) => (
           <ExperienceItem
             title={project.projectName}
             experience={project}
+            onChange={(editedProject) => {
+              setProjects(
+                withReplacedAt(
+                  resume.projectHistory,
+                  index,
+                  editedProject as ProjectExperience
+                )
+              );
+            }}
             format={format}
             pointsToPx={pointsToPx}
             isLast={isLast}
@@ -375,61 +417,101 @@ const ExperienceItem = React.forwardRef<
     title: string;
     subtitle?: string;
     experience: Experience;
+    onChange: (experience: Experience) => void;
     format: DocumentFormat;
     isLast: boolean;
   }
->(({ pointsToPx, title, subtitle, experience, format, isLast }, ref) => {
-  const start = monthYearToString(experience.startDate);
-  const end = experience.endDate
-    ? monthYearToString(experience.endDate)
-    : "Present";
+>(
+  (
+    { pointsToPx, title, subtitle, experience, onChange, format, isLast },
+    ref
+  ) => {
+    const start = monthYearToString(experience.startDate);
+    const end = experience.endDate
+      ? monthYearToString(experience.endDate)
+      : "Present";
 
-  return (
-    <div ref={ref} style={{ paddingBottom: isLast ? 0 : pointsToPx(16) }}>
-      <div
-        className="flex justify-between"
-        style={{ fontSize: pointsToPx(format.fontSizes.header) }}
-      >
-        <label className="font-bold" style={{ marginRight: pointsToPx(6) }}>
-          {title}
-        </label>
+    const [openBulletModal, bulletModal] = useBulletModal();
 
-        <label>{`${start} – ${end}`}</label>
-      </div>
-
-      {subtitle && (
+    return (
+      <div ref={ref} style={{ paddingBottom: isLast ? 0 : pointsToPx(16) }}>
         <div
           className="flex justify-between"
-          style={{ fontSize: pointsToPx(format.fontSizes.body) }}
+          style={{ fontSize: pointsToPx(format.fontSizes.header) }}
         >
-          <label className="italic">{subtitle}</label>
-          {/* <label>Kuala-Lumpur, Malaysia</label> */}
-        </div>
-      )}
+          <label className="font-bold" style={{ marginRight: pointsToPx(6) }}>
+            {title}
+          </label>
 
-      <ul
-        style={{
-          fontSize: pointsToPx(format.fontSizes.body),
-          lineHeight: format.bulletLineHeight,
-        }}
-      >
-        {experience.bulletPoints
-          .filter((bullet) => bullet.included)
-          .map((bullet) => (
-            <li key={bullet.id} className="flex" style={{ marginTop: "0.4em" }}>
-              <span
-                style={{
-                  marginRight: pointsToPx(8),
+          <label>{`${start} – ${end}`}</label>
+        </div>
+
+        {subtitle && (
+          <div
+            className="flex justify-between"
+            style={{ fontSize: pointsToPx(format.fontSizes.body) }}
+          >
+            <label className="italic">{subtitle}</label>
+            {/* <label>Kuala-Lumpur, Malaysia</label> */}
+          </div>
+        )}
+
+        <ul
+          style={{
+            fontSize: pointsToPx(format.fontSizes.body),
+            lineHeight: format.bulletLineHeight,
+          }}
+        >
+          {experience.bulletPoints
+            .filter((bullet) => bullet.included)
+            .map((bullet, index) => (
+              <li
+                key={bullet.id}
+                className="flex cursor-pointer rounded hover:bg-yellow-100"
+                style={{ marginTop: "0.4em" }}
+                onClick={() => {
+                  openBulletModal(bullet)
+                    .then((editedBullet) => {
+                      if (editedBullet) {
+                        onChange({
+                          ...experience,
+                          bulletPoints: withReplacedAt(
+                            experience.bulletPoints,
+                            index,
+                            editedBullet
+                          ),
+                        });
+                      } else {
+                        onChange({
+                          ...experience,
+                          bulletPoints: withRemovedAt(
+                            experience.bulletPoints,
+                            index
+                          ),
+                        });
+                      }
+                    })
+                    .catch((e) => {
+                      if (e !== userCancelReason) console.error(e);
+                    });
                 }}
               >
-                &bull;
-              </span>
-              {bullet.text}
-            </li>
-          ))}
-      </ul>
-    </div>
-  );
-});
+                <span
+                  style={{
+                    marginRight: pointsToPx(8),
+                  }}
+                >
+                  &bull;
+                </span>
+                {bullet.text}
+              </li>
+            ))}
+        </ul>
+
+        {bulletModal}
+      </div>
+    );
+  }
+);
 
 export default DocumentPreview;

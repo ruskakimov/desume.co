@@ -7,6 +7,8 @@ import { EditDialogProps } from "../hooks/useEditFlow";
 
 interface FormModalProps extends EditDialogProps {
   children: React.ReactNode;
+  secondaryButton?: React.ReactNode;
+  formRef?: React.MutableRefObject<HTMLFormElement | null>;
   initialFocusRef?: React.MutableRefObject<HTMLElement | null>;
 }
 
@@ -17,7 +19,10 @@ const FormModal: React.FC<FormModalProps> = ({
   onCancel,
   onSubmit,
   onDelete,
+  secondaryButton,
+  formRef,
   initialFocusRef,
+  canSubmit,
 }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -54,6 +59,7 @@ const FormModal: React.FC<FormModalProps> = ({
             >
               <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl h-full sm:h-auto">
                 <form
+                  ref={formRef}
                   className="h-full"
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -91,7 +97,10 @@ const FormModal: React.FC<FormModalProps> = ({
                         </SecondaryButton>
                       )}
 
-                      <PrimaryButton type="submit">Save</PrimaryButton>
+                      {secondaryButton}
+                      <PrimaryButton disabled={!canSubmit} type="submit">
+                        Save
+                      </PrimaryButton>
                     </div>
                   </div>
                 </form>

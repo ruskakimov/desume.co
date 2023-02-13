@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
@@ -6,7 +6,6 @@ import WebsiteField from "../../../common/components/fields/WebsiteField";
 import FormModal from "../../../common/components/FormModal";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { EducationExperience } from "../../../common/interfaces/resume";
-import BulletForm, { FormBullet } from "../components/BulletForm";
 
 interface EducationForm {
   schoolName: string;
@@ -19,7 +18,8 @@ interface EducationForm {
 }
 
 function convertFormDataToExperience(
-  formData: EducationForm
+  formData: EducationForm,
+  oldExperience: EducationExperience | null
 ): EducationExperience {
   return {
     schoolName: formData.schoolName,
@@ -33,7 +33,7 @@ function convertFormDataToExperience(
       month: parseInt(formData.endDateMonth!),
       year: parseInt(formData.endDateYear!),
     },
-    bulletPoints: [],
+    bulletPoints: oldExperience?.bulletPoints ?? [],
     included: true,
   };
 }
@@ -71,8 +71,7 @@ export default function useEducationPanel(): [
     trigger,
     formState: { isDirty },
   } = useForm<EducationForm>();
-  const [bullets, setBullets] = useState<FormBullet[]>([]);
-  const touchedBulletsRef = useRef<boolean>(false);
+  const oldExperienceRef = useRef<EducationExperience | null>(null);
 
   const { openEditDialog, buildDialogProps, confirmationPopups } =
     useEditFlow<EducationExperience>();
@@ -82,18 +81,11 @@ export default function useEducationPanel(): [
       // Edit experience
       const prefilledForm = convertExperienceToFormData(experience);
       reset(prefilledForm);
-      setBullets(
-        experience.bulletPoints.map((bulletPoint) => ({
-          ...bulletPoint,
-          shouldDelete: false,
-        }))
-      );
     } else {
       // Add experience
       reset({});
-      setBullets([]);
     }
-    touchedBulletsRef.current = false;
+    oldExperienceRef.current = experience;
     return openEditDialog({ isCreateNew: experience === null });
   };
 
@@ -104,14 +96,16 @@ export default function useEducationPanel(): [
     <FormModal
       {...buildDialogProps({
         titleName: "education",
-        getIsDirty: () => isDirty || touchedBulletsRef.current,
+        getIsDirty: () => isDirty,
         getIsValid: () => trigger(undefined, { shouldFocus: true }),
         getDeleteName: () =>
           `${getValues("degree")} at ${getValues("schoolName")}`,
         getData: () => {
           const formData = getValues();
-          const newExperience = convertFormDataToExperience(formData);
-          newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
+          const newExperience = convertFormDataToExperience(
+            formData,
+            oldExperienceRef.current
+          );
           return newExperience;
         },
       })}
@@ -164,14 +158,6 @@ export default function useEducationPanel(): [
           />
         </div>
       </div>
-
-      <BulletForm
-        bullets={bullets}
-        onChange={(bullets) => {
-          touchedBulletsRef.current = true;
-          setBullets(bullets);
-        }}
-      />
 
       {confirmationPopups}
     </FormModal>,

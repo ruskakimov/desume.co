@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import CheckboxField from "../../../common/components/fields/CheckboxField";
 import MonthYearField from "../../../common/components/fields/MonthYearField";
@@ -7,7 +7,6 @@ import WebsiteField from "../../../common/components/fields/WebsiteField";
 import FormModal from "../../../common/components/FormModal";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { ProjectExperience } from "../../../common/interfaces/resume";
-import BulletForm, { FormBullet } from "../components/BulletForm";
 
 interface ProjectForm {
   projectName: string;
@@ -19,7 +18,10 @@ interface ProjectForm {
   isOngoing: boolean;
 }
 
-function convertFormDataToExperience(formData: ProjectForm): ProjectExperience {
+function convertFormDataToExperience(
+  formData: ProjectForm,
+  oldExperience: ProjectExperience | null
+): ProjectExperience {
   return {
     projectName: formData.projectName,
     projectWebsiteUrl: formData.projectWebsiteUrl ?? "",
@@ -33,7 +35,7 @@ function convertFormDataToExperience(formData: ProjectForm): ProjectExperience {
           month: parseInt(formData.endDateMonth!),
           year: parseInt(formData.endDateYear!),
         },
-    bulletPoints: [],
+    bulletPoints: oldExperience?.bulletPoints ?? [],
     included: true,
   };
 }
@@ -69,8 +71,7 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
     trigger,
     formState: { isDirty },
   } = useForm<ProjectForm>();
-  const [bullets, setBullets] = useState<FormBullet[]>([]);
-  const touchedBulletsRef = useRef<boolean>(false);
+  const oldExperienceRef = useRef<ProjectExperience | null>(null);
 
   const { openEditDialog, buildDialogProps, confirmationPopups } =
     useEditFlow<ProjectExperience>();
@@ -80,18 +81,11 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
       // Edit experience
       const prefilledForm = convertExperienceToFormData(experience);
       reset(prefilledForm);
-      setBullets(
-        experience.bulletPoints.map((bulletPoint) => ({
-          ...bulletPoint,
-          shouldDelete: false,
-        }))
-      );
     } else {
       // Add experience
       reset({});
-      setBullets([]);
     }
-    touchedBulletsRef.current = false;
+    oldExperienceRef.current = experience;
     return openEditDialog({ isCreateNew: experience === null });
   };
 
@@ -102,13 +96,15 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
     <FormModal
       {...buildDialogProps({
         titleName: "project",
-        getIsDirty: () => isDirty || touchedBulletsRef.current,
+        getIsDirty: () => isDirty,
         getIsValid: () => trigger(undefined, { shouldFocus: true }),
         getDeleteName: () => `${getValues("projectName")}`,
         getData: () => {
           const formData = getValues();
-          const newExperience = convertFormDataToExperience(formData);
-          newExperience.bulletPoints = bullets.filter((b) => !b.shouldDelete);
+          const newExperience = convertFormDataToExperience(
+            formData,
+            oldExperienceRef.current
+          );
           return newExperience;
         },
       })}
@@ -163,14 +159,6 @@ export default function useProjectPanel(): [OpenProjectPanel, React.ReactNode] {
           />
         </div>
       </div>
-
-      <BulletForm
-        bullets={bullets}
-        onChange={(bullets) => {
-          touchedBulletsRef.current = true;
-          setBullets(bullets);
-        }}
-      />
 
       {confirmationPopups}
     </FormModal>,

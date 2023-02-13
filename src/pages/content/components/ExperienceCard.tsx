@@ -2,7 +2,10 @@ import Checkbox from "../../../common/components/Checkbox";
 import { Experience } from "../../../common/interfaces/resume";
 import { monthYearToString } from "../../../common/functions/time";
 import SortableBulletList from "./SortableBulletList";
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+import useBulletModal from "./bullet-modal/useBulletModal";
+import { withRemovedAt, withReplacedAt } from "../../../common/functions/array";
+import { userCancelReason } from "../../../common/constants/reject-reasons";
 
 interface ExperienceCardProps {
   title: string;
@@ -23,6 +26,8 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
   const end = experience.endDate
     ? monthYearToString(experience.endDate)
     : "Present";
+
+  const [openBulletModal, bulletModal] = useBulletModal();
 
   return (
     <>
@@ -53,19 +58,59 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
           </button>
         </div>
 
-        {experience.bulletPoints.length === 0 ? (
-          <div className="my-2 h-9 flex items-center justify-center">
-            <span className="text-sm text-gray-400">No bullet points</span>
-          </div>
-        ) : (
-          <SortableBulletList
-            bullets={experience.bulletPoints}
-            onChange={(bulletPoints) =>
-              onChange({ ...experience, bulletPoints })
-            }
-          />
-        )}
+        <SortableBulletList
+          bullets={experience.bulletPoints}
+          onChange={(bulletPoints) => onChange({ ...experience, bulletPoints })}
+          onClick={(bullet, index) => {
+            openBulletModal(bullet)
+              .then((editedBullet) => {
+                if (editedBullet) {
+                  onChange({
+                    ...experience,
+                    bulletPoints: withReplacedAt(
+                      experience.bulletPoints,
+                      index,
+                      editedBullet
+                    ),
+                  });
+                } else {
+                  onChange({
+                    ...experience,
+                    bulletPoints: withRemovedAt(experience.bulletPoints, index),
+                  });
+                }
+              })
+              .catch((e) => {
+                if (e !== userCancelReason) console.error(e);
+              });
+          }}
+        />
+
+        <div className="mx-4 mb-4">
+          <button
+            className="w-full h-10 rounded bg-gray-50 flex justify-center items-center gap-1 font-medium hover:bg-gray-100"
+            onClick={() => {
+              openBulletModal(null)
+                .then((newBullet) => {
+                  if (newBullet) {
+                    onChange({
+                      ...experience,
+                      bulletPoints: [...experience.bulletPoints, newBullet],
+                    });
+                  }
+                })
+                .catch((e) => {
+                  if (e !== userCancelReason) console.error(e);
+                });
+            }}
+          >
+            <PlusSmallIcon className="h-6 w-6 text-gray-400" />
+            <span className="text-sm text-gray-600">Add accomplishment</span>
+          </button>
+        </div>
       </div>
+
+      {bulletModal}
     </>
   );
 };
