@@ -318,11 +318,11 @@ const SkillsSection: React.FC<{
     <div>
       <SectionHeader pointsToPx={pointsToPx} text="Skills" />
       <div
-        className="grid grid-cols-4"
+        className="grid grid-cols-[auto_1fr]"
         style={{
           fontSize: pointsToPx(format.fontSizes.body),
           lineHeight: format.bulletLineHeight,
-          gap: "0.4em",
+          gap: "0.4em 1em",
         }}
       >
         {skillGroups
@@ -330,7 +330,7 @@ const SkillsSection: React.FC<{
           .map((skillGroup) => (
             <>
               <div className="font-bold">{skillGroup.groupName}</div>
-              <div className="col-span-3">
+              <div>
                 {skillGroup.skills
                   .filter((skill) => skill.included)
                   .map((skill) => skill.text)
