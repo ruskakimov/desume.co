@@ -322,7 +322,9 @@ const SkillsSection: React.FC<{
         style={{
           fontSize: pointsToPx(format.fontSizes.body),
           lineHeight: 1.4 * format.spacingMultiplier,
-          gap: "0.4em 1em",
+          columnGap: "1em",
+          rowGap:
+            0.4 * pointsToPx(format.fontSizes.body) * format.spacingMultiplier,
         }}
       >
         {skillGroups
@@ -468,7 +470,12 @@ const ExperienceItem = React.forwardRef<
               <li
                 key={bullet.id}
                 className="flex cursor-pointer rounded hover:bg-yellow-100"
-                style={{ paddingTop: "0.4em" }}
+                style={{
+                  paddingTop:
+                    0.4 *
+                    pointsToPx(format.fontSizes.body) *
+                    format.spacingMultiplier,
+                }}
                 onClick={() => {
                   openBulletModal(bullet)
                     .then((editedBullet) => {
