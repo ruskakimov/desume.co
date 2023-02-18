@@ -321,7 +321,7 @@ const SkillsSection: React.FC<{
         className="grid grid-cols-[auto_1fr]"
         style={{
           fontSize: pointsToPx(format.fontSizes.body),
-          lineHeight: 1.4 * format.spacingMultiplier,
+          lineHeight: Math.max(1.25, 1.4 * format.spacingMultiplier),
           columnGap: "1em",
           rowGap:
             0.4 * pointsToPx(format.fontSizes.body) * format.spacingMultiplier,
@@ -470,7 +470,7 @@ const ExperienceItem = React.forwardRef<
         <ul
           style={{
             fontSize: pointsToPx(format.fontSizes.body),
-            lineHeight: 1.4 * format.spacingMultiplier,
+            lineHeight: Math.max(1.25, 1.4 * format.spacingMultiplier),
           }}
         >
           {experience.bulletPoints

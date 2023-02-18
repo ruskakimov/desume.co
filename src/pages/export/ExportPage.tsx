@@ -21,16 +21,24 @@ const pageSizeOptions: SelectOption<PageSizeName>[] = [
   },
 ];
 
-type SpacingMultiplier = "1" | "0.9";
+type SpacingMultiplier = "1" | "0.9" | "0.8" | "0.7";
 
 const spacingOptions: SelectOption<SpacingMultiplier>[] = [
   {
-    label: "Comfortable",
+    label: "Relaxed",
     value: "1",
   },
   {
-    label: "Compact",
+    label: "Comfortable",
     value: "0.9",
+  },
+  {
+    label: "Compact",
+    value: "0.8",
+  },
+  {
+    label: "Tight",
+    value: "0.7",
   },
 ];
 
