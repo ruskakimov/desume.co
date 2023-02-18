@@ -1,15 +1,15 @@
 import React from "react";
 import { useId } from "react";
 
-export interface SelectOption {
-  value: string;
+export interface SelectOption<T extends string> {
   label: string;
+  value: T;
 }
 
 interface SelectFieldProps
   extends React.InputHTMLAttributes<HTMLSelectElement> {
   label: string;
-  options: SelectOption[];
+  options: SelectOption<string>[];
 }
 
 const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>(

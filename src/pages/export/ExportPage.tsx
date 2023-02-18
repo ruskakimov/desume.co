@@ -10,7 +10,7 @@ import { PageSizeName, pageSizes } from "../../common/constants/page-sizes";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import DocumentPreview from "./DocumentPreview";
 
-const pageSizeOptions: { label: string; value: PageSizeName }[] = [
+const pageSizeOptions: SelectOption<PageSizeName>[] = [
   {
     label: "A4",
     value: "a4",
@@ -21,7 +21,9 @@ const pageSizeOptions: { label: string; value: PageSizeName }[] = [
   },
 ];
 
-const bulletSpacingOptions: SelectOption[] = [
+type BulletLineHeight = "1.4" | "1.25";
+
+const bulletSpacingOptions: SelectOption<BulletLineHeight>[] = [
   {
     label: "Comfortable",
     value: "1.4",
@@ -32,7 +34,9 @@ const bulletSpacingOptions: SelectOption[] = [
   },
 ];
 
-const verticalMarginsOptions: SelectOption[] = [
+type VerticalMarginPts = "36" | "54" | "72";
+
+const verticalMarginsOptions: SelectOption<VerticalMarginPts>[] = [
   {
     label: "0.5 inch",
     value: "36",
@@ -47,7 +51,9 @@ const verticalMarginsOptions: SelectOption[] = [
   },
 ];
 
-const horizontalMarginsOptions: SelectOption[] = [
+type HorizontalMarginPts = "36" | "45" | "54" | "63" | "72" | "81" | "90";
+
+const horizontalMarginsOptions: SelectOption<HorizontalMarginPts>[] = [
   {
     label: "0.5 inch",
     value: "36",
@@ -80,16 +86,16 @@ const horizontalMarginsOptions: SelectOption[] = [
 
 interface ExportOptionsForm {
   pageSize: PageSizeName;
-  bulletSpacing: string;
-  verticalMargins: string;
-  horizontalMargins: string;
+  bulletSpacing: BulletLineHeight;
+  verticalMargins: VerticalMarginPts;
+  horizontalMargins: HorizontalMarginPts;
 }
 
 const defaultFormValues: ExportOptionsForm = {
-  pageSize: pageSizeOptions[0].value,
-  bulletSpacing: bulletSpacingOptions[0].value,
-  verticalMargins: verticalMarginsOptions[1].value,
-  horizontalMargins: horizontalMarginsOptions[3].value,
+  pageSize: "a4",
+  bulletSpacing: "1.4",
+  verticalMargins: "54",
+  horizontalMargins: "63",
 };
 
 const formStorageKey = "export-form";
