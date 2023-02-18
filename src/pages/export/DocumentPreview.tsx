@@ -84,7 +84,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return [
       // Prevent widow header by grouping it with the first item.
       <div>
-        <SectionHeader pointsToPx={pointsToPx} text={header} />
+        <SectionHeader pointsToPx={pointsToPx} format={format} text={header} />
         {renderItem(includedExperiences[0], 0, 0 === lastIndex)}
       </div>,
       ...includedExperiences
@@ -316,7 +316,7 @@ const SkillsSection: React.FC<{
 }> = ({ skillGroups, format, pointsToPx }) => {
   return (
     <div>
-      <SectionHeader pointsToPx={pointsToPx} text="Skills" />
+      <SectionHeader pointsToPx={pointsToPx} format={format} text="Skills" />
       <div
         className="grid grid-cols-[auto_1fr]"
         style={{
@@ -389,10 +389,14 @@ const SectionHeader = React.forwardRef<
   {
     pointsToPx: (points: number) => number;
     text: string;
+    format: DocumentFormat;
   }
->(({ pointsToPx, text }, ref) => {
+>(({ pointsToPx, text, format }, ref) => {
   return (
-    <div ref={ref} style={{ paddingTop: pointsToPx(20) }}>
+    <div
+      ref={ref}
+      style={{ paddingTop: pointsToPx(20) * format.spacingMultiplier }}
+    >
       <div
         className={classNames(rectMarkerClass, "bg-black")}
         style={{ height: pointsToPx(0.6) }}
@@ -401,8 +405,8 @@ const SectionHeader = React.forwardRef<
         className="font-bold"
         style={{
           fontSize: pointsToPx(8),
-          paddingTop: pointsToPx(4),
-          paddingBottom: pointsToPx(8),
+          paddingTop: pointsToPx(4) * format.spacingMultiplier,
+          paddingBottom: pointsToPx(8) * format.spacingMultiplier,
           letterSpacing: pointsToPx(0.5),
         }}
       >
@@ -436,7 +440,12 @@ const ExperienceItem = React.forwardRef<
     const [openBulletModal, bulletModal] = useBulletModal();
 
     return (
-      <div ref={ref} style={{ paddingBottom: isLast ? 0 : pointsToPx(16) }}>
+      <div
+        ref={ref}
+        style={{
+          paddingBottom: isLast ? 0 : pointsToPx(16) * format.spacingMultiplier,
+        }}
+      >
         <div
           className="flex justify-between"
           style={{ fontSize: pointsToPx(format.fontSizes.header) }}
