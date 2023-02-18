@@ -43,7 +43,7 @@ interface DocumentFormat {
     header: number;
     body: number;
   };
-  bulletLineHeight: number;
+  spacingMultiplier: number;
 }
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({
@@ -321,7 +321,7 @@ const SkillsSection: React.FC<{
         className="grid grid-cols-[auto_1fr]"
         style={{
           fontSize: pointsToPx(format.fontSizes.body),
-          lineHeight: format.bulletLineHeight,
+          lineHeight: 1.4 * format.spacingMultiplier,
           gap: "0.4em 1em",
         }}
       >
@@ -459,7 +459,7 @@ const ExperienceItem = React.forwardRef<
         <ul
           style={{
             fontSize: pointsToPx(format.fontSizes.body),
-            lineHeight: format.bulletLineHeight,
+            lineHeight: 1.4 * format.spacingMultiplier,
           }}
         >
           {experience.bulletPoints

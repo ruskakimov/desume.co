@@ -21,16 +21,16 @@ const pageSizeOptions: SelectOption<PageSizeName>[] = [
   },
 ];
 
-type BulletLineHeight = "1.4" | "1.25";
+type SpacingMultiplier = "1" | "0.9";
 
-const bulletSpacingOptions: SelectOption<BulletLineHeight>[] = [
+const spacingOptions: SelectOption<SpacingMultiplier>[] = [
   {
     label: "Comfortable",
-    value: "1.4",
+    value: "1",
   },
   {
     label: "Compact",
-    value: "1.25",
+    value: "0.9",
   },
 ];
 
@@ -86,14 +86,14 @@ const horizontalMarginsOptions: SelectOption<HorizontalMarginPts>[] = [
 
 interface ExportOptionsForm {
   pageSize: PageSizeName;
-  bulletSpacing: BulletLineHeight;
+  spacing: SpacingMultiplier;
   verticalMargins: VerticalMarginPts;
   horizontalMargins: HorizontalMarginPts;
 }
 
 const defaultFormValues: ExportOptionsForm = {
   pageSize: "a4",
-  bulletSpacing: "1.4",
+  spacing: "1",
   verticalMargins: "54",
   horizontalMargins: "63",
 };
@@ -122,7 +122,7 @@ const ExportPage: React.FC = () => {
   const pagesRef = useRef<HTMLDivElement[]>([]);
 
   const pageSize = watch("pageSize");
-  const bulletSpacing = parseFloat(watch("bulletSpacing"));
+  const spacing = parseFloat(watch("spacing"));
   const verticalMargins = parseFloat(watch("verticalMargins"));
   const horizontalMargins = parseFloat(watch("horizontalMargins"));
 
@@ -130,7 +130,7 @@ const ExportPage: React.FC = () => {
   useEffect(() => {
     const formData = getValues();
     localStorage.setItem(formStorageKey, JSON.stringify(formData));
-  }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
+  }, [pageSize, spacing, verticalMargins, horizontalMargins]);
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -144,8 +144,8 @@ const ExportPage: React.FC = () => {
 
           <SelectField
             label="Bullet spacing"
-            options={bulletSpacingOptions}
-            {...register("bulletSpacing")}
+            options={spacingOptions}
+            {...register("spacing")}
           />
 
           <SelectField
@@ -190,7 +190,7 @@ const ExportPage: React.FC = () => {
               header: 12,
               body: 10,
             },
-            bulletLineHeight: bulletSpacing,
+            spacingMultiplier: spacing,
           }}
         />
       ) : (
