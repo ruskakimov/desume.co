@@ -151,7 +151,7 @@ const ExportPage: React.FC = () => {
           />
 
           <SelectField
-            label="Bullet spacing"
+            label="Spacing"
             options={spacingOptions}
             {...register("spacing")}
           />
