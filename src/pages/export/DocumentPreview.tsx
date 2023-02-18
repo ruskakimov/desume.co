@@ -399,8 +399,8 @@ const SectionHeader = React.forwardRef<
         className="font-bold"
         style={{
           fontSize: pointsToPx(8),
-          marginTop: pointsToPx(4),
-          marginBottom: pointsToPx(8),
+          paddingTop: pointsToPx(4),
+          paddingBottom: pointsToPx(8),
           letterSpacing: pointsToPx(0.5),
         }}
       >
@@ -439,7 +439,7 @@ const ExperienceItem = React.forwardRef<
           className="flex justify-between"
           style={{ fontSize: pointsToPx(format.fontSizes.header) }}
         >
-          <label className="font-bold" style={{ marginRight: pointsToPx(6) }}>
+          <label className="font-bold" style={{ paddingRight: pointsToPx(10) }}>
             {title}
           </label>
 
@@ -468,7 +468,7 @@ const ExperienceItem = React.forwardRef<
               <li
                 key={bullet.id}
                 className="flex cursor-pointer rounded hover:bg-yellow-100"
-                style={{ marginTop: "0.4em" }}
+                style={{ paddingTop: "0.4em" }}
                 onClick={() => {
                   openBulletModal(bullet)
                     .then((editedBullet) => {
