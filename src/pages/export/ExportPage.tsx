@@ -49,16 +49,32 @@ const verticalMarginsOptions: SelectOption[] = [
 
 const horizontalMarginsOptions: SelectOption[] = [
   {
+    label: "0.5 inch",
+    value: "36",
+  },
+  {
+    label: "0.625 inch",
+    value: "45",
+  },
+  {
+    label: "0.75 inch",
+    value: "54",
+  },
+  {
+    label: "0.875 inch",
+    value: "63",
+  },
+  {
     label: "1 inch",
     value: "72",
   },
   {
-    label: "1.25 inches",
-    value: "90",
+    label: "1.125 inches",
+    value: "81",
   },
   {
-    label: "1.5 inches",
-    value: "108",
+    label: "1.25 inches",
+    value: "90",
   },
 ];
 
@@ -73,7 +89,7 @@ const defaultFormValues: ExportOptionsForm = {
   pageSize: pageSizeOptions[0].value,
   bulletSpacing: bulletSpacingOptions[0].value,
   verticalMargins: verticalMarginsOptions[1].value,
-  horizontalMargins: horizontalMarginsOptions[1].value,
+  horizontalMargins: horizontalMarginsOptions[3].value,
 };
 
 const formStorageKey = "export-form";
