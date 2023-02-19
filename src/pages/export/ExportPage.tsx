@@ -7,7 +7,10 @@ import SelectField, {
 } from "../../common/components/fields/SelectField";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { PageSizeName, pageSizes } from "../../common/constants/page-sizes";
-import { extractString } from "../../common/functions/defensive";
+import {
+  extractString,
+  safelyParseJSON,
+} from "../../common/functions/defensive";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import DocumentPreview from "./DocumentPreview";
 
@@ -113,7 +116,7 @@ function getSavedFormData(): ExportOptionsForm {
   const serialized = localStorage.getItem(formStorageKey);
   if (!serialized) return defaultFormValues;
 
-  const parsed: unknown = JSON.parse(serialized);
+  const parsed: unknown = safelyParseJSON(serialized);
   return Object.assign({ ...defaultFormValues }, extractValidFormData(parsed));
 }
 

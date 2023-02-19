@@ -11,3 +11,12 @@ export function extractProperty(
 ): unknown | undefined {
   if (isObject(data) && key in data) return (data as any)[key];
 }
+
+export function safelyParseJSON(serialized: string): any {
+  try {
+    return JSON.parse(serialized);
+  } catch (e) {
+    console.error(e);
+    return undefined;
+  }
+}
