@@ -480,7 +480,7 @@ const ExperienceItem = React.forwardRef<
                 key={bullet.id}
                 className="flex cursor-pointer rounded hover:bg-yellow-100"
                 style={{
-                  paddingTop:
+                  marginTop:
                     0.4 *
                     pointsToPx(format.fontSizes.body) *
                     format.spacingMultiplier,
