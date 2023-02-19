@@ -43,7 +43,7 @@ interface DocumentFormat {
     header: number;
     body: number;
   };
-  bulletLineHeight: number;
+  spacingMultiplier: number;
 }
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({
@@ -84,7 +84,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     return [
       // Prevent widow header by grouping it with the first item.
       <div>
-        <SectionHeader pointsToPx={pointsToPx} text={header} />
+        <SectionHeader pointsToPx={pointsToPx} format={format} text={header} />
         {renderItem(includedExperiences[0], 0, 0 === lastIndex)}
       </div>,
       ...includedExperiences
@@ -316,13 +316,15 @@ const SkillsSection: React.FC<{
 }> = ({ skillGroups, format, pointsToPx }) => {
   return (
     <div>
-      <SectionHeader pointsToPx={pointsToPx} text="Skills" />
+      <SectionHeader pointsToPx={pointsToPx} format={format} text="Skills" />
       <div
-        className="grid grid-cols-4"
+        className="grid grid-cols-[auto_1fr]"
         style={{
           fontSize: pointsToPx(format.fontSizes.body),
-          lineHeight: format.bulletLineHeight,
-          gap: "0.4em",
+          lineHeight: Math.max(1.25, 1.4 * format.spacingMultiplier),
+          columnGap: "1em",
+          rowGap:
+            0.4 * pointsToPx(format.fontSizes.body) * format.spacingMultiplier,
         }}
       >
         {skillGroups
@@ -330,7 +332,7 @@ const SkillsSection: React.FC<{
           .map((skillGroup) => (
             <>
               <div className="font-bold">{skillGroup.groupName}</div>
-              <div className="col-span-3">
+              <div>
                 {skillGroup.skills
                   .filter((skill) => skill.included)
                   .map((skill) => skill.text)
@@ -387,10 +389,14 @@ const SectionHeader = React.forwardRef<
   {
     pointsToPx: (points: number) => number;
     text: string;
+    format: DocumentFormat;
   }
->(({ pointsToPx, text }, ref) => {
+>(({ pointsToPx, text, format }, ref) => {
   return (
-    <div ref={ref} style={{ paddingTop: pointsToPx(20) }}>
+    <div
+      ref={ref}
+      style={{ paddingTop: pointsToPx(20) * format.spacingMultiplier }}
+    >
       <div
         className={classNames(rectMarkerClass, "bg-black")}
         style={{ height: pointsToPx(0.6) }}
@@ -399,8 +405,8 @@ const SectionHeader = React.forwardRef<
         className="font-bold"
         style={{
           fontSize: pointsToPx(8),
-          marginTop: pointsToPx(4),
-          marginBottom: pointsToPx(8),
+          paddingTop: pointsToPx(4) * format.spacingMultiplier,
+          paddingBottom: pointsToPx(8) * format.spacingMultiplier,
           letterSpacing: pointsToPx(0.5),
         }}
       >
@@ -434,12 +440,17 @@ const ExperienceItem = React.forwardRef<
     const [openBulletModal, bulletModal] = useBulletModal();
 
     return (
-      <div ref={ref} style={{ paddingBottom: isLast ? 0 : pointsToPx(16) }}>
+      <div
+        ref={ref}
+        style={{
+          paddingBottom: isLast ? 0 : pointsToPx(16) * format.spacingMultiplier,
+        }}
+      >
         <div
           className="flex justify-between"
           style={{ fontSize: pointsToPx(format.fontSizes.header) }}
         >
-          <label className="font-bold" style={{ marginRight: pointsToPx(6) }}>
+          <label className="font-bold" style={{ paddingRight: pointsToPx(10) }}>
             {title}
           </label>
 
@@ -459,7 +470,7 @@ const ExperienceItem = React.forwardRef<
         <ul
           style={{
             fontSize: pointsToPx(format.fontSizes.body),
-            lineHeight: format.bulletLineHeight,
+            lineHeight: Math.max(1.25, 1.4 * format.spacingMultiplier),
           }}
         >
           {experience.bulletPoints
@@ -468,7 +479,12 @@ const ExperienceItem = React.forwardRef<
               <li
                 key={bullet.id}
                 className="flex cursor-pointer rounded hover:bg-yellow-100"
-                style={{ marginTop: "0.4em" }}
+                style={{
+                  paddingTop:
+                    0.4 *
+                    pointsToPx(format.fontSizes.body) *
+                    format.spacingMultiplier,
+                }}
                 onClick={() => {
                   openBulletModal(bullet)
                     .then((editedBullet) => {

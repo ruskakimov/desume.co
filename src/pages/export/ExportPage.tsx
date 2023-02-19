@@ -7,10 +7,14 @@ import SelectField, {
 } from "../../common/components/fields/SelectField";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { PageSizeName, pageSizes } from "../../common/constants/page-sizes";
+import {
+  extractString,
+  safelyParseJSON,
+} from "../../common/functions/defensive";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import DocumentPreview from "./DocumentPreview";
 
-const pageSizeOptions: { label: string; value: PageSizeName }[] = [
+const pageSizeOptions: SelectOption<PageSizeName>[] = [
   {
     label: "A4",
     value: "a4",
@@ -21,18 +25,30 @@ const pageSizeOptions: { label: string; value: PageSizeName }[] = [
   },
 ];
 
-const bulletSpacingOptions: SelectOption[] = [
+type SpacingMultiplier = "1" | "0.9" | "0.8" | "0.7";
+
+const spacingOptions: SelectOption<SpacingMultiplier>[] = [
+  {
+    label: "Relaxed",
+    value: "1",
+  },
   {
     label: "Comfortable",
-    value: "1.4",
+    value: "0.9",
   },
   {
     label: "Compact",
-    value: "1.25",
+    value: "0.8",
+  },
+  {
+    label: "Tight",
+    value: "0.7",
   },
 ];
 
-const verticalMarginsOptions: SelectOption[] = [
+type VerticalMarginPts = "36" | "54" | "72";
+
+const verticalMarginsOptions: SelectOption<VerticalMarginPts>[] = [
   {
     label: "0.5 inch",
     value: "36",
@@ -47,33 +63,51 @@ const verticalMarginsOptions: SelectOption[] = [
   },
 ];
 
-const horizontalMarginsOptions: SelectOption[] = [
+type HorizontalMarginPts = "36" | "45" | "54" | "63" | "72" | "81" | "90";
+
+const horizontalMarginsOptions: SelectOption<HorizontalMarginPts>[] = [
+  {
+    label: "0.5 inch",
+    value: "36",
+  },
+  {
+    label: "0.625 inch",
+    value: "45",
+  },
+  {
+    label: "0.75 inch",
+    value: "54",
+  },
+  {
+    label: "0.875 inch",
+    value: "63",
+  },
   {
     label: "1 inch",
     value: "72",
   },
   {
-    label: "1.25 inches",
-    value: "90",
+    label: "1.125 inches",
+    value: "81",
   },
   {
-    label: "1.5 inches",
-    value: "108",
+    label: "1.25 inches",
+    value: "90",
   },
 ];
 
 interface ExportOptionsForm {
   pageSize: PageSizeName;
-  bulletSpacing: string;
-  verticalMargins: string;
-  horizontalMargins: string;
+  spacing: SpacingMultiplier;
+  verticalMargins: VerticalMarginPts;
+  horizontalMargins: HorizontalMarginPts;
 }
 
 const defaultFormValues: ExportOptionsForm = {
-  pageSize: pageSizeOptions[0].value,
-  bulletSpacing: bulletSpacingOptions[0].value,
-  verticalMargins: verticalMarginsOptions[1].value,
-  horizontalMargins: horizontalMarginsOptions[1].value,
+  pageSize: "a4",
+  spacing: "1",
+  verticalMargins: "54",
+  horizontalMargins: "63",
 };
 
 const formStorageKey = "export-form";
@@ -82,14 +116,33 @@ function getSavedFormData(): ExportOptionsForm {
   const serialized = localStorage.getItem(formStorageKey);
   if (!serialized) return defaultFormValues;
 
-  const parsed: unknown = JSON.parse(serialized);
-  if (!isFormData(parsed)) return defaultFormValues;
-
-  return Object.assign({ ...defaultFormValues }, parsed);
+  const parsed: unknown = safelyParseJSON(serialized);
+  return Object.assign({ ...defaultFormValues }, extractValidFormData(parsed));
 }
 
-function isFormData(obj: unknown): obj is Partial<ExportOptionsForm> {
-  return typeof obj === "object" && obj !== null;
+function extractValidFormData(parsed: unknown): Partial<ExportOptionsForm> {
+  const keys = Object.keys(defaultFormValues) as (keyof ExportOptionsForm)[];
+
+  const optionsForKey: Record<keyof ExportOptionsForm, SelectOption<string>[]> =
+    {
+      pageSize: pageSizeOptions,
+      spacing: spacingOptions,
+      verticalMargins: verticalMarginsOptions,
+      horizontalMargins: horizontalMarginsOptions,
+    };
+
+  const extractedValid: Partial<ExportOptionsForm> = {};
+
+  keys.forEach((key) => {
+    const extracted = extractString(parsed, key);
+    const validValues = optionsForKey[key].map((option) => option.value);
+
+    if (extracted && validValues.includes(extracted)) {
+      extractedValid[key] = extracted as any;
+    }
+  });
+
+  return extractedValid;
 }
 
 const ExportPage: React.FC = () => {
@@ -100,7 +153,7 @@ const ExportPage: React.FC = () => {
   const pagesRef = useRef<HTMLDivElement[]>([]);
 
   const pageSize = watch("pageSize");
-  const bulletSpacing = parseFloat(watch("bulletSpacing"));
+  const spacing = parseFloat(watch("spacing"));
   const verticalMargins = parseFloat(watch("verticalMargins"));
   const horizontalMargins = parseFloat(watch("horizontalMargins"));
 
@@ -108,7 +161,7 @@ const ExportPage: React.FC = () => {
   useEffect(() => {
     const formData = getValues();
     localStorage.setItem(formStorageKey, JSON.stringify(formData));
-  }, [pageSize, bulletSpacing, verticalMargins, horizontalMargins]);
+  }, [pageSize, spacing, verticalMargins, horizontalMargins]);
 
   return (
     <div className="pb-8 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-x-5">
@@ -121,9 +174,9 @@ const ExportPage: React.FC = () => {
           />
 
           <SelectField
-            label="Bullet spacing"
-            options={bulletSpacingOptions}
-            {...register("bulletSpacing")}
+            label="Spacing"
+            options={spacingOptions}
+            {...register("spacing")}
           />
 
           <SelectField
@@ -168,7 +221,7 @@ const ExportPage: React.FC = () => {
               header: 12,
               body: 10,
             },
-            bulletLineHeight: bulletSpacing,
+            spacingMultiplier: spacing,
           }}
         />
       ) : (
