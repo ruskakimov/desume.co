@@ -118,20 +118,28 @@ function getSavedFormData(): ExportOptionsForm {
 }
 
 function extractValidFormData(parsed: unknown): Partial<ExportOptionsForm> {
-  function isValid<T extends string>(
-    value: string | undefined,
-    options: SelectOption<T>[]
-  ): value is T {
-    return !!options.find((option) => option.value === value);
-  }
+  const keys = Object.keys(defaultFormValues) as (keyof ExportOptionsForm)[];
 
-  const rawPageSize = extractString(parsed, "pageSize");
+  const optionsForKey: Record<keyof ExportOptionsForm, SelectOption<string>[]> =
+    {
+      pageSize: pageSizeOptions,
+      spacing: spacingOptions,
+      verticalMargins: verticalMarginsOptions,
+      horizontalMargins: horizontalMarginsOptions,
+    };
 
-  return {
-    pageSize: isValid<PageSizeName>(rawPageSize, pageSizeOptions)
-      ? rawPageSize
-      : undefined,
-  };
+  const extractedValid: Partial<ExportOptionsForm> = {};
+
+  keys.forEach((key) => {
+    const extracted = extractString(parsed, key);
+    const validValues = optionsForKey[key].map((option) => option.value);
+
+    if (extracted && validValues.includes(extracted)) {
+      extractedValid[key] = extracted as any;
+    }
+  });
+
+  return extractedValid;
 }
 
 const ExportPage: React.FC = () => {
