@@ -7,6 +7,7 @@ import SelectField, {
 } from "../../common/components/fields/SelectField";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import { PageSizeName, pageSizes } from "../../common/constants/page-sizes";
+import { extractString } from "../../common/functions/defensive";
 import { generatePdfFromHtml } from "../../pdf/generatePdfFromHtml";
 import DocumentPreview from "./DocumentPreview";
 
@@ -113,13 +114,24 @@ function getSavedFormData(): ExportOptionsForm {
   if (!serialized) return defaultFormValues;
 
   const parsed: unknown = JSON.parse(serialized);
-  if (!isFormData(parsed)) return defaultFormValues;
-
-  return Object.assign({ ...defaultFormValues }, parsed);
+  return Object.assign({ ...defaultFormValues }, extractValidFormData(parsed));
 }
 
-function isFormData(obj: unknown): obj is Partial<ExportOptionsForm> {
-  return typeof obj === "object" && obj !== null;
+function extractValidFormData(parsed: unknown): Partial<ExportOptionsForm> {
+  function isValid<T extends string>(
+    value: string | undefined,
+    options: SelectOption<T>[]
+  ): value is T {
+    return !!options.find((option) => option.value === value);
+  }
+
+  const rawPageSize = extractString(parsed, "pageSize");
+
+  return {
+    pageSize: isValid<PageSizeName>(rawPageSize, pageSizeOptions)
+      ? rawPageSize
+      : undefined,
+  };
 }
 
 const ExportPage: React.FC = () => {
