@@ -33,6 +33,7 @@ interface DialogOptions {
 
 export default function useEditFlow<T>(): {
   openEditDialog: (options: DialogOptions) => Promise<T | null>;
+  cancelEditFlow: () => void;
   buildDialogProps: DialogPropsBuilder<T>;
   confirmationPopups: React.ReactNode;
 } {
@@ -62,6 +63,10 @@ export default function useEditFlow<T>(): {
       new Promise((resolve, reject) =>
         openEditDialog(options, resolve, reject)
       ),
+    cancelEditFlow: () => {
+      rejectCallbackRef.current?.(userCancelReason);
+      setIsOpen(false);
+    },
     buildDialogProps: ({
       titleName,
       getData,
