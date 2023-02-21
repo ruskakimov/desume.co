@@ -103,7 +103,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       })}
       canSubmit={isDirty && !isEmpty}
       secondaryButton={
-        !isDirty && (
+        !isDirty && oldBullet ? (
           <SecondaryButton
             onClick={() => {
               cancelEditFlow();
@@ -111,7 +111,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
           >
             Rewrite mode
           </SecondaryButton>
-        )
+        ) : null
       }
     >
       <div className="grid grid-cols-6 gap-6">
