@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import FormModal from "../../../../common/components/FormModal";
 import SecondaryButton from "../../../../common/components/SecondaryButton";
+import { launchRewriteModeReason } from "../../../../common/constants/reject-reasons";
 import { generateId } from "../../../../common/functions/ids";
 import useEditFlow from "../../../../common/hooks/useEditFlow";
 import { BulletPoint } from "../../../../common/interfaces/resume";
@@ -55,7 +56,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
 
   const {
     openEditDialog,
-    cancelEditFlow,
+    closeEditDialog,
     buildDialogProps,
     confirmationPopups,
   } = useEditFlow<BulletPoint>();
@@ -105,9 +106,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       secondaryButton={
         !isDirty && oldBullet ? (
           <SecondaryButton
-            onClick={() => {
-              cancelEditFlow();
-            }}
+            onClick={() => closeEditDialog(launchRewriteModeReason)}
           >
             Rewrite mode
           </SecondaryButton>
