@@ -22,6 +22,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   return [
     () => new Promise((resolve, reject) => openModal(resolve, reject)),
+    // TODO: Use a custom version where we control the buttons
     <FormModal
       title="Rewrite: brainstorm"
       isOpen={isOpen}
@@ -31,6 +32,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         setIsOpen(false);
       }}
       onSubmit={() => {
+        // TODO: Get final selection
         // resolveCallbackRef.current?.(getData());
         setIsOpen(false);
       }}
