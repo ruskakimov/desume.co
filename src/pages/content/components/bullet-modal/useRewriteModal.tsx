@@ -1,30 +1,41 @@
+import { useRef, useState } from "react";
 import FormModal from "../../../../common/components/FormModal";
-import useEditFlow from "../../../../common/hooks/useEditFlow";
+import { userCancelReason } from "../../../../common/constants/reject-reasons";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 
 type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
 
-export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
-  const { openEditDialog, buildDialogProps, confirmationPopups } =
-    useEditFlow<BulletPoint>();
+type ResolveCallback = (bullet: BulletPoint) => void;
+type RejectCallback = (reason: string) => void;
 
-  const openModal: OpenRewriteModal = async (bullet: BulletPoint) => {
-    const result = await openEditDialog({ isCreateNew: false });
-    return result ?? bullet;
+export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const resolveCallbackRef = useRef<ResolveCallback | null>(null);
+  const rejectCallbackRef = useRef<RejectCallback | null>(null);
+
+  const openModal = (onResolve: ResolveCallback, onReject: RejectCallback) => {
+    resolveCallbackRef.current = onResolve;
+    rejectCallbackRef.current = onReject;
+    setIsOpen(true);
   };
 
   return [
-    openModal,
+    () => new Promise((resolve, reject) => openModal(resolve, reject)),
     <FormModal
-      {...buildDialogProps({
-        titleName: "accomplishment",
-        getIsDirty: () => false,
-        getIsValid: async () => false,
-        getData: () => ({ id: "", included: false, text: "" }),
-      })}
+      title="Rewrite: brainstorm"
+      isOpen={isOpen}
+      canSubmit={false}
+      onCancel={() => {
+        rejectCallbackRef.current?.(userCancelReason);
+        setIsOpen(false);
+      }}
+      onSubmit={() => {
+        // resolveCallbackRef.current?.(getData());
+        setIsOpen(false);
+      }}
     >
       <div></div>
-      {confirmationPopups}
     </FormModal>,
   ];
 }
