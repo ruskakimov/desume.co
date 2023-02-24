@@ -38,7 +38,7 @@ function convertFormDataToBullet(
   };
 }
 
-type OpenBulletModal = (
+export type OpenBulletModal = (
   bullet: BulletPoint | null
 ) => Promise<BulletPoint | null>;
 
