@@ -4,6 +4,7 @@ import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import FormModal from "../../../../common/components/FormModal";
 import { userCancelReason } from "../../../../common/constants/reject-reasons";
 import { BulletPoint } from "../../../../common/interfaces/resume";
+import { fixFormat } from "./format";
 import { bulletMaxLength } from "./useBulletModal";
 
 type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
@@ -23,7 +24,16 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setIsOpen(true);
   };
 
+  const [variants, setVariants] = useState<string[]>([]);
   const [input, setInput] = useState("");
+
+  const onSubmit = () => {
+    const formattedInput = fixFormat(input);
+    if (formattedInput.length === 0) return;
+
+    setVariants([...variants, formattedInput]);
+    setInput("");
+  };
 
   return [
     () => new Promise((resolve, reject) => openModal(resolve, reject)),
@@ -54,6 +64,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
           onKeyDown={(e) => {
             if (e.code === "Enter") {
               e.preventDefault();
+              onSubmit();
             }
           }}
           style={{ paddingRight: 52 }}
@@ -61,6 +72,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         <button
           className="absolute top-6 right-0 p-2 m-2 rounded bg-gray-100"
           type="button"
+          onClick={onSubmit}
         >
           <PaperAirplaneIcon className="h-5" />
         </button>
