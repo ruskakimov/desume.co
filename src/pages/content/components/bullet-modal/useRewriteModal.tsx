@@ -18,10 +18,16 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const resolveCallbackRef = useRef<ResolveCallback | null>(null);
   const rejectCallbackRef = useRef<RejectCallback | null>(null);
 
-  const openModal = (onResolve: ResolveCallback, onReject: RejectCallback) => {
+  const openModal = (
+    bullet: BulletPoint,
+    onResolve: ResolveCallback,
+    onReject: RejectCallback
+  ) => {
     resolveCallbackRef.current = onResolve;
     rejectCallbackRef.current = onReject;
     setIsOpen(true);
+    setInput("");
+    setVariants([bullet.text]);
   };
 
   const [variants, setVariants] = useState<string[]>([]);
@@ -36,7 +42,8 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   };
 
   return [
-    () => new Promise((resolve, reject) => openModal(resolve, reject)),
+    (bullet) =>
+      new Promise((resolve, reject) => openModal(bullet, resolve, reject)),
     // TODO: Use a custom version where we control the buttons
     <FormModal
       title="Rewrite: brainstorm"
@@ -52,7 +59,18 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         setIsOpen(false);
       }}
     >
-      <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
+      <div className="space-y-6">
+        <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
+          {variants.map((text, index) => (
+            <>
+              <div className="text-gray-400">{index + 1}.</div>
+              <div>{text}</div>
+            </>
+          ))}
+        </div>
+
+        <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
+      </div>
     </FormModal>,
   ];
 }
