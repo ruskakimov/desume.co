@@ -8,12 +8,6 @@ import { generateId } from "../../../../common/functions/ids";
 import useEditFlow from "../../../../common/hooks/useEditFlow";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
-import { ValidationItem } from "./ValidationItem";
-import {
-  validateActionVerb,
-  validateLength,
-  validateQuantitativeData,
-} from "./validators";
 
 const bulletMaxLength = 250;
 
@@ -39,7 +33,8 @@ function convertFormDataToBullet(
 }
 
 export type OpenBulletModal = (
-  bullet: BulletPoint | null
+  bullet: BulletPoint | null,
+  hasDelete?: boolean
 ) => Promise<BulletPoint | null>;
 
 export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
@@ -64,7 +59,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
   const formRef = useRef<HTMLFormElement | null>(null);
   const textareaRef = useRef<HTMLElement | null>(null);
 
-  const openModal = (bullet: BulletPoint | null) => {
+  const openModal: OpenBulletModal = (bullet, hasDelete) => {
     if (bullet) {
       // Edit bullet
       const prefilledForm = convertBulletToFormData(bullet);
@@ -74,7 +69,7 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       reset({});
     }
     setOldBullet(bullet);
-    return openEditDialog({ isCreateNew: bullet === null });
+    return openEditDialog({ isCreateNew: bullet === null, hasDelete });
   };
 
   const textareaProps = register("text", {

@@ -486,7 +486,7 @@ const ExperienceItem = React.forwardRef<
                     format.spacingMultiplier,
                 }}
                 onClick={() => {
-                  openBulletModal(bullet)
+                  openBulletModal(bullet, false)
                     .then((editedBullet) => {
                       if (editedBullet) {
                         onChange({

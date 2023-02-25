@@ -29,6 +29,7 @@ type DialogPropsBuilder<T> = (
 
 interface DialogOptions {
   isCreateNew: boolean;
+  hasDelete?: boolean;
 }
 
 export default function useEditFlow<T>(): {
@@ -57,6 +58,8 @@ export default function useEditFlow<T>(): {
     setIsOpen(true);
     setOptions(options);
   };
+
+  const hasDelete = options.hasDelete ?? !options.isCreateNew;
 
   return {
     openEditDialog: (options) =>
@@ -89,7 +92,7 @@ export default function useEditFlow<T>(): {
           setIsOpen(false);
         }
       },
-      onDelete: !options.isCreateNew
+      onDelete: hasDelete
         ? async () => {
             const confirmed = await openConfirmationDialog({
               title: `Delete ${titleName}`,

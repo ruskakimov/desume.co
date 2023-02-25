@@ -10,8 +10,8 @@ export default function useBulletFlow(): [OpenBulletModal, React.ReactNode] {
   const [openRewriteModal, rewriteModal] = useRewriteModal();
 
   return [
-    async (bullet) => {
-      return openBulletModal(bullet).catch((reason) => {
+    async (bullet, hasDelete) => {
+      return openBulletModal(bullet, hasDelete).catch((reason) => {
         if (bullet && reason === launchRewriteModeReason) {
           return openRewriteModal(bullet);
         } else {
