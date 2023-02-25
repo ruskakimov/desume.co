@@ -52,19 +52,31 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         setIsOpen(false);
       }}
     >
+      <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
+    </FormModal>,
+  ];
+}
+
+const InputBox: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+}> = (props) => {
+  return (
+    <div>
       <div className="relative">
         <TextAreaField
           label="Write a variation"
           rows={3}
           maxLength={bulletMaxLength}
-          value={input}
+          value={props.value}
           onChange={(e) => {
-            setInput(e.target.value);
+            props.onChange(e.target.value);
           }}
           onKeyDown={(e) => {
             if (e.code === "Enter") {
               e.preventDefault();
-              onSubmit();
+              props.onSubmit();
             }
           }}
           style={{ paddingRight: 52 }}
@@ -72,19 +84,18 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         <button
           className="absolute top-6 right-0 p-2 m-2 rounded bg-gray-100"
           type="button"
-          onClick={onSubmit}
+          onClick={props.onSubmit}
         >
           <PaperAirplaneIcon className="h-5" />
         </button>
       </div>
 
       <div className="mt-2 flex justify-end text-sm text-gray-500">
-        {/* <span>Press Enter to submit</span> */}
         <span className="text-gray-900">
-          {input.length}
+          {props.value.length}
           <span className="text-gray-500">/{bulletMaxLength}</span>
         </span>
       </div>
-    </FormModal>,
-  ];
-}
+    </div>
+  );
+};
