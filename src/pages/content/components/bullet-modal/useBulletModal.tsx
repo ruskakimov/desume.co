@@ -8,6 +8,12 @@ import { generateId } from "../../../../common/functions/ids";
 import useEditFlow from "../../../../common/hooks/useEditFlow";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
+import { ValidationItem } from "./ValidationItem";
+import {
+  validateActionVerb,
+  validateLength,
+  validateQuantitativeData,
+} from "./validators";
 
 const bulletMaxLength = 250;
 
@@ -112,11 +118,11 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       }
     >
       <div className="grid grid-cols-6 gap-6">
-        {/* <div className="col-span-full grid grid-cols-2 gap-3">
+        <div className="col-span-full grid grid-cols-2 gap-3">
           <ValidationItem {...validateActionVerb(newText)} />
           <ValidationItem {...validateLength(newText)} />
           <ValidationItem {...validateQuantitativeData(newText)} />
-        </div> */}
+        </div>
 
         <div className="col-span-full">
           <TextAreaField
