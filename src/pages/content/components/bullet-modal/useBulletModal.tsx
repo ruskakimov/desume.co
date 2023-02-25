@@ -117,11 +117,11 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
       }
     >
       <div className="grid grid-cols-6 gap-6">
-        <div className="col-span-full grid grid-cols-2 gap-3">
+        {/* <div className="col-span-full grid grid-cols-2 gap-3">
           <ValidationItem {...validateActionVerb(newText)} />
           <ValidationItem {...validateLength(newText)} />
           <ValidationItem {...validateQuantitativeData(newText)} />
-        </div>
+        </div> */}
 
         <div className="col-span-full">
           <TextAreaField
