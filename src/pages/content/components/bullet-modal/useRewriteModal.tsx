@@ -66,10 +66,10 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     >
       <div className="space-y-6">
         <div className="grid grid-cols-[auto_1fr] gap-2">
-          <div className="h-8 w-8 flex justify-center items-center text-xl rounded-full bg-neutral-100 mt-4">
+          <div className="h-8 w-8 flex justify-center items-center text-xl rounded-full bg-neutral-100 mt-2.5">
             🤓
           </div>
-          <p className="text-sm p-4 bg-neutral-50 rounded text-gray-600">
+          <p className="text-sm p-4 bg-neutral-50 rounded-md text-gray-700">
             This is a good accomplishment, but you could make it even stronger
             by including metrics such as the percentage increase in user
             engagement, customer satisfaction, or customer retention that
