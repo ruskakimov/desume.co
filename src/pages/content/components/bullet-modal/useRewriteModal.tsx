@@ -7,6 +7,7 @@ import { userCancelReason } from "../../../../common/constants/reject-reasons";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
 import { bulletMaxLength } from "./useBulletModal";
+import eggSvg from "../../../../assets/images/egg.svg";
 
 type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
 
@@ -61,7 +62,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       <div className="space-y-6">
         <div className="grid grid-cols-[auto_1fr] gap-2">
           <div className="h-8 w-8 flex justify-center items-center text-xl rounded-full bg-black mt-4">
-            <CpuChipIcon className="h-5 w-5 text-white" />
+            <img className="h-6 text-white" src={eggSvg} />
           </div>
           <p className="text-sm p-4 bg-neutral-100 rounded text-gray-600">
             This is a good accomplishment, but you could make it even stronger
