@@ -110,8 +110,8 @@ export default function useBulletModal(): [OpenBulletModal, React.ReactNode] {
             onClick={() => closeEditDialog(launchRewriteModeReason)}
           >
             Rewrite
-            <span className="px-2 ml-2 h-full flex items-center text-xs font-bold bg-teal-500 text-white rounded-full">
-              GPT
+            <span className="px-2 ml-2 h-full flex items-center text-xs font-bold bg-gray-900 tracking-wide text-white rounded-full">
+              AI
             </span>
           </SecondaryButton>
         ) : null

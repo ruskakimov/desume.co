@@ -1,4 +1,4 @@
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { CpuChipIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import Modal from "../../../../common/components/Modal";
@@ -59,6 +59,21 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       }
     >
       <div className="space-y-6">
+        <div className="grid grid-cols-[auto_1fr] gap-2">
+          <div className="h-8 w-8 flex justify-center items-center text-xl rounded-full bg-black mt-4">
+            <CpuChipIcon className="h-5 w-5 text-white" />
+          </div>
+          <p className="text-sm p-4 bg-neutral-100 rounded text-gray-600">
+            This is a good accomplishment, but you could make it even stronger
+            by including metrics such as the percentage increase in user
+            engagement, customer satisfaction, or customer retention that
+            resulted from the profile editor. You could also add metrics about
+            the time saved or the cost savings associated with the profile
+            editor. Additionally, you could include details about the scale of
+            the user base (e.g. international, national, or regional).
+          </p>
+        </div>
+
         <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
           {variants.map((text, index) => (
             <>
