@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import Modal from "../../../../common/components/Modal";
 import PrimaryButton from "../../../../common/components/PrimaryButton";
+import SecondaryButton from "../../../../common/components/SecondaryButton";
 import { userCancelReason } from "../../../../common/constants/reject-reasons";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
@@ -82,6 +83,8 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
             </>
           ))}
         </div>
+
+        <SecondaryButton>Generate variations</SecondaryButton>
 
         <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
       </div>
