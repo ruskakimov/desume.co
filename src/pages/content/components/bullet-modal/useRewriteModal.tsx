@@ -1,5 +1,5 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import Modal from "../../../../common/components/Modal";
 import PrimaryButton from "../../../../common/components/PrimaryButton";
@@ -34,6 +34,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const [variants, setVariants] = useState<string[]>([]);
   const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLDivElement | null>(null);
 
   const onSubmit = () => {
     const formattedInput = fixFormat(input);
@@ -42,6 +43,10 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setVariants([...variants, formattedInput]);
     setInput("");
   };
+
+  useLayoutEffect(() => {
+    inputRef.current?.scrollIntoView();
+  }, [variants]);
 
   return [
     (bullet) =>
@@ -86,7 +91,9 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
         <SecondaryButton>Generate variations</SecondaryButton>
 
-        <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
+        <div ref={inputRef}>
+          <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
+        </div>
       </div>
     </Modal>,
   ];
