@@ -1,7 +1,8 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
-import FormModal from "../../../../common/components/FormModal";
+import Modal from "../../../../common/components/Modal";
+import PrimaryButton from "../../../../common/components/PrimaryButton";
 import { userCancelReason } from "../../../../common/constants/reject-reasons";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
@@ -44,20 +45,18 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   return [
     (bullet) =>
       new Promise((resolve, reject) => openModal(bullet, resolve, reject)),
-    // TODO: Use a custom version where we control the buttons
-    <FormModal
+    <Modal
       title="Rewrite: brainstorm"
       isOpen={isOpen}
-      canSubmit={false}
-      onCancel={() => {
+      onClose={() => {
         rejectCallbackRef.current?.(userCancelReason);
         setIsOpen(false);
       }}
-      onSubmit={() => {
-        // TODO: Get final selection
-        // resolveCallbackRef.current?.(getData());
-        setIsOpen(false);
-      }}
+      footerButtons={
+        <>
+          <PrimaryButton>Next</PrimaryButton>
+        </>
+      }
     >
       <div className="space-y-6">
         <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
@@ -71,7 +70,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
         <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
       </div>
-    </FormModal>,
+    </Modal>,
   ];
 }
 
