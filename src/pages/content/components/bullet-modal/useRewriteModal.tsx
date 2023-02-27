@@ -66,8 +66,8 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     >
       <div className="space-y-6">
         <div className="grid grid-cols-[auto_1fr] gap-2">
-          <div className="h-8 w-8 flex justify-center items-center text-3xl mt-2.5">
-            🤓
+          <div className="h-8 w-8 flex justify-center items-center text-sm text-white font-bold tracking-wide bg-sky-500 rounded-full mt-2.5">
+            AI
           </div>
           <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900">
             This is a good accomplishment, but you could make it even stronger
