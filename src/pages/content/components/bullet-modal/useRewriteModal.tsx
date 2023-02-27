@@ -66,17 +66,16 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     >
       <div className="space-y-6">
         <div className="grid grid-cols-[auto_1fr] gap-2">
-          <div className="h-8 w-8 flex justify-center items-center text-xl rounded-full bg-neutral-100 mt-2.5">
+          <div className="h-8 w-8 flex justify-center items-center text-3xl mt-2.5">
             🤓
           </div>
-          <p className="text-sm p-4 bg-neutral-50 rounded-md text-gray-700">
+          <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900">
             This is a good accomplishment, but you could make it even stronger
             by including metrics such as the percentage increase in user
             engagement, customer satisfaction, or customer retention that
             resulted from the profile editor. You could also add metrics about
             the time saved or the cost savings associated with the profile
-            editor. Additionally, you could include details about the scale of
-            the user base (e.g. international, national, or regional).
+            editor.
           </p>
         </div>
 
