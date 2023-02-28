@@ -82,7 +82,9 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       >
         Back to brainstorming
       </SecondaryButton>
-      <PrimaryButton onClick={() => {}}>Save selected</PrimaryButton>
+      <PrimaryButton disabled={selectedVariant === ""} onClick={() => {}}>
+        Save selected
+      </PrimaryButton>
     </>
   );
 
