@@ -7,6 +7,7 @@ import SecondaryButton from "../../../../common/components/SecondaryButton";
 import { userCancelReason } from "../../../../common/constants/reject-reasons";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
+import RadioList from "./RadioList";
 import { bulletMaxLength } from "./useBulletModal";
 
 type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
@@ -18,7 +19,7 @@ type RewriteStep = "generate-variants" | "select-variant";
 
 const rewriteStepTitles: Record<RewriteStep, string> = {
   "generate-variants": "brainstorm",
-  "select-variant": "pick a winner",
+  "select-variant": "select a winner",
 };
 
 export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
@@ -35,6 +36,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     resolveCallbackRef.current = onResolve;
     rejectCallbackRef.current = onReject;
     setIsOpen(true);
+    setStep("generate-variants");
     setInput("");
     setVariants([bullet.text]);
   };
@@ -44,6 +46,8 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const [variants, setVariants] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLDivElement | null>(null);
+
+  const [selectedVariant, setSelectedVariant] = useState("");
 
   useLayoutEffect(() => {
     inputRef.current?.scrollIntoView();
@@ -80,6 +84,54 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     </>
   );
 
+  const generateStepUi = (
+    <div className="space-y-6">
+      <AiTextBubble>
+        This is a good accomplishment, but you could make it even stronger by
+        including metrics such as the percentage increase in user engagement,
+        customer satisfaction, or customer retention that resulted from the
+        profile editor. You could also add metrics about the time saved or the
+        cost savings associated with the profile editor.
+      </AiTextBubble>
+
+      <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
+        {variants.map((text, index) => (
+          <>
+            <div className="text-gray-400">{index + 1}.</div>
+            <div>{text}</div>
+          </>
+        ))}
+      </div>
+
+      <SecondaryButton>Generate variations</SecondaryButton>
+
+      <div ref={inputRef}>
+        <InputBox
+          value={input}
+          onChange={setInput}
+          onSubmit={onVariantSubmit}
+        />
+      </div>
+    </div>
+  );
+
+  const selectStepUi = (
+    <div className="space-y-6">
+      {/* <AiTextBubble>Hold on, I am ranking your variants...</AiTextBubble> */}
+      <AiTextBubble>
+        Here is how I would rank them.
+        <br />
+        Now, it's your turn to select the one you want to use.
+      </AiTextBubble>
+
+      <RadioList
+        value={selectedVariant}
+        items={variants.map((text) => ({ value: text, text }))}
+        onChange={setSelectedVariant}
+      />
+    </div>
+  );
+
   return [
     (bullet) =>
       new Promise((resolve, reject) => openModal(bullet, resolve, reject)),
@@ -94,39 +146,12 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         step === "generate-variants" ? generateStepButtons : selectStepButtons
       }
     >
-      <div className="space-y-6">
-        <AiTextBubble>
-          This is a good accomplishment, but you could make it even stronger by
-          including metrics such as the percentage increase in user engagement,
-          customer satisfaction, or customer retention that resulted from the
-          profile editor. You could also add metrics about the time saved or the
-          cost savings associated with the profile editor.
-        </AiTextBubble>
-
-        <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
-          {variants.map((text, index) => (
-            <>
-              <div className="text-gray-400">{index + 1}.</div>
-              <div>{text}</div>
-            </>
-          ))}
-        </div>
-
-        <SecondaryButton>Generate variations</SecondaryButton>
-
-        <div ref={inputRef}>
-          <InputBox
-            value={input}
-            onChange={setInput}
-            onSubmit={onVariantSubmit}
-          />
-        </div>
-      </div>
+      {step === "generate-variants" ? generateStepUi : selectStepUi}
     </Modal>,
   ];
 }
 
-const AiTextBubble: React.FC<{ children: string }> = (props) => {
+const AiTextBubble: React.FC<{ children: React.ReactNode }> = (props) => {
   return (
     <div className="grid grid-cols-[auto_1fr] gap-2">
       <div className="h-8 w-8 flex justify-center items-center text-sm text-white font-bold tracking-wide bg-sky-500 rounded-full mt-2.5">
