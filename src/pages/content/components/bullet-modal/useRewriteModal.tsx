@@ -1,4 +1,5 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import classNames from "classnames";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import Modal from "../../../../common/components/Modal";
@@ -39,6 +40,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setStep("generate-variants");
     setInput("");
     setVariants([bullet.text]);
+    setSelectedVariant("");
   };
 
   const [step, setStep] = useState<RewriteStep>("generate-variants");
@@ -122,7 +124,17 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
       <div className="space-y-4">
         {variants.map((text, index) => (
-          <div className="p-4 border rounded-md flex gap-3 items-center">
+          <div
+            className={classNames(
+              "p-4 border rounded-md flex gap-3 items-center cursor-pointer",
+              {
+                "ring-2 ring-gray-600": text === selectedVariant,
+                "opacity-50":
+                  text !== selectedVariant && selectedVariant !== "",
+              }
+            )}
+            onClick={() => setSelectedVariant(text)}
+          >
             <div className="h-7 w-7 rounded-full bg-sky-500 flex-shrink-0 flex justify-center items-center">
               <span className="text-white font-bold">{index + 1}</span>
             </div>
