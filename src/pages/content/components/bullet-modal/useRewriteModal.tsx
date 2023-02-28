@@ -32,11 +32,19 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setVariants([bullet.text]);
   };
 
+  const [step, setStep] = useState<"brainstorm" | "pick a winner">(
+    "brainstorm"
+  );
+
   const [variants, setVariants] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLDivElement | null>(null);
 
-  const onSubmit = () => {
+  useLayoutEffect(() => {
+    inputRef.current?.scrollIntoView();
+  }, [variants]);
+
+  const onVariantSubmit = () => {
     const formattedInput = fixFormat(input);
     if (formattedInput.length === 0) return;
 
@@ -44,15 +52,11 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setInput("");
   };
 
-  useLayoutEffect(() => {
-    inputRef.current?.scrollIntoView();
-  }, [variants]);
-
   return [
     (bullet) =>
       new Promise((resolve, reject) => openModal(bullet, resolve, reject)),
     <Modal
-      title="Rewrite: brainstorm"
+      title={`Rewrite: ${step}`}
       isOpen={isOpen}
       onClose={() => {
         rejectCallbackRef.current?.(userCancelReason);
@@ -60,7 +64,12 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       }}
       footerButtons={
         <>
-          <PrimaryButton>Next</PrimaryButton>
+          <PrimaryButton
+            disabled={variants.length < 2}
+            onClick={() => setStep("pick a winner")}
+          >
+            Next
+          </PrimaryButton>
         </>
       }
     >
@@ -85,7 +94,11 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         <SecondaryButton>Generate variations</SecondaryButton>
 
         <div ref={inputRef}>
-          <InputBox value={input} onChange={setInput} onSubmit={onSubmit} />
+          <InputBox
+            value={input}
+            onChange={setInput}
+            onSubmit={onVariantSubmit}
+          />
         </div>
       </div>
     </Modal>,
