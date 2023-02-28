@@ -65,19 +65,13 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       }
     >
       <div className="space-y-6">
-        <div className="grid grid-cols-[auto_1fr] gap-2">
-          <div className="h-8 w-8 flex justify-center items-center text-sm text-white font-bold tracking-wide bg-sky-500 rounded-full mt-2.5">
-            AI
-          </div>
-          <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900">
-            This is a good accomplishment, but you could make it even stronger
-            by including metrics such as the percentage increase in user
-            engagement, customer satisfaction, or customer retention that
-            resulted from the profile editor. You could also add metrics about
-            the time saved or the cost savings associated with the profile
-            editor.
-          </p>
-        </div>
+        <AiTextBubble>
+          This is a good accomplishment, but you could make it even stronger by
+          including metrics such as the percentage increase in user engagement,
+          customer satisfaction, or customer retention that resulted from the
+          profile editor. You could also add metrics about the time saved or the
+          cost savings associated with the profile editor.
+        </AiTextBubble>
 
         <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
           {variants.map((text, index) => (
@@ -97,6 +91,19 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     </Modal>,
   ];
 }
+
+const AiTextBubble: React.FC<{ children: string }> = (props) => {
+  return (
+    <div className="grid grid-cols-[auto_1fr] gap-2">
+      <div className="h-8 w-8 flex justify-center items-center text-sm text-white font-bold tracking-wide bg-sky-500 rounded-full mt-2.5">
+        AI
+      </div>
+      <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900">
+        {props.children}
+      </p>
+    </div>
+  );
+};
 
 const InputBox: React.FC<{
   value: string;
