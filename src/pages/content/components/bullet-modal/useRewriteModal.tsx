@@ -118,17 +118,18 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const selectStepUi = (
     <div className="space-y-6">
       {/* <AiTextBubble>Hold on, I am ranking your variants...</AiTextBubble> */}
-      <AiTextBubble>
-        Here is how I would rank them.
-        <br />
-        Now, it's your turn to select the one you want to use.
-      </AiTextBubble>
+      <AiTextBubble>Here is how I would rank them.</AiTextBubble>
 
-      <RadioList
-        value={selectedVariant}
-        items={variants.map((text) => ({ value: text, text }))}
-        onChange={setSelectedVariant}
-      />
+      <div className="space-y-4">
+        {variants.map((text, index) => (
+          <div className="p-4 border rounded-md flex gap-3 items-center">
+            <div className="h-7 w-7 rounded-full bg-sky-500 flex-shrink-0 flex justify-center items-center">
+              <span className="text-white font-bold">{index + 1}</span>
+            </div>
+            <span className="text-sm">{text}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 
