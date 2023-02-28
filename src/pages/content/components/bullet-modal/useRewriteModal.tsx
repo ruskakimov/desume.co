@@ -1,5 +1,5 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import Modal from "../../../../common/components/Modal";
 import PrimaryButton from "../../../../common/components/PrimaryButton";
@@ -13,6 +13,13 @@ type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
 
 type ResolveCallback = (bullet: BulletPoint) => void;
 type RejectCallback = (reason: string) => void;
+
+type RewriteStep = "generate-variants" | "select-variant";
+
+const rewriteStepTitles: Record<RewriteStep, string> = {
+  "generate-variants": "brainstorm",
+  "select-variant": "pick a winner",
+};
 
 export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,9 +39,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setVariants([bullet.text]);
   };
 
-  const [step, setStep] = useState<"brainstorm" | "pick a winner">(
-    "brainstorm"
-  );
+  const [step, setStep] = useState<RewriteStep>("generate-variants");
 
   const [variants, setVariants] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -52,22 +57,22 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setInput("");
   };
 
-  const brainstormFooterButtons = (
+  const generateStepButtons = (
     <>
       <PrimaryButton
         disabled={variants.length < 2}
-        onClick={() => setStep("pick a winner")}
+        onClick={() => setStep("select-variant")}
       >
         Next
       </PrimaryButton>
     </>
   );
 
-  const pickWinnerFooterButtons = (
+  const selectStepButtons = (
     <>
       <SecondaryButton
         className="mr-auto"
-        onClick={() => setStep("brainstorm")}
+        onClick={() => setStep("generate-variants")}
       >
         Back to brainstorming
       </SecondaryButton>
@@ -79,16 +84,14 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     (bullet) =>
       new Promise((resolve, reject) => openModal(bullet, resolve, reject)),
     <Modal
-      title={`Rewrite: ${step}`}
+      title={`Rewrite: ${rewriteStepTitles[step]}`}
       isOpen={isOpen}
       onClose={() => {
         rejectCallbackRef.current?.(userCancelReason);
         setIsOpen(false);
       }}
       footerButtons={
-        step === "brainstorm"
-          ? brainstormFooterButtons
-          : pickWinnerFooterButtons
+        step === "generate-variants" ? generateStepButtons : selectStepButtons
       }
     >
       <div className="space-y-6">
