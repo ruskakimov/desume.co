@@ -52,6 +52,29 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setInput("");
   };
 
+  const brainstormFooterButtons = (
+    <>
+      <PrimaryButton
+        disabled={variants.length < 2}
+        onClick={() => setStep("pick a winner")}
+      >
+        Next
+      </PrimaryButton>
+    </>
+  );
+
+  const pickWinnerFooterButtons = (
+    <>
+      <SecondaryButton
+        className="mr-auto"
+        onClick={() => setStep("brainstorm")}
+      >
+        Back to brainstorming
+      </SecondaryButton>
+      <PrimaryButton onClick={() => {}}>Save selected</PrimaryButton>
+    </>
+  );
+
   return [
     (bullet) =>
       new Promise((resolve, reject) => openModal(bullet, resolve, reject)),
@@ -63,14 +86,9 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         setIsOpen(false);
       }}
       footerButtons={
-        <>
-          <PrimaryButton
-            disabled={variants.length < 2}
-            onClick={() => setStep("pick a winner")}
-          >
-            Next
-          </PrimaryButton>
-        </>
+        step === "brainstorm"
+          ? brainstormFooterButtons
+          : pickWinnerFooterButtons
       }
     >
       <div className="space-y-6">
