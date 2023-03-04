@@ -8,7 +8,6 @@ import SecondaryButton from "../../../../common/components/SecondaryButton";
 import { userCancelReason } from "../../../../common/constants/reject-reasons";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
-import RadioList from "./RadioList";
 import { bulletMaxLength } from "./useBulletModal";
 
 type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
