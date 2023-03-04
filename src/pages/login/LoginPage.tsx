@@ -5,7 +5,7 @@ import SignupForm from "./SignupForm";
 import logo from "../../assets/images/logo.svg";
 import googleLogo from "../../assets/images/google-logo.svg";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { firebaseAuth } from "../../App";
+import { firebaseAuth } from "../../api/firebase-setup";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC<{ isSignup?: boolean }> = ({ isSignup = false }) => {

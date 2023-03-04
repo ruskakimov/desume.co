@@ -2,7 +2,7 @@ import { User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { firestore } from "../App";
+import { firestore } from "./firebase-setup";
 import { extractProperty, extractString } from "../common/functions/defensive";
 import { sortExperiences } from "../common/functions/experiences";
 import {
