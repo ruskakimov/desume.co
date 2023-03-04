@@ -1,6 +1,7 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { suggestImprovements } from "../../../../api/bullet-functions";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import Modal from "../../../../common/components/Modal";
 import PrimaryButton from "../../../../common/components/PrimaryButton";
@@ -40,9 +41,16 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setInput("");
     setVariants([bullet.text]);
     setSelectedVariant("");
+    setSuggestion("Hold on, I am reviewing your bullet point...");
+
+    suggestImprovements({ bulletPoint: bullet.text }).then((res) =>
+      setSuggestion(res.data.suggestion)
+    );
   };
 
   const [step, setStep] = useState<RewriteStep>("generate-variants");
+
+  const [suggestion, setSuggestion] = useState("");
 
   const [variants, setVariants] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -89,13 +97,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const generateStepUi = (
     <div className="space-y-6">
-      <AiTextBubble>
-        This is a good accomplishment, but you could make it even stronger by
-        including metrics such as the percentage increase in user engagement,
-        customer satisfaction, or customer retention that resulted from the
-        profile editor. You could also add metrics about the time saved or the
-        cost savings associated with the profile editor.
-      </AiTextBubble>
+      <AiTextBubble>{suggestion}</AiTextBubble>
 
       <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
         {variants.map((text, index) => (

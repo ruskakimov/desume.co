@@ -1,6 +1,14 @@
-import { getFunctions, httpsCallable } from "firebase/functions";
+import {
+  connectFunctionsEmulator,
+  getFunctions,
+  httpsCallable,
+} from "firebase/functions";
+import { firebaseApp } from "./firebase-setup";
 
-const functions = getFunctions();
+const functions = getFunctions(firebaseApp);
+
+// TODO: Remove before deploying or use a condition
+connectFunctionsEmulator(functions, "localhost", 5001);
 
 interface SuggestImprovementsRequestData {
   bulletPoint: string;
