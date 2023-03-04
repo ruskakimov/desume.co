@@ -138,7 +138,15 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
             )}
             onClick={() => setSelectedVariant(text)}
           >
-            <div className="h-7 w-7 rounded-full bg-sky-500 flex-shrink-0 flex justify-center items-center">
+            <div
+              className={classNames(
+                "h-7 w-7 rounded-full flex-shrink-0 flex justify-center items-center",
+                {
+                  "bg-neutral-300": index > 0,
+                  "bg-amber-400": index === 0,
+                }
+              )}
+            >
               <span className="text-white font-bold">{index + 1}</span>
             </div>
             <span className="text-sm">{text}</span>
