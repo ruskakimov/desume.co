@@ -10,7 +10,7 @@ import logo from "./assets/images/logo.svg";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./App";
 import { NavLink, Outlet, useOutletContext } from "react-router-dom";
-import useResume from "./common/hooks/useResume";
+import useResume from "./api/useResume";
 
 const navigation = [
   { name: "Edit", to: "/edit" },

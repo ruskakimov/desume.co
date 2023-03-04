@@ -2,10 +2,14 @@ import { User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { firestore } from "../../App";
-import { extractProperty, extractString } from "../functions/defensive";
-import { sortExperiences } from "../functions/experiences";
-import { PersonalDetails, Resume, ResumeSectionId } from "../interfaces/resume";
+import { firestore } from "../App";
+import { extractProperty, extractString } from "../common/functions/defensive";
+import { sortExperiences } from "../common/functions/experiences";
+import {
+  PersonalDetails,
+  Resume,
+  ResumeSectionId,
+} from "../common/interfaces/resume";
 
 function getResumeDocRef(uid: string) {
   return doc(firestore, "resumes", uid);
