@@ -1,6 +1,7 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { toast } from "react-hot-toast";
 import {
   generateVariations,
   suggestImprovements,
@@ -46,9 +47,12 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setSelectedVariant("");
     setSuggestion("Hold on, I am reviewing your bullet point...");
 
-    suggestImprovements({ bulletPoint: bullet.text }).then((res) =>
-      setSuggestion(res.data.suggestion)
-    );
+    suggestImprovements({ bulletPoint: bullet.text })
+      .then((res) => setSuggestion(res.data.suggestion))
+      .catch((e) => {
+        console.error(e);
+        setSuggestion("Oops, something went wrong.");
+      });
   };
 
   const [step, setStep] = useState<RewriteStep>("generate-variants");
@@ -76,12 +80,15 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const onGenerateVariations = () => {
     if (variants.length >= 10) return;
 
-    generateVariations({ bulletPoint: variants[0], variationCount: 1 }).then(
-      (res) => {
+    generateVariations({ bulletPoint: variants[0], variationCount: 1 })
+      .then((res) => {
         const { variations } = res.data;
         setVariants([...variants, ...variations]);
-      }
-    );
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error("Something went wrong with generation.");
+      });
   };
 
   const generateStepButtons = (
