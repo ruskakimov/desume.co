@@ -220,7 +220,7 @@ const SelectionStep: React.FC<{
         text={
           isLoading
             ? "Hold on, I am scoring your submissions..."
-            : "Done! Here is how I would score your submissions. Now, you need to pick the one you want to use in your resume."
+            : "Done! Here is how I would score your submissions. Now, you need to select the one you want to use in your resume."
         }
       />
 
