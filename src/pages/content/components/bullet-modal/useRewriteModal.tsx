@@ -127,7 +127,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const generateStepUi = (
     <div className="space-y-6">
-      <AiTextBubble>{suggestion}</AiTextBubble>
+      <AiTextBubble text={suggestion} />
 
       <div className="grid grid-cols-[auto_1fr] gap-3 text-sm leading-normal">
         {variants.map((text) => (
@@ -139,11 +139,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       </div>
 
       {variants.length >= 10 ? (
-        <AiTextBubble>
-          Great job! You have reached the maximum number of submissions.
-          <br />
-          Let's proceed to the next step.
-        </AiTextBubble>
+        <AiTextBubble text="Great job! You have reached the maximum number of submissions. Let's proceed to the next step." />
       ) : (
         <div>
           <div ref={inputRef}>
@@ -221,7 +217,7 @@ const SelectionStep: React.FC<{
   return (
     <div className="space-y-6">
       <AiTextBubble
-        children={
+        text={
           isLoading
             ? "Hold on, I am scoring your submissions..."
             : "Done! Here is how I would score your submissions. Now, you need to pick the one you want to use in your resume."
@@ -263,14 +259,28 @@ const SelectionStep: React.FC<{
   );
 };
 
-const AiTextBubble: React.FC<{ children: React.ReactNode }> = (props) => {
+const AiTextBubble: React.FC<{ text: string }> = (props) => {
+  const [displayed, setDisplayed] = useState("");
+
+  useEffect(() => {
+    setDisplayed("");
+
+    const intervalId = window.setInterval(() => {
+      setDisplayed((displayed) => props.text.slice(0, displayed.length + 1));
+    }, 20);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [props.text]);
+
   return (
     <div className="grid grid-cols-[auto_1fr] gap-2">
       <div className="h-8 w-8 flex justify-center items-center text-sm text-white font-bold tracking-wide bg-sky-500 rounded-full mt-2.5">
         AI
       </div>
       <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900 leading-normal">
-        {props.children}
+        {displayed}
       </p>
     </div>
   );
