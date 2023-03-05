@@ -77,17 +77,15 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setInput("");
   };
 
-  const onGenerateVariations = () => {
-    if (variants.length >= 10) return;
-
+  const onGenerate = () => {
     generateVariations({ bulletPoint: variants[0], variationCount: 1 })
       .then((res) => {
         const { variations } = res.data;
-        setVariants([...variants, ...variations]);
+        setInput(variations[0]);
       })
       .catch((e) => {
         console.error(e);
-        toast.error("Something went wrong with generation.");
+        toast.error("Generation failed.");
       });
   };
 
@@ -120,25 +118,28 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     <div className="space-y-6">
       <AiTextBubble>{suggestion}</AiTextBubble>
 
-      <div className="grid grid-cols-[1.75rem_1fr] gap-y-3 text-sm">
-        {variants.map((text, index) => (
+      <div className="grid grid-cols-[auto_1fr] gap-3 text-sm">
+        {variants.map((text) => (
           <>
-            <div className="text-gray-400">{index + 1}.</div>
+            <div>&bull;</div>
             <div>{text}</div>
           </>
         ))}
       </div>
 
-      <SecondaryButton onClick={onGenerateVariations}>
-        Generate a variation
-      </SecondaryButton>
-
-      <div ref={inputRef}>
-        <InputBox
-          value={input}
-          onChange={setInput}
-          onSubmit={onVariantSubmit}
-        />
+      <div>
+        <div ref={inputRef}>
+          <InputBox
+            value={input}
+            onChange={setInput}
+            onSubmit={onVariantSubmit}
+          />
+        </div>
+        <div className="-mt-4">
+          <SecondaryButton onClick={onGenerate}>
+            Generate with AI
+          </SecondaryButton>
+        </div>
       </div>
     </div>
   );
