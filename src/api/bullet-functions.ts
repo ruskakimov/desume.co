@@ -22,3 +22,17 @@ export const suggestImprovements = httpsCallable<
   SuggestImprovementsRequestData,
   SuggestImprovementsResponseData
 >(functions, "suggestImprovements");
+
+interface GenerateVariationsRequestData {
+  bulletPoint: string;
+  variationCount: number;
+}
+
+interface GenerateVariationsResponseData {
+  variations: string[];
+}
+
+export const generateVariations = httpsCallable<
+  GenerateVariationsRequestData,
+  GenerateVariationsResponseData
+>(functions, "generateVariations");
