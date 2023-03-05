@@ -39,6 +39,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     onResolve: ResolveCallback,
     onReject: RejectCallback
   ) => {
+    originalBullet.current = bullet;
     resolveCallbackRef.current = onResolve;
     rejectCallbackRef.current = onReject;
     setIsOpen(true);
@@ -55,6 +56,8 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         setSuggestion("Oops, something went wrong.");
       });
   };
+
+  const originalBullet = useRef<BulletPoint | null>(null);
 
   const [step, setStep] = useState<RewriteStep>("generate-variants");
 
@@ -90,6 +93,14 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       });
   };
 
+  const onSave = () => {
+    resolveCallbackRef.current?.({
+      ...originalBullet.current!,
+      text: selectedVariant,
+    });
+    setIsOpen(false);
+  };
+
   const generateStepButtons = (
     <>
       <div className="flex items-center gap-3">
@@ -108,13 +119,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const selectStepButtons = (
     <>
-      <SecondaryButton
-        className="mr-auto"
-        onClick={() => setStep("generate-variants")}
-      >
-        Back to brainstorming
-      </SecondaryButton>
-      <PrimaryButton disabled={selectedVariant === ""} onClick={() => {}}>
+      <PrimaryButton disabled={selectedVariant === ""} onClick={onSave}>
         Save selected
       </PrimaryButton>
     </>
