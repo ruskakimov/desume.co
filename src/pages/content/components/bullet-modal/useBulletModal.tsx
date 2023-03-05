@@ -15,7 +15,7 @@ import {
   validateQuantitativeData,
 } from "./validators";
 
-export const bulletMaxLength = 250;
+export const bulletMaxLength = 300;
 
 interface SingleBulletForm {
   text: string;
