@@ -132,20 +132,28 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         ))}
       </div>
 
-      <div>
-        <div ref={inputRef}>
-          <InputBox
-            value={input}
-            onChange={setInput}
-            onSubmit={onVariantSubmit}
-          />
+      {variants.length >= 10 ? (
+        <AiTextBubble>
+          Great job! You have reached the maximum number of submissions.
+          <br />
+          Let's proceed to the next step.
+        </AiTextBubble>
+      ) : (
+        <div>
+          <div ref={inputRef}>
+            <InputBox
+              value={input}
+              onChange={setInput}
+              onSubmit={onVariantSubmit}
+            />
+          </div>
+          <div className="-mt-4">
+            <SecondaryButton onClick={onGenerate}>
+              Generate with AI
+            </SecondaryButton>
+          </div>
         </div>
-        <div className="-mt-4">
-          <SecondaryButton onClick={onGenerate}>
-            Generate with AI
-          </SecondaryButton>
-        </div>
-      </div>
+      )}
     </div>
   );
 
@@ -210,7 +218,7 @@ const AiTextBubble: React.FC<{ children: React.ReactNode }> = (props) => {
       <div className="h-8 w-8 flex justify-center items-center text-sm text-white font-bold tracking-wide bg-sky-500 rounded-full mt-2.5">
         AI
       </div>
-      <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900">
+      <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900 leading-normal">
         {props.children}
       </p>
     </div>
