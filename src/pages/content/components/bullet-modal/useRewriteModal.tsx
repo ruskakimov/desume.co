@@ -280,7 +280,7 @@ const AiTextBubble: React.FC<{ text: string }> = (props) => {
         AI
       </div>
       <p className="text-sm p-4 bg-sky-50 rounded-md text-sky-900 leading-normal">
-        {displayed}
+        {displayed.length > 0 ? displayed : " "}
       </p>
     </div>
   );
