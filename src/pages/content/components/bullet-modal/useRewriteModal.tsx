@@ -99,7 +99,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
           disabled={variants.length < 2 || input.trim() !== ""}
           onClick={() => setStep("select-variant")}
         >
-          Rank submissions
+          Score submissions
         </PrimaryButton>
       </div>
     </>
@@ -159,7 +159,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const selectStepUi = (
     <div className="space-y-6">
-      {/* <AiTextBubble>Hold on, I am ranking your submissions...</AiTextBubble> */}
+      {/* <AiTextBubble>Hold on, I am scoring your submissions...</AiTextBubble> */}
       <AiTextBubble>Here is how I would rank them.</AiTextBubble>
 
       <div className="space-y-4">

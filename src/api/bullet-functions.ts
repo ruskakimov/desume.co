@@ -36,3 +36,16 @@ export const generateVariations = httpsCallable<
   GenerateVariationsRequestData,
   GenerateVariationsResponseData
 >(functions, "generateVariations");
+
+interface ScoreVariationsRequestData {
+  variations: string[];
+}
+
+interface ScoreVariationsResponseData {
+  scores: number[];
+}
+
+export const scoreVariations = httpsCallable<
+  ScoreVariationsRequestData,
+  ScoreVariationsResponseData
+>(functions, "scoreVariations");
