@@ -123,7 +123,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     <div className="space-y-6">
       <AiTextBubble>{suggestion}</AiTextBubble>
 
-      <div className="grid grid-cols-[auto_1fr] gap-3 text-sm">
+      <div className="grid grid-cols-[auto_1fr] gap-3 text-sm leading-normal">
         {variants.map((text) => (
           <>
             <div>&bull;</div>
