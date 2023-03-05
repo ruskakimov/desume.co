@@ -1,7 +1,10 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { suggestImprovements } from "../../../../api/bullet-functions";
+import {
+  generateVariations,
+  suggestImprovements,
+} from "../../../../api/bullet-functions";
 import TextAreaField from "../../../../common/components/fields/TextAreaField";
 import Modal from "../../../../common/components/Modal";
 import PrimaryButton from "../../../../common/components/PrimaryButton";
@@ -70,6 +73,17 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setInput("");
   };
 
+  const onGenerateVariations = () => {
+    if (variants.length >= 10) return;
+
+    generateVariations({ bulletPoint: variants[0], variationCount: 1 }).then(
+      (res) => {
+        const { variations } = res.data;
+        setVariants([...variants, ...variations]);
+      }
+    );
+  };
+
   const generateStepButtons = (
     <>
       <PrimaryButton
@@ -108,7 +122,9 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         ))}
       </div>
 
-      <SecondaryButton>Generate variations</SecondaryButton>
+      <SecondaryButton onClick={onGenerateVariations}>
+        Generate a variation
+      </SecondaryButton>
 
       <div ref={inputRef}>
         <InputBox
