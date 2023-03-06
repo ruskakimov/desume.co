@@ -134,6 +134,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         <AiTextBubble text="Great job! You have reached the maximum number of submissions. Let's proceed to the next step." />
       ) : (
         <InputBoxWithAi
+          ref={inputRef}
           originalBulletPoint={variants[0]}
           onSubmit={onVariantSubmit}
           onStateChange={setIsInputDirty}
