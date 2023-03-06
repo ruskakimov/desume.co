@@ -59,7 +59,7 @@ const InputBoxWithAi = forwardRef<HTMLDivElement, Props>(
             </div>
           )}
         </div>
-        <div className="-mt-4">
+        <div className="-mt-4 relative z-10">
           <SecondaryButton disabled={isLoading} onClick={onGenerate}>
             Generate with AI
           </SecondaryButton>
