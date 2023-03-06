@@ -1,18 +1,13 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
-import {
-  generateVariations,
-  suggestImprovements,
-} from "../../../../../api/bullet-functions";
+import { suggestImprovements } from "../../../../../api/bullet-functions";
 import Modal from "../../../../../common/components/Modal";
 import PrimaryButton from "../../../../../common/components/PrimaryButton";
-import SecondaryButton from "../../../../../common/components/SecondaryButton";
 import { userCancelReason } from "../../../../../common/constants/reject-reasons";
 import useDiscardChangesDialog from "../../../../../common/hooks/useDiscardChangesDialog";
 import { BulletPoint } from "../../../../../common/interfaces/resume";
-import { fixFormat } from "../format";
 import AiTextBubble from "./AiTextBubble";
-import InputBox from "./InputBox";
+import InputBoxWithAi from "./InputBoxWithAi";
 import SelectionStep from "./SelectionStep";
 
 type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
@@ -43,7 +38,6 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     rejectCallbackRef.current = onReject;
     setIsOpen(true);
     setStep("generate-variants");
-    setInput("");
     setVariants([bullet.text]);
     setSelectedVariant("");
     setSuggestion("Hold on, I am reviewing your bullet point...");
@@ -63,10 +57,11 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const [suggestion, setSuggestion] = useState("");
 
   const [variants, setVariants] = useState<string[]>([]);
-  const [input, setInput] = useState("");
-  const inputRef = useRef<HTMLDivElement | null>(null);
 
   const [selectedVariant, setSelectedVariant] = useState("");
+
+  const inputRef = useRef<HTMLDivElement | null>(null);
+  const [isInputDirty, setIsInputDirty] = useState(false);
 
   const [getDiscardConfirmation, discardConfirmationDialog] =
     useDiscardChangesDialog();
@@ -75,29 +70,12 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     inputRef.current?.scrollIntoView();
   }, [variants]);
 
-  const onVariantSubmit = () => {
-    const formattedInput = fixFormat(input);
-    if (formattedInput.length === 0) return;
-
-    if (variants.includes(formattedInput)) {
+  const onVariantSubmit = (variant: string) => {
+    if (variants.includes(variant)) {
       toast.error("Cannot submit duplicates.");
       return;
     }
-
-    setVariants([...variants, formattedInput]);
-    setInput("");
-  };
-
-  const onGenerate = () => {
-    generateVariations({ bulletPoint: variants[0], variationCount: 1 })
-      .then((res) => {
-        const { variations } = res.data;
-        setInput(variations[0]);
-      })
-      .catch((e) => {
-        console.error(e);
-        toast.error("Generation failed.");
-      });
+    setVariants([...variants, variant]);
   };
 
   const onSave = () => {
@@ -118,11 +96,11 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const generateStepButtons = (
     <>
       <div className="flex items-center gap-3">
-        {input.trim() !== "" && (
+        {isInputDirty && (
           <p className="text-sm text-gray-500">Submit or delete your input</p>
         )}
         <PrimaryButton
-          disabled={variants.length < 2 || input.trim() !== ""}
+          disabled={variants.length < 2 || isInputDirty}
           onClick={() => setStep("select-variant")}
         >
           Score submissions
@@ -155,20 +133,11 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       {variants.length >= 10 ? (
         <AiTextBubble text="Great job! You have reached the maximum number of submissions. Let's proceed to the next step." />
       ) : (
-        <div>
-          <div ref={inputRef}>
-            <InputBox
-              value={input}
-              onChange={setInput}
-              onSubmit={onVariantSubmit}
-            />
-          </div>
-          <div className="-mt-4">
-            <SecondaryButton onClick={onGenerate}>
-              Generate with AI
-            </SecondaryButton>
-          </div>
-        </div>
+        <InputBoxWithAi
+          originalBulletPoint={variants[0]}
+          onSubmit={onVariantSubmit}
+          onStateChange={setIsInputDirty}
+        />
       )}
     </div>
   );
