@@ -95,12 +95,17 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const generateStepButtons = (
     <>
-      <PrimaryButton
-        disabled={variants.length < 2 || isInputDirty}
-        onClick={() => setStep("select-variant")}
-      >
-        Score submissions
-      </PrimaryButton>
+      <div className="flex items-center gap-3">
+        {isInputDirty && (
+          <p className="text-sm text-gray-500">Submit or delete your input</p>
+        )}
+        <PrimaryButton
+          disabled={variants.length < 2 || isInputDirty}
+          onClick={() => setStep("select-variant")}
+        >
+          Score submissions
+        </PrimaryButton>
+      </div>
     </>
   );
 
