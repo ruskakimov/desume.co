@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { generateVariations } from "../../../../../api/bullet-functions";
 import SecondaryButton from "../../../../../common/components/SecondaryButton";
+import Spinner from "../../../../../common/components/Spinner";
 import { fixFormat } from "../format";
 import InputBox from "./InputBox";
 
@@ -20,6 +21,7 @@ const InputBoxWithAi = forwardRef<HTMLDivElement, Props>(
     useEffect(() => onStateChange(isDirty), [isDirty]);
 
     const onGenerate = () => {
+      setInput("");
       setIsLoading(true);
       generateVariations({
         bulletPoint: originalBulletPoint,
@@ -38,18 +40,25 @@ const InputBoxWithAi = forwardRef<HTMLDivElement, Props>(
 
     return (
       <div ref={ref}>
-        <InputBox
-          value={input}
-          disabled={isLoading}
-          onChange={setInput}
-          onSubmit={() => {
-            const formattedInput = fixFormat(input);
-            if (formattedInput.length > 0) {
-              onSubmit(formattedInput);
-              setInput("");
-            }
-          }}
-        />
+        <div className="relative">
+          <InputBox
+            value={input}
+            disabled={isLoading}
+            onChange={setInput}
+            onSubmit={() => {
+              const formattedInput = fixFormat(input);
+              if (formattedInput.length > 0) {
+                onSubmit(formattedInput);
+                setInput("");
+              }
+            }}
+          />
+          {isLoading && (
+            <div className="absolute inset-0 -mt-1 flex justify-center items-center">
+              <Spinner shade="dark" />
+            </div>
+          )}
+        </div>
         <div className="-mt-4">
           <SecondaryButton disabled={isLoading} onClick={onGenerate}>
             Generate with AI
