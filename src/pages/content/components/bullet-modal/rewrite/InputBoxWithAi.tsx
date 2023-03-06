@@ -16,7 +16,7 @@ const InputBoxWithAi = forwardRef<HTMLDivElement, Props>(
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const isDirty = input.trim().length > 0;
+    const isDirty = input.trim().length > 0 || isLoading;
     useEffect(() => onStateChange(isDirty), [isDirty]);
 
     const onGenerate = () => {
