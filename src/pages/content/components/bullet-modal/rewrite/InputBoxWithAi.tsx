@@ -14,11 +14,13 @@ interface Props {
 const InputBoxWithAi = forwardRef<HTMLDivElement, Props>(
   ({ originalBulletPoint, onSubmit, onStateChange }, ref) => {
     const [input, setInput] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const isDirty = input.trim().length > 0;
     useEffect(() => onStateChange(isDirty), [isDirty]);
 
     const onGenerate = () => {
+      setIsLoading(true);
       generateVariations({
         bulletPoint: originalBulletPoint,
         variationCount: 1,
@@ -30,22 +32,26 @@ const InputBoxWithAi = forwardRef<HTMLDivElement, Props>(
         .catch((e) => {
           console.error(e);
           toast.error("Generation failed.");
-        });
+        })
+        .finally(() => setIsLoading(false));
     };
 
     return (
       <div ref={ref}>
         <InputBox
           value={input}
+          disabled={isLoading}
           onChange={setInput}
           onSubmit={() => {
             const formattedInput = fixFormat(input);
-            onSubmit(formattedInput);
-            setInput("");
+            if (formattedInput.length > 0) {
+              onSubmit(formattedInput);
+              setInput("");
+            }
           }}
         />
         <div className="-mt-4">
-          <SecondaryButton onClick={onGenerate}>
+          <SecondaryButton disabled={isLoading} onClick={onGenerate}>
             Generate with AI
           </SecondaryButton>
         </div>

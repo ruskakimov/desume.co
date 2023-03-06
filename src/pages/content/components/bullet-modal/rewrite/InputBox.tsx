@@ -4,6 +4,7 @@ import { bulletMaxLength } from "../useBulletModal";
 
 const InputBox: React.FC<{
   value: string;
+  disabled: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
 }> = (props) => {
@@ -14,6 +15,7 @@ const InputBox: React.FC<{
           label="Write a variation"
           rows={3}
           maxLength={bulletMaxLength}
+          disabled={props.disabled}
           value={props.value}
           onChange={(e) => {
             props.onChange(e.target.value);
@@ -27,7 +29,8 @@ const InputBox: React.FC<{
           style={{ paddingRight: 52 }}
         />
         <button
-          className="absolute top-6 right-0 p-2 m-2 rounded bg-gray-100"
+          disabled={props.disabled}
+          className="absolute top-6 right-0 p-2 m-2 rounded bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
           type="button"
           onClick={props.onSubmit}
         >
