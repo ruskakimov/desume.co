@@ -12,6 +12,7 @@ import Modal from "../../../../common/components/Modal";
 import PrimaryButton from "../../../../common/components/PrimaryButton";
 import SecondaryButton from "../../../../common/components/SecondaryButton";
 import { userCancelReason } from "../../../../common/constants/reject-reasons";
+import useDiscardChangesDialog from "../../../../common/hooks/useDiscardChangesDialog";
 import { BulletPoint } from "../../../../common/interfaces/resume";
 import { fixFormat } from "./format";
 import { bulletMaxLength } from "./useBulletModal";
@@ -69,6 +70,9 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const [selectedVariant, setSelectedVariant] = useState("");
 
+  const [getDiscardConfirmation, discardConfirmationDialog] =
+    useDiscardChangesDialog();
+
   useLayoutEffect(() => {
     inputRef.current?.scrollIntoView();
   }, [variants]);
@@ -99,6 +103,13 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
       text: selectedVariant,
     });
     setIsOpen(false);
+  };
+
+  const onClose = async () => {
+    if (await getDiscardConfirmation()) {
+      rejectCallbackRef.current?.(userCancelReason);
+      setIsOpen(false);
+    }
   };
 
   const generateStepButtons = (
@@ -165,10 +176,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     <Modal
       title={`Rewrite: ${rewriteStepTitles[step]}`}
       isOpen={isOpen}
-      onClose={() => {
-        rejectCallbackRef.current?.(userCancelReason);
-        setIsOpen(false);
-      }}
+      onClose={onClose}
       footerButtons={
         step === "generate-variants" ? generateStepButtons : selectStepButtons
       }
@@ -182,6 +190,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
           onChange={setSelectedVariant}
         />
       )}
+      {discardConfirmationDialog}
     </Modal>,
   ];
 }
