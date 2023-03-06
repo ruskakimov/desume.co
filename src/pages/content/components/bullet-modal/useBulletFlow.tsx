@@ -1,6 +1,6 @@
 import { launchRewriteModeReason } from "../../../../common/constants/reject-reasons";
 import useBulletModal, { OpenBulletModal } from "./useBulletModal";
-import useRewriteModal from "./useRewriteModal";
+import useRewriteModal from "./rewrite/useRewriteModal";
 
 /**
  * A convenience hook that combines bullet edit and rewrite and features the same interface as `useBulletModal`.
