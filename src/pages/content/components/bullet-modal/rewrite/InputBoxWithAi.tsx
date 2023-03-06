@@ -48,8 +48,9 @@ const InputBoxWithAi = forwardRef<HTMLDivElement, Props>(
             onSubmit={() => {
               const formattedInput = fixFormat(input);
               if (formattedInput.length > 0) {
-                onSubmit(formattedInput);
                 setInput("");
+                onSubmit(formattedInput);
+                onStateChange(false);
               }
             }}
           />
