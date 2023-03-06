@@ -79,6 +79,11 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     const formattedInput = fixFormat(input);
     if (formattedInput.length === 0) return;
 
+    if (variants.includes(formattedInput)) {
+      toast.error("Cannot submit duplicates.");
+      return;
+    }
+
     setVariants([...variants, formattedInput]);
     setInput("");
   };
