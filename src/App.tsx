@@ -1,12 +1,33 @@
+import { createContext, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate, useLocation } from "react-router-dom";
 import { firebaseAuth } from "./api/firebase-setup";
 import AppShell from "./AppShell";
 import logo from "./assets/images/logo.svg";
 
+export interface AppUser {
+  isProMember: boolean;
+}
+
+const defaultAppUser: AppUser = {
+  isProMember: false,
+};
+
+export const AppUserContext = createContext<AppUser>(defaultAppUser);
+
 function App() {
   const [user, loadingAuth] = useAuthState(firebaseAuth);
+  const [appUser, setAppUser] = useState(defaultAppUser);
   const location = useLocation();
+
+  useEffect(() => {
+    if (user) {
+      user.getIdTokenResult().then((idTokenResult) => {
+        const isProMember = idTokenResult.claims.pro_member || false;
+        setAppUser({ isProMember });
+      });
+    }
+  }, [user]);
 
   if (loadingAuth) {
     return (
@@ -24,7 +45,11 @@ function App() {
     return <Navigate to="/sign-in" state={{ from: location }} replace />;
   }
 
-  return <AppShell />;
+  return (
+    <AppUserContext.Provider value={appUser}>
+      <AppShell />
+    </AppUserContext.Provider>
+  );
 }
 
 export default App;
