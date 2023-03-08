@@ -53,11 +53,8 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   };
 
   const [step, setStep] = useState<RewriteStep>("generate-variants");
-
   const [aiSuggestion, setAiSuggestion] = useState("");
-
   const [variants, setVariants] = useState<string[]>([]);
-
   const [selectedVariant, setSelectedVariant] = useState("");
 
   const inputRef = useRef<HTMLDivElement | null>(null);
