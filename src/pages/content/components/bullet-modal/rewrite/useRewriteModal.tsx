@@ -40,13 +40,13 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
     setStep("generate-variants");
     setVariants([bullet.text]);
     setSelectedVariant("");
-    setSuggestion("Hold on, I am reviewing your bullet point...");
+    setAiSuggestion("Hold on, I am reviewing your bullet point...");
 
     suggestImprovements({ bulletPoint: bullet.text })
-      .then((res) => setSuggestion(res.data.suggestion))
+      .then((res) => setAiSuggestion(res.data.suggestion))
       .catch((e) => {
         console.error(e);
-        setSuggestion("Oops, something went wrong.");
+        setAiSuggestion("Oops, something went wrong.");
       });
   };
 
@@ -54,7 +54,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const [step, setStep] = useState<RewriteStep>("generate-variants");
 
-  const [suggestion, setSuggestion] = useState("");
+  const [aiSuggestion, setAiSuggestion] = useState("");
 
   const [variants, setVariants] = useState<string[]>([]);
 
@@ -119,7 +119,7 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
 
   const generateStepUi = (
     <div className="space-y-6">
-      <AiTextBubble text={suggestion} />
+      <AiTextBubble text={aiSuggestion} />
 
       <div className="grid grid-cols-[auto_1fr] gap-3 text-sm leading-normal">
         {variants.map((text) => (
