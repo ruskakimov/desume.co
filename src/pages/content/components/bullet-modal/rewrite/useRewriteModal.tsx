@@ -15,6 +15,12 @@ type OpenRewriteModal = (bullet: BulletPoint) => Promise<BulletPoint>;
 type ResolveCallback = (bullet: BulletPoint) => void;
 type RejectCallback = (reason: string) => void;
 
+interface ModalArgs {
+  bullet: BulletPoint;
+  onResolve: ResolveCallback;
+  onReject: RejectCallback;
+}
+
 type RewriteStep = "generate-variants" | "select-variant";
 
 const rewriteStepTitles: Record<RewriteStep, string> = {
@@ -24,18 +30,14 @@ const rewriteStepTitles: Record<RewriteStep, string> = {
 
 export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   const [isOpen, setIsOpen] = useState(false);
-
-  const resolveCallbackRef = useRef<ResolveCallback | null>(null);
-  const rejectCallbackRef = useRef<RejectCallback | null>(null);
+  const modalArgsRef = useRef<ModalArgs | null>(null);
 
   const openModal = (
     bullet: BulletPoint,
     onResolve: ResolveCallback,
     onReject: RejectCallback
   ) => {
-    originalBullet.current = bullet;
-    resolveCallbackRef.current = onResolve;
-    rejectCallbackRef.current = onReject;
+    modalArgsRef.current = { bullet, onResolve, onReject };
     setIsOpen(true);
     setStep("generate-variants");
     setVariants([bullet.text]);
@@ -49,8 +51,6 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
         setAiSuggestion("Oops, something went wrong.");
       });
   };
-
-  const originalBullet = useRef<BulletPoint | null>(null);
 
   const [step, setStep] = useState<RewriteStep>("generate-variants");
 
@@ -79,16 +79,18 @@ export default function useRewriteModal(): [OpenRewriteModal, React.ReactNode] {
   };
 
   const onSave = () => {
-    resolveCallbackRef.current?.({
-      ...originalBullet.current!,
+    const { bullet, onResolve } = modalArgsRef.current!;
+    onResolve({
+      ...bullet,
       text: selectedVariant,
     });
     setIsOpen(false);
   };
 
   const onClose = async () => {
+    const { onReject } = modalArgsRef.current!;
     if (await getDiscardConfirmation()) {
-      rejectCallbackRef.current?.(userCancelReason);
+      onReject(userCancelReason);
       setIsOpen(false);
     }
   };
