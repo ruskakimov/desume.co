@@ -7,8 +7,9 @@ import { firebaseApp } from "./firebase-setup";
 
 const functions = getFunctions(firebaseApp);
 
-// TODO: Remove before deploying or use a condition
-connectFunctionsEmulator(functions, "localhost", 5001);
+if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+  connectFunctionsEmulator(functions, "localhost", 5001);
+}
 
 interface SuggestImprovementsRequestData {
   bulletPoint: string;
