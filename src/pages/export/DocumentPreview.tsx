@@ -16,7 +16,7 @@ import {
   WorkExperience,
 } from "../../common/interfaces/resume";
 import { rectMarkerClass } from "../../pdf/generatePdfFromHtml";
-import useBulletModal from "../content/components/bullet-modal/useBulletModal";
+import useBulletFlow from "../content/components/bullet-modal/useBulletFlow";
 import { useEducation } from "../content/education/EducationSection";
 import { useProjects } from "../content/projects/ProjectsSection";
 import { useWorkHistory } from "../content/work-history/WorkHistorySection";
@@ -437,7 +437,7 @@ const ExperienceItem = React.forwardRef<
       ? monthYearToString(experience.endDate)
       : "Present";
 
-    const [openBulletModal, bulletModal] = useBulletModal();
+    const [openBulletModal, bulletModal] = useBulletFlow();
 
     return (
       <div
@@ -486,7 +486,7 @@ const ExperienceItem = React.forwardRef<
                     format.spacingMultiplier,
                 }}
                 onClick={() => {
-                  openBulletModal(bullet)
+                  openBulletModal(bullet, false)
                     .then((editedBullet) => {
                       if (editedBullet) {
                         onChange({

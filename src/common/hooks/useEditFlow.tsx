@@ -29,10 +29,12 @@ type DialogPropsBuilder<T> = (
 
 interface DialogOptions {
   isCreateNew: boolean;
+  hasDelete?: boolean;
 }
 
 export default function useEditFlow<T>(): {
   openEditDialog: (options: DialogOptions) => Promise<T | null>;
+  closeEditDialog: (reason: string) => void;
   buildDialogProps: DialogPropsBuilder<T>;
   confirmationPopups: React.ReactNode;
 } {
@@ -57,11 +59,17 @@ export default function useEditFlow<T>(): {
     setOptions(options);
   };
 
+  const hasDelete = options.hasDelete ?? !options.isCreateNew;
+
   return {
     openEditDialog: (options) =>
       new Promise((resolve, reject) =>
         openEditDialog(options, resolve, reject)
       ),
+    closeEditDialog: (reason) => {
+      rejectCallbackRef.current?.(reason);
+      setIsOpen(false);
+    },
     buildDialogProps: ({
       titleName,
       getData,
@@ -84,7 +92,7 @@ export default function useEditFlow<T>(): {
           setIsOpen(false);
         }
       },
-      onDelete: !options.isCreateNew
+      onDelete: hasDelete
         ? async () => {
             const confirmed = await openConfirmationDialog({
               title: `Delete ${titleName}`,

@@ -1,38 +1,45 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { createContext, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "react-hot-toast";
 import { Navigate, useLocation } from "react-router-dom";
+import { firebaseAuth } from "./api/firebase-setup";
 import AppShell from "./AppShell";
 import logo from "./assets/images/logo.svg";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB34gwQ0mKdYJEUg36TBjtaSbujmZSVjZw",
-  authDomain: "pdfegg.firebaseapp.com",
-  projectId: "pdfegg",
-  storageBucket: "pdfegg.appspot.com",
-  messagingSenderId: "474976026369",
-  appId: "1:474976026369:web:5ef3a3eeed72e408d5e500",
-  measurementId: "G-Y3QWR9FZKF",
+export interface AppUser {
+  isProMember: boolean;
+}
+
+const defaultAppUser: AppUser = {
+  isProMember: false,
 };
 
-export const firebaseApp = initializeApp(firebaseConfig);
-export const firebaseAuth = getAuth(firebaseApp);
-export const firestore = getFirestore(firebaseApp);
+export const AppUserContext = createContext<AppUser>(defaultAppUser);
 
 function App() {
   const [user, loadingAuth] = useAuthState(firebaseAuth);
+  const [appUser, setAppUser] = useState<AppUser | null>(null);
   const location = useLocation();
 
-  if (loadingAuth) {
-    return (
-      <div className="absolute inset-0 flex justify-center items-center">
-        <img className="mx-auto h-12 w-auto" src={logo} alt="PDFEGG" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (user) {
+      user
+        .getIdTokenResult()
+        .then((idTokenResult) => {
+          const isProMember = idTokenResult.claims.pro_member || false;
+          setAppUser({ isProMember });
+        })
+        .catch((e) => {
+          console.error("Error when retrieving custom claims:", e);
+          toast.error("Something went wrong while verifying your Pro status.");
+          setAppUser(defaultAppUser);
+        });
+    } else {
+      setAppUser(null);
+    }
+  }, [user]);
 
-  if (!user) {
+  if (!loadingAuth && !user) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
@@ -40,7 +47,19 @@ function App() {
     return <Navigate to="/sign-in" state={{ from: location }} replace />;
   }
 
-  return <AppShell />;
+  if (loadingAuth || appUser === null) {
+    return (
+      <div className="absolute inset-0 flex justify-center items-center">
+        <img className="mx-auto h-12 w-auto" src={logo} alt="PDFEGG" />
+      </div>
+    );
+  }
+
+  return (
+    <AppUserContext.Provider value={appUser}>
+      <AppShell />
+    </AppUserContext.Provider>
+  );
 }
 
 export default App;

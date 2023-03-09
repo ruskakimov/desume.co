@@ -1,7 +1,14 @@
-const Spinner: React.FC = () => {
+import classNames from "classnames";
+
+const Spinner: React.FC<{ shade?: "dark" | "light" }> = ({
+  shade = "light",
+}) => {
   return (
     <svg
-      className="animate-spin h-5 w-5 text-white"
+      className={classNames("animate-spin h-5 w-5", {
+        "text-white": shade === "light",
+        "text-black": shade === "dark",
+      })}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

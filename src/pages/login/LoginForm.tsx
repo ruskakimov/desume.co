@@ -2,7 +2,7 @@ import { AuthError, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { firebaseAuth } from "../../App";
+import { firebaseAuth } from "../../api/firebase-setup";
 import TextField from "../../common/components/fields/TextField";
 import PrimaryButton from "../../common/components/PrimaryButton";
 import Spinner from "../../common/components/Spinner";
