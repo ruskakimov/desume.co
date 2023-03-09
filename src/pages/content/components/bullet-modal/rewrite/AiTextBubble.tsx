@@ -7,7 +7,11 @@ const AiTextBubble: React.FC<{ text: string }> = (props) => {
     setDisplayed("");
 
     const intervalId = window.setInterval(() => {
-      setDisplayed((displayed) => props.text.slice(0, displayed.length + 1));
+      setDisplayed((displayed) => {
+        const newDisplayed = props.text.slice(0, displayed.length + 1);
+        if (newDisplayed === props.text) window.clearInterval(intervalId);
+        return newDisplayed;
+      });
     }, 20);
 
     return () => {
