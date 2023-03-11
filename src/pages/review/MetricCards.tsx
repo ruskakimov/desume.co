@@ -12,7 +12,7 @@ const MetricCards: React.FC<Props> = ({ resume }) => {
       stat: resume ? calcYearsOfExp(resume).toFixed(0) : 0,
     },
     { name: "Word Count", stat: resume ? calcResumeWordCount(resume) : 0 },
-    { name: "Bullet Count", stat: "24" },
+    { name: "Bullet Count", stat: resume ? calcBulletCount(resume) : 0 },
   ];
 
   return (
@@ -117,6 +117,29 @@ function calcResumeWordCount(resume: Resume): number {
 
 function calcWordCount(text: string): number {
   return text.trim().split(/\s+/).length;
+}
+
+function calcBulletCount(resume: Resume): number {
+  let count = 0;
+
+  count += resume.workHistory
+    .map(calcExpBulletCount)
+    .reduce((a, b) => a + b, 0);
+
+  count += resume.educationHistory
+    .map(calcExpBulletCount)
+    .reduce((a, b) => a + b, 0);
+
+  count += resume.projectHistory
+    .map(calcExpBulletCount)
+    .reduce((a, b) => a + b, 0);
+
+  return count;
+}
+
+function calcExpBulletCount(exp: Experience): number {
+  if (!exp.included) return 0;
+  return exp.bulletPoints.reduce((count, b) => count + (b.included ? 1 : 0), 0);
 }
 
 export default MetricCards;
