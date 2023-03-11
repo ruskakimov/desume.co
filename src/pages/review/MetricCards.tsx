@@ -11,7 +11,7 @@ const MetricCards: React.FC<Props> = ({ resume }) => {
       name: "Years of Experience",
       stat: resume ? calcYearsOfExp(resume).toFixed(0) : 0,
     },
-    { name: "Word Count", stat: "345" },
+    { name: "Word Count", stat: resume ? calcResumeWordCount(resume) : 0 },
     { name: "Bullet Count", stat: "24" },
   ];
 
@@ -57,6 +57,66 @@ function calcExpYears(exp: Experience): number {
     1;
 
   return monthDiff / 12;
+}
+
+function calcResumeWordCount(resume: Resume): number {
+  let total = 0;
+
+  total += calcWordCount(resume.personalDetails.fullName);
+  total += calcWordCount(resume.personalDetails.location);
+  total += calcWordCount(resume.personalDetails.title);
+
+  for (const skillGroup of resume.skillGroups) {
+    if (!skillGroup.included) continue;
+
+    total += calcWordCount(skillGroup.groupName);
+
+    for (const skill of skillGroup.skills) {
+      if (!skill.included) continue;
+      total += calcWordCount(skill.text);
+    }
+  }
+
+  for (const workExp of resume.workHistory) {
+    if (!workExp.included) continue;
+
+    total += calcWordCount(workExp.companyName);
+    total += calcWordCount(workExp.jobTitle);
+
+    for (const bullet of workExp.bulletPoints) {
+      if (!bullet.included) continue;
+      total += calcWordCount(bullet.text);
+    }
+  }
+
+  for (const education of resume.educationHistory) {
+    if (!education.included) continue;
+
+    total += calcWordCount(education.schoolName);
+    total += calcWordCount(education.degree);
+
+    for (const bullet of education.bulletPoints) {
+      if (!bullet.included) continue;
+      total += calcWordCount(bullet.text);
+    }
+  }
+
+  for (const project of resume.projectHistory) {
+    if (!project.included) continue;
+
+    total += calcWordCount(project.projectName);
+
+    for (const bullet of project.bulletPoints) {
+      if (!bullet.included) continue;
+      total += calcWordCount(bullet.text);
+    }
+  }
+
+  return total;
+}
+
+function calcWordCount(text: string): number {
+  return text.trim().split(/\s+/).length;
 }
 
 export default MetricCards;
