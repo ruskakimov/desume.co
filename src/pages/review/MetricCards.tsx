@@ -1,5 +1,5 @@
 import ShimmerOverlay from "../../common/components/ShimmerOverlay";
-import { Resume } from "../../common/interfaces/resume";
+import { Experience, Resume } from "../../common/interfaces/resume";
 
 interface Props {
   resume: Resume | null;
@@ -7,7 +7,10 @@ interface Props {
 
 const MetricCards: React.FC<Props> = ({ resume }) => {
   const stats = [
-    { name: "Years of Experience", stat: "5" },
+    {
+      name: "Years of Experience",
+      stat: resume ? calcYearsOfExp(resume).toFixed(0) : 0,
+    },
     { name: "Word Count", stat: "345" },
     { name: "Bullet Count", stat: "24" },
   ];
@@ -32,5 +35,28 @@ const MetricCards: React.FC<Props> = ({ resume }) => {
     </dl>
   );
 };
+
+function calcYearsOfExp(resume: Resume): number {
+  return resume.workHistory.reduce(
+    (total, workExp) => total + calcExpYears(workExp),
+    0
+  );
+}
+
+function calcExpYears(exp: Experience): number {
+  const endDate = exp.endDate ?? {
+    month: new Date().getMonth(),
+    year: new Date().getFullYear(),
+  };
+
+  const monthDiff =
+    endDate.year * 12 +
+    endDate.month -
+    exp.startDate.year * 12 -
+    exp.startDate.month +
+    1;
+
+  return monthDiff / 12;
+}
 
 export default MetricCards;
