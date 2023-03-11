@@ -14,6 +14,7 @@ import useResume from "./api/useResume";
 
 const navigation = [
   { name: "Edit", to: "/edit" },
+  { name: "Review", to: "/review" },
   { name: "Export", to: "/export" },
 ];
 
