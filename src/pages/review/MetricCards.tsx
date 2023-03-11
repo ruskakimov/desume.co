@@ -48,6 +48,8 @@ function calcYearsOfExp(resume: Resume): number {
 }
 
 function calcExpYears(exp: Experience): number {
+  if (!exp.included) return 0;
+
   const endDate = exp.endDate ?? {
     month: new Date().getMonth(),
     year: new Date().getFullYear(),
