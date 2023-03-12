@@ -26,23 +26,28 @@ function calcExpYears(exp: Experience): number {
 }
 
 export function calcResumeWordCount(resume: Resume): number {
-  let total = 0;
+  return getResumeStrings(resume)
+    .map(calcWordCount)
+    .reduce((a, b) => a + b, 0);
+}
+
+export function getResumeStrings(resume: Resume): string[] {
+  const strings: string[] = [];
 
   if (resumeContainsSection(resume, "personal")) {
-    total += calcWordCount(resume.personalDetails.fullName);
-    total += calcWordCount(resume.personalDetails.location);
-    total += calcWordCount(resume.personalDetails.title);
+    strings.push(resume.personalDetails.location);
+    strings.push(resume.personalDetails.title);
   }
 
   if (resumeContainsSection(resume, "skills")) {
     for (const skillGroup of resume.skillGroups) {
       if (!skillGroup.included) continue;
 
-      total += calcWordCount(skillGroup.groupName);
+      strings.push(skillGroup.groupName);
 
       for (const skill of skillGroup.skills) {
         if (!skill.included) continue;
-        total += calcWordCount(skill.text);
+        strings.push(skill.text);
       }
     }
   }
@@ -51,12 +56,12 @@ export function calcResumeWordCount(resume: Resume): number {
     for (const workExp of resume.workHistory) {
       if (!workExp.included) continue;
 
-      total += calcWordCount(workExp.companyName);
-      total += calcWordCount(workExp.jobTitle);
+      strings.push(workExp.companyName);
+      strings.push(workExp.jobTitle);
 
       for (const bullet of workExp.bulletPoints) {
         if (!bullet.included) continue;
-        total += calcWordCount(bullet.text);
+        strings.push(bullet.text);
       }
     }
   }
@@ -65,12 +70,12 @@ export function calcResumeWordCount(resume: Resume): number {
     for (const education of resume.educationHistory) {
       if (!education.included) continue;
 
-      total += calcWordCount(education.schoolName);
-      total += calcWordCount(education.degree);
+      strings.push(education.schoolName);
+      strings.push(education.degree);
 
       for (const bullet of education.bulletPoints) {
         if (!bullet.included) continue;
-        total += calcWordCount(bullet.text);
+        strings.push(bullet.text);
       }
     }
   }
@@ -79,16 +84,16 @@ export function calcResumeWordCount(resume: Resume): number {
     for (const project of resume.projectHistory) {
       if (!project.included) continue;
 
-      total += calcWordCount(project.projectName);
+      strings.push(project.projectName);
 
       for (const bullet of project.bulletPoints) {
         if (!bullet.included) continue;
-        total += calcWordCount(bullet.text);
+        strings.push(bullet.text);
       }
     }
   }
 
-  return total;
+  return strings;
 }
 
 function calcWordCount(text: string): number {
