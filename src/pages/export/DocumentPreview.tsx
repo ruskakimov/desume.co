@@ -304,7 +304,7 @@ const Footer: React.FC<{
         letterSpacing: pointsToPx(0.5),
       }}
     >
-      {`${name} résumé — page ${pageNumber} of ${pageCount}`.toUpperCase()}
+      {`${name} — page ${pageNumber} of ${pageCount}`.toUpperCase()}
     </div>
   );
 };
