@@ -51,8 +51,12 @@ const ReviewPage: React.FC = () => {
       <MetricCards resume={resume} />
 
       <Card sidePadding={false}>
-        <div className="text-center">
-          {/* <PrimaryButton>Start review</PrimaryButton> */}
+        {/* <PrimaryButton>Start review</PrimaryButton> */}
+
+        <div>
+          <h3 className="mb-4 px-6 text-xl font-semibold">
+            {grammar?.corrections.length} grammar/spelling corrections
+          </h3>
 
           <div className="space-y-6">
             {grammar?.corrections.map(({ wrong, fixed }) => {
