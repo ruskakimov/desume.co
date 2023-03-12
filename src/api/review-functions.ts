@@ -1,11 +1,11 @@
 import { httpsCallable } from "firebase/functions";
 import { functions } from "./firebase-setup";
 
-interface FixGrammarRequestData {
+export interface FixGrammarRequestData {
   strings: string[];
 }
 
-interface FixGrammarResponseData {
+export interface FixGrammarResponseData {
   corrections: {
     wrong: string;
     fixed: string;
