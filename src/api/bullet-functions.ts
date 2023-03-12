@@ -1,15 +1,5 @@
-import {
-  connectFunctionsEmulator,
-  getFunctions,
-  httpsCallable,
-} from "firebase/functions";
-import { firebaseApp } from "./firebase-setup";
-
-const functions = getFunctions(firebaseApp);
-
-if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-  connectFunctionsEmulator(functions, "localhost", 5001);
-}
+import { httpsCallable } from "firebase/functions";
+import { functions } from "./firebase-setup";
 
 interface SuggestImprovementsRequestData {
   bulletPoint: string;
