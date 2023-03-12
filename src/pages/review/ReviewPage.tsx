@@ -3,6 +3,7 @@ import { fixGrammar, FixGrammarResponseData } from "../../api/review-functions";
 import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
 import PrimaryButton from "../../common/components/PrimaryButton";
+import SecondaryButton from "../../common/components/SecondaryButton";
 import { buildRichDiff } from "../../common/functions/build-rich-diff";
 import { getResumeStrings } from "../../common/functions/resume-utils";
 import MetricCards from "./MetricCards";
@@ -49,7 +50,7 @@ const ReviewPage: React.FC = () => {
     <div className="space-y-5">
       <MetricCards resume={resume} />
 
-      <Card>
+      <Card sidePadding={false}>
         <div className="text-center">
           {/* <PrimaryButton>Start review</PrimaryButton> */}
 
@@ -58,9 +59,12 @@ const ReviewPage: React.FC = () => {
               const [wrongRich, fixedRich] = buildRichDiff(wrong, fixed);
 
               return (
-                <div className="grid grid-cols-2 border rounded divide-x">
-                  <div className="p-4 bg-neutral-50">{wrongRich}</div>
-                  <div className="p-4">{fixedRich}</div>
+                <div className="flex py-4 px-6 bg-neutral-50 items-center">
+                  <div className="flex flex-col gap-2 text-left">
+                    <div className="text-gray-400">{wrongRich}</div>
+                    <div className="bg-neutral-50">{fixedRich}</div>
+                  </div>
+                  <SecondaryButton className="ml-auto">Apply</SecondaryButton>
                 </div>
               );
             })}
