@@ -12,7 +12,7 @@ interface FixGrammarResponseData {
   }[];
 }
 
-export const FixGrammar = httpsCallable<
+export const fixGrammar = httpsCallable<
   FixGrammarRequestData,
   FixGrammarResponseData
 >(functions, "fixGrammar");
