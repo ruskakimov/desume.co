@@ -52,9 +52,9 @@ const ReviewPage: React.FC = () => {
         {/* <PrimaryButton>Start review</PrimaryButton> */}
 
         <div>
-          <h3 className="mb-4 px-6 flex items-center gap-2">
+          <h3 className="mb-4 px-6 flex items-center gap-3">
             <span className="text-xl font-semibold">Correctness</span>
-            <span className="py-1 px-2 rounded-full bg-red-600 text-white text-sm font-semibold">
+            <span className="py-1 px-3 rounded-full bg-red-600 text-white text-sm font-semibold">
               {grammar?.corrections.length} mistakes
             </span>
           </h3>
