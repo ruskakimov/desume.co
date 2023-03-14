@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { fixGrammar, FixGrammarResponseData } from "../../api/review-functions";
 import { useContextResume } from "../../AppShell";
@@ -49,13 +50,18 @@ const ReviewPage: React.FC = () => {
       <MetricCards resume={resume} />
 
       <Card sidePadding={false}>
-        {/* <PrimaryButton>Start review</PrimaryButton> */}
-
         <div>
           <h3 className="mb-4 px-6 flex items-center gap-3">
             <span className="text-xl font-semibold">Correctness</span>
-            <span className="py-1 px-3 rounded-full bg-red-600 text-white text-sm font-semibold">
-              {grammar?.corrections.length} mistakes
+            <span
+              className={classNames(
+                "py-1 px-3 rounded-full  text-white text-sm font-semibold",
+                !grammar?.corrections.length ? "bg-emerald-600" : "bg-rose-600"
+              )}
+            >
+              {!!grammar?.corrections.length
+                ? `${grammar?.corrections.length} mistakes`
+                : `All good`}
             </span>
           </h3>
 
