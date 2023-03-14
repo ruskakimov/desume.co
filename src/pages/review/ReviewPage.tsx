@@ -69,7 +69,7 @@ const ReviewPage: React.FC = () => {
 
                   <div className="flex-grow flex flex-col gap-2 text-left">
                     <div className="text-gray-400">{wrongRich}</div>
-                    <div className="bg-neutral-50">{fixedRich}</div>
+                    <div>{fixedRich}</div>
                   </div>
                 </div>
               );
