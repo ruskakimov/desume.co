@@ -52,15 +52,10 @@ const ReviewPage: React.FC = () => {
       <Card sidePadding={false}>
         <div>
           <h3 className="mb-4 px-6 flex items-center gap-3">
-            <span className="text-xl font-semibold">Correctness</span>
-            <span
-              className={classNames(
-                "py-1 px-3 rounded-full  text-white text-sm font-semibold",
-                !grammar?.corrections.length ? "bg-emerald-600" : "bg-rose-600"
-              )}
-            >
+            <span className="text-xl font-semibold">Writing style</span>
+            <span className="py-1 px-3 rounded-full  text-white text-sm font-semibold bg-sky-500">
               {!!grammar?.corrections.length
-                ? `${grammar?.corrections.length} mistakes`
+                ? `${grammar?.corrections.length} corrections`
                 : `All good`}
             </span>
           </h3>
@@ -70,13 +65,15 @@ const ReviewPage: React.FC = () => {
               const [wrongRich, fixedRich] = buildRichDiff(wrong, fixed);
 
               return (
-                <div className="flex py-4 px-6 bg-neutral-50 items-center gap-6">
-                  <SecondaryButton>Fix</SecondaryButton>
+                <div className="flex py-8 px-6 bg-neutral-50 items-center gap-6">
+                  <PrimaryButton>Apply</PrimaryButton>
 
                   <div className="flex-grow flex flex-col gap-2 text-left">
                     <div className="text-gray-400">{wrongRich}</div>
-                    <div>{fixedRich}</div>
+                    <div className="font-medium">{fixedRich}</div>
                   </div>
+
+                  <SecondaryButton>Reject</SecondaryButton>
                 </div>
               );
             })}
