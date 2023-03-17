@@ -9,6 +9,7 @@ import {
   BulletPoint,
   EducationExperience,
   PersonalDetails,
+  ProjectExperience,
   Resume,
   ResumeSectionId,
   WorkExperience,
@@ -29,12 +30,13 @@ export function parseResume(data: unknown, user: User): Resume {
   // TODO: Complete defensive programming
   const workHistory = extractProperty(data, "personalDetails");
   const educationHistory = extractProperty(data, "educationHistory");
+  const projectHistory = extractProperty(data, "projectHistory");
 
   const resume: Resume = {
     personalDetails: parseResumePersonalDetails(data, user),
     workHistory: sortExperiences(parseWorkHistory(workHistory)),
     educationHistory: sortExperiences(parseEducationHistory(educationHistory)),
-    projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
+    projectHistory: sortExperiences(parseProjectHistory(projectHistory)),
     skillGroups: (data as any)?.skillGroups ?? [],
     sectionOrder:
       (data as any)?.sectionOrder ??
@@ -125,6 +127,39 @@ function parseEducationHistory(data: unknown): EducationExperience[] {
       usedIds.add(educationExperience.id);
 
       return educationExperience;
+    })
+    .filter(notNullish);
+}
+
+function parseProjectHistory(data: unknown): ProjectExperience[] {
+  if (!Array.isArray(data)) return [];
+
+  const array = data as unknown[];
+  const usedIds = new Set<string>();
+
+  return array
+    .map((x) => {
+      const id = extractString(x, "id");
+      const included = extractBoolean(x, "included");
+      const projectName = extractString(x, "projectName");
+      const projectWebsiteUrl = extractString(x, "projectWebsiteUrl");
+      const startDate = extractProperty(x, "startDate");
+      const endDate = extractProperty(x, "endDate");
+      const bulletPoints = extractProperty(x, "bulletPoints");
+
+      const projectExperience: ProjectExperience = {
+        id: id && !usedIds.has(id) ? id : generateId(),
+        included: included ?? true,
+        projectName: projectName ?? "",
+        projectWebsiteUrl: projectWebsiteUrl ?? "",
+        startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
+        endDate: parseMonthYear(endDate) ?? { month: 1, year: 2000 },
+        bulletPoints: parseBullets(bulletPoints),
+      };
+
+      usedIds.add(projectExperience.id);
+
+      return projectExperience;
     })
     .filter(notNullish);
 }
