@@ -10,5 +10,5 @@ export function compareMonthYearDates(a: MonthYear, b: MonthYear): number {
   if (a.year === b.year && a.month === b.month) return 0;
 
   const aIsBefore = a.year < b.year || (a.year === b.year && a.month < b.month);
-  return aIsBefore ? -1 : 1;
+  return aIsBefore ? 1 : -1;
 }
