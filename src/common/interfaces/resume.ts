@@ -16,7 +16,7 @@ export type ResumeSectionId =
   | "projects"
   | "skills";
 
-export interface ResumeSectionItem extends Includable, Orderable {
+export interface ResumeSectionItem extends Includable, Identifiable {
   id: ResumeSectionId;
 }
 
@@ -57,12 +57,12 @@ export interface Experience extends Includable {
   bulletPoints: BulletPoint[];
 }
 
-export interface SkillGroup extends Includable, Orderable {
+export interface SkillGroup extends Includable, Identifiable {
   groupName: string;
   skills: BulletPoint[];
 }
 
-export interface BulletPoint extends Includable, Orderable {
+export interface BulletPoint extends Includable, Identifiable {
   text: string;
 }
 
@@ -70,6 +70,6 @@ export interface Includable {
   included: boolean;
 }
 
-export interface Orderable {
+export interface Identifiable {
   id: string;
 }
