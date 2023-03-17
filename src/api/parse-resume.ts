@@ -12,6 +12,7 @@ import {
   ProjectExperience,
   Resume,
   ResumeSectionId,
+  SkillGroup,
   WorkExperience,
 } from "../common/interfaces/resume";
 import { isObject, notNullish } from "../common/functions/type-guards";
@@ -31,13 +32,14 @@ export function parseResume(data: unknown, user: User): Resume {
   const workHistory = extractProperty(data, "personalDetails");
   const educationHistory = extractProperty(data, "educationHistory");
   const projectHistory = extractProperty(data, "projectHistory");
+  const skillGroups = extractProperty(data, "skillGroups");
 
   const resume: Resume = {
     personalDetails: parseResumePersonalDetails(data, user),
     workHistory: sortExperiences(parseWorkHistory(workHistory)),
     educationHistory: sortExperiences(parseEducationHistory(educationHistory)),
     projectHistory: sortExperiences(parseProjectHistory(projectHistory)),
-    skillGroups: (data as any)?.skillGroups ?? [],
+    skillGroups: parseSkillGroups(skillGroups),
     sectionOrder:
       (data as any)?.sectionOrder ??
       defaultSectionOrder.map((id) => ({ id, included: true })),
@@ -160,6 +162,33 @@ function parseProjectHistory(data: unknown): ProjectExperience[] {
       usedIds.add(projectExperience.id);
 
       return projectExperience;
+    })
+    .filter(notNullish);
+}
+
+function parseSkillGroups(data: unknown): SkillGroup[] {
+  if (!Array.isArray(data)) return [];
+
+  const array = data as unknown[];
+  const usedIds = new Set<string>();
+
+  return array
+    .map((x) => {
+      const id = extractString(x, "id");
+      const included = extractBoolean(x, "included");
+      const groupName = extractString(x, "groupName");
+      const skills = extractProperty(x, "skills");
+
+      const skillGroup: SkillGroup = {
+        id: id && !usedIds.has(id) ? id : generateId(),
+        included: included ?? true,
+        groupName: groupName ?? "",
+        skills: parseBullets(skills),
+      };
+
+      usedIds.add(skillGroup.id);
+
+      return skillGroup;
     })
     .filter(notNullish);
 }
