@@ -10,6 +10,10 @@ export function isBoolean(data: unknown): data is boolean {
   return typeof data === "boolean";
 }
 
+export function isNumber(data: unknown): data is number {
+  return typeof data === "number";
+}
+
 export function notNullish<T>(val: T | undefined | null): val is T {
   return val !== undefined && val !== null;
 }

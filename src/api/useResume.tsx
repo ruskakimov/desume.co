@@ -3,20 +3,23 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { firestore } from "./firebase-setup";
-import { extractProperty, extractString } from "../common/functions/defensive";
+import {
+  extractBoolean,
+  extractNumber,
+  extractProperty,
+  extractString,
+} from "../common/functions/defensive";
 import { sortExperiences } from "../common/functions/experiences";
 import {
   BulletPoint,
   PersonalDetails,
   Resume,
   ResumeSectionId,
+  WorkExperience,
 } from "../common/interfaces/resume";
-import {
-  isBoolean,
-  isString,
-  notNullish,
-} from "../common/functions/type-guards";
+import { isObject, notNullish } from "../common/functions/type-guards";
 import { generateId } from "../common/functions/ids";
+import { MonthYear } from "../common/interfaces/time";
 
 function getResumeDocRef(uid: string) {
   return doc(firestore, "resumes", uid);
@@ -31,9 +34,11 @@ const defaultSectionOrder: ResumeSectionId[] = [
 
 function parseResume(data: unknown, user: User): Resume {
   // TODO: Complete defensive programming
+  const workHistory = extractProperty(data, "personalDetails");
+
   const resume: Resume = {
     personalDetails: parseResumePersonalDetails(data, user),
-    workHistory: sortExperiences((data as any)?.workHistory ?? []),
+    workHistory: sortExperiences(parseWorkHistory(workHistory)),
     educationHistory: sortExperiences((data as any)?.educationHistory ?? []),
     projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
     skillGroups: (data as any)?.skillGroups ?? [],
@@ -60,6 +65,49 @@ function parseResumePersonalDetails(
   };
 }
 
+function parseWorkHistory(data: unknown): WorkExperience[] {
+  if (!Array.isArray(data)) return [];
+
+  const array = data as unknown[];
+  const usedIds = new Set<string>();
+
+  return array
+    .map((x) => {
+      const id = extractString(x, "id");
+      const included = extractBoolean(x, "included");
+      const companyName = extractString(x, "companyName");
+      const companyWebsiteUrl = extractString(x, "companyWebsiteUrl");
+      const jobTitle = extractString(x, "jobTitle");
+      const startDate = extractProperty(x, "startDate");
+      const endDate = extractProperty(x, "endDate");
+      const bulletPoints = extractProperty(x, "bulletPoints");
+
+      const workExperience: WorkExperience = {
+        id: id && !usedIds.has(id) ? id : generateId(),
+        included: included ?? true,
+        companyName: companyName ?? "",
+        companyWebsiteUrl: companyWebsiteUrl ?? "",
+        jobTitle: jobTitle ?? "",
+        startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
+        endDate: parseMonthYear(endDate),
+        bulletPoints: parseBullets(bulletPoints),
+      };
+
+      usedIds.add(workExperience.id);
+
+      return workExperience;
+    })
+    .filter(notNullish);
+}
+
+function parseMonthYear(data: unknown): MonthYear | null {
+  if (!isObject(data)) return null;
+  return {
+    month: extractNumber(data, "month") ?? 1,
+    year: extractNumber(data, "year") ?? 2000,
+  };
+}
+
 function parseBullets(data: unknown): BulletPoint[] {
   if (!Array.isArray(data)) return [];
 
@@ -68,15 +116,15 @@ function parseBullets(data: unknown): BulletPoint[] {
 
   return array
     .map((x) => {
-      const id = extractProperty(x, "id");
-      const included = extractProperty(x, "included");
-      const text = extractProperty(x, "text");
+      const id = extractString(x, "id");
+      const included = extractBoolean(x, "included");
+      const text = extractString(x, "text");
 
-      if (!isString(text)) return null;
+      if (!text) return null;
 
       const bullet: BulletPoint = {
-        id: isString(id) && !usedIds.has(id) ? id : generateId(),
-        included: isBoolean(included) ? included : true,
+        id: id && !usedIds.has(id) ? id : generateId(),
+        included: included ?? true,
         text,
       };
 

@@ -51,7 +51,7 @@ export interface ProjectExperience extends Experience {
   projectWebsiteUrl: string;
 }
 
-export interface Experience extends Includable {
+export interface Experience extends Includable, Identifiable {
   startDate: MonthYear;
   endDate: MonthYear | null;
   bulletPoints: BulletPoint[];
