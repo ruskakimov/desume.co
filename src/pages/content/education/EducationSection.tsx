@@ -56,6 +56,7 @@ const EducationSection: React.FC = () => {
 
     return experiences.map((experience, index) => (
       <ExperienceCard
+        key={experience.id}
         title={experience.schoolName}
         subtitle={experience.degree}
         experience={experience}

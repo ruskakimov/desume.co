@@ -56,6 +56,7 @@ const ProjectsSection: React.FC = () => {
 
     return experiences.map((experience, index) => (
       <ExperienceCard
+        key={experience.id}
         title={experience.projectName}
         subtitle=""
         experience={experience}

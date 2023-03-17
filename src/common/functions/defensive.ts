@@ -1,8 +1,21 @@
-import { isObject, isString } from "./type-guards";
+import { isBoolean, isNumber, isObject, isString } from "./type-guards";
 
 export function extractString(data: unknown, key: string): string | undefined {
   const value = extractProperty(data, key);
   if (isString(value)) return value;
+}
+
+export function extractBoolean(
+  data: unknown,
+  key: string
+): boolean | undefined {
+  const value = extractProperty(data, key);
+  if (isBoolean(value)) return value;
+}
+
+export function extractNumber(data: unknown, key: string): number | undefined {
+  const value = extractProperty(data, key);
+  if (isNumber(value)) return value;
 }
 
 export function extractProperty(

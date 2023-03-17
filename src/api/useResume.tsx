@@ -3,54 +3,11 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { firestore } from "./firebase-setup";
-import { extractProperty, extractString } from "../common/functions/defensive";
-import { sortExperiences } from "../common/functions/experiences";
-import {
-  PersonalDetails,
-  Resume,
-  ResumeSectionId,
-} from "../common/interfaces/resume";
+import { Resume } from "../common/interfaces/resume";
+import { parseResume } from "./parse-resume";
 
 function getResumeDocRef(uid: string) {
   return doc(firestore, "resumes", uid);
-}
-
-const defaultSectionOrder: ResumeSectionId[] = [
-  "skills",
-  "work",
-  "education",
-  "projects",
-];
-
-function parseResume(data: unknown, user: User): Resume {
-  // TODO: Complete defensive programming
-  const resume: Resume = {
-    personalDetails: parseResumePersonalDetails(data, user),
-    workHistory: sortExperiences((data as any)?.workHistory ?? []),
-    educationHistory: sortExperiences((data as any)?.educationHistory ?? []),
-    projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
-    skillGroups: (data as any)?.skillGroups ?? [],
-    sectionOrder:
-      (data as any)?.sectionOrder ??
-      defaultSectionOrder.map((id) => ({ id, included: true })),
-  };
-
-  return resume;
-}
-
-function parseResumePersonalDetails(
-  data: unknown,
-  user: User
-): PersonalDetails {
-  const details = extractProperty(data, "personalDetails");
-  return {
-    fullName: extractString(details, "fullName") ?? user.displayName ?? "",
-    title: extractString(details, "title") ?? "",
-    email: extractString(details, "email") ?? user.email ?? "",
-    phoneNumber: extractString(details, "phoneNumber") ?? "",
-    websiteUrl: extractString(details, "websiteUrl") ?? "",
-    location: extractString(details, "location") ?? "",
-  };
 }
 
 export default function useResume(

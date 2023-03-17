@@ -4,6 +4,7 @@ import MonthYearField from "../../../common/components/fields/MonthYearField";
 import TextField from "../../../common/components/fields/TextField";
 import WebsiteField from "../../../common/components/fields/WebsiteField";
 import FormModal from "../../../common/components/FormModal";
+import { generateId } from "../../../common/functions/ids";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { EducationExperience } from "../../../common/interfaces/resume";
 
@@ -22,6 +23,7 @@ function convertFormDataToExperience(
   oldExperience: EducationExperience | null
 ): EducationExperience {
   return {
+    id: oldExperience?.id ?? generateId(),
     schoolName: formData.schoolName,
     schoolWebsiteUrl: formData.schoolWebsiteUrl ?? "",
     degree: formData.degree,

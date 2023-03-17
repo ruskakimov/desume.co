@@ -9,14 +9,21 @@ export interface Resume {
   sectionOrder: ResumeSectionItem[];
 }
 
-export type ResumeSectionId =
-  | "personal"
-  | "work"
-  | "education"
-  | "projects"
-  | "skills";
+export const ALL_RESUME_SECTIONS = [
+  "personal",
+  "skills",
+  "work",
+  "education",
+  "projects",
+] as const;
+type ResumeTuple = typeof ALL_RESUME_SECTIONS;
+export type ResumeSectionId = ResumeTuple[number];
 
-export interface ResumeSectionItem extends Includable, Orderable {
+export function isResumeSectionId(str: string): str is ResumeSectionId {
+  return ALL_RESUME_SECTIONS.includes(str as ResumeSectionId);
+}
+
+export interface ResumeSectionItem extends Includable, Identifiable {
   id: ResumeSectionId;
 }
 
@@ -51,18 +58,18 @@ export interface ProjectExperience extends Experience {
   projectWebsiteUrl: string;
 }
 
-export interface Experience extends Includable {
+export interface Experience extends Includable, Identifiable {
   startDate: MonthYear;
   endDate: MonthYear | null;
   bulletPoints: BulletPoint[];
 }
 
-export interface SkillGroup extends Includable, Orderable {
+export interface SkillGroup extends Includable, Identifiable {
   groupName: string;
   skills: BulletPoint[];
 }
 
-export interface BulletPoint extends Includable, Orderable {
+export interface BulletPoint extends Includable, Identifiable {
   text: string;
 }
 
@@ -70,6 +77,6 @@ export interface Includable {
   included: boolean;
 }
 
-export interface Orderable {
+export interface Identifiable {
   id: string;
 }
