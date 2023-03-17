@@ -6,10 +6,17 @@ import { firestore } from "./firebase-setup";
 import { extractProperty, extractString } from "../common/functions/defensive";
 import { sortExperiences } from "../common/functions/experiences";
 import {
+  BulletPoint,
   PersonalDetails,
   Resume,
   ResumeSectionId,
 } from "../common/interfaces/resume";
+import {
+  isBoolean,
+  isString,
+  notNullish,
+} from "../common/functions/type-guards";
+import { generateId } from "../common/functions/ids";
 
 function getResumeDocRef(uid: string) {
   return doc(firestore, "resumes", uid);
@@ -51,6 +58,27 @@ function parseResumePersonalDetails(
     websiteUrl: extractString(details, "websiteUrl") ?? "",
     location: extractString(details, "location") ?? "",
   };
+}
+
+function parseBullets(data: unknown): BulletPoint[] {
+  if (!Array.isArray(data)) return [];
+  const array = data as unknown[];
+  return array
+    .map((x) => {
+      const id = extractProperty(x, "id");
+      const included = extractProperty(x, "included");
+      const text = extractProperty(x, "text");
+
+      if (!isString(text)) return null;
+
+      return {
+        // TODO: Check for collisions
+        id: isString(id) ? id : generateId(),
+        included: isBoolean(included) ? included : true,
+        text,
+      };
+    })
+    .filter(notNullish);
 }
 
 export default function useResume(
