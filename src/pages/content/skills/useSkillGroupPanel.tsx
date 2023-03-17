@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import TextAreaField from "../../../common/components/fields/TextAreaField";
 import TextField from "../../../common/components/fields/TextField";
 import FormModal from "../../../common/components/FormModal";
-import { generateId, generateIds } from "../../../common/functions/ids";
+import { generateId } from "../../../common/functions/ids";
 import useEditFlow from "../../../common/hooks/useEditFlow";
 import { BulletPoint, SkillGroup } from "../../../common/interfaces/resume";
 
@@ -24,16 +24,14 @@ function convertFormDataToSkillGroup(
     .map((text) => text.trim())
     .filter((text) => text.length > 0);
 
-  const newIds = generateIds(parsedSkills.length);
-
   return {
     id: oldSkillGroup?.id ?? generateId(),
     groupName: formData.groupName,
     included: oldSkillGroup?.included ?? true,
     skills: parsedSkills.map(
-      (text, index) =>
+      (text) =>
         skillsByText[text] ?? {
-          id: newIds[index],
+          id: generateId(),
           included: true,
           text,
         }
