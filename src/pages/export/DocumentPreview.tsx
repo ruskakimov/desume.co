@@ -476,7 +476,7 @@ const ExperienceItem = React.forwardRef<
         >
           {experience.bulletPoints
             .filter((bullet) => bullet.included)
-            .map((bullet, index) => (
+            .map((bullet) => (
               <li
                 key={bullet.id}
                 className="flex cursor-pointer rounded hover:bg-yellow-100"
@@ -489,24 +489,14 @@ const ExperienceItem = React.forwardRef<
                 onClick={() => {
                   openBulletModal(bullet, false)
                     .then((editedBullet) => {
-                      if (editedBullet) {
-                        onChange({
-                          ...experience,
-                          bulletPoints: withReplacedAt(
-                            experience.bulletPoints,
-                            index,
-                            editedBullet
-                          ),
-                        });
-                      } else {
-                        onChange({
-                          ...experience,
-                          bulletPoints: withRemovedAt(
-                            experience.bulletPoints,
-                            index
-                          ),
-                        });
-                      }
+                      if (!editedBullet) return;
+
+                      onChange({
+                        ...experience,
+                        bulletPoints: experience.bulletPoints.map((x) =>
+                          x.id === editedBullet.id ? editedBullet : x
+                        ),
+                      });
                     })
                     .catch((e) => {
                       if (e !== userCancelReason) console.error(e);
