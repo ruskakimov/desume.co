@@ -57,6 +57,7 @@ const WorkHistorySection: React.FC = () => {
 
     return experiences.map((experience, index) => (
       <ExperienceCard
+        key={experience.id}
         title={experience.companyName}
         subtitle={experience.jobTitle}
         experience={experience}
