@@ -9,12 +9,19 @@ export interface Resume {
   sectionOrder: ResumeSectionItem[];
 }
 
-export type ResumeSectionId =
-  | "personal"
-  | "work"
-  | "education"
-  | "projects"
-  | "skills";
+export const ALL_RESUME_SECTIONS = [
+  "personal",
+  "skills",
+  "work",
+  "education",
+  "projects",
+] as const;
+type ResumeTuple = typeof ALL_RESUME_SECTIONS;
+export type ResumeSectionId = ResumeTuple[number];
+
+export function isResumeSectionId(str: string): str is ResumeSectionId {
+  return ALL_RESUME_SECTIONS.includes(str as ResumeSectionId);
+}
 
 export interface ResumeSectionItem extends Includable, Identifiable {
   id: ResumeSectionId;
