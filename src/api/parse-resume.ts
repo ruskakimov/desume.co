@@ -23,6 +23,8 @@ import { MonthYear } from "../common/interfaces/time";
 import { User } from "firebase/auth";
 
 export function parseResume(data: unknown, user: User): Resume {
+  const usedIds = new Set<string>();
+
   const workHistory = extractProperty(data, "personalDetails");
   const educationHistory = extractProperty(data, "educationHistory");
   const projectHistory = extractProperty(data, "projectHistory");
@@ -31,10 +33,14 @@ export function parseResume(data: unknown, user: User): Resume {
 
   const resume: Resume = {
     personalDetails: parseResumePersonalDetails(data, user),
-    workHistory: sortExperiences(parseWorkHistory(workHistory)),
-    educationHistory: sortExperiences(parseEducationHistory(educationHistory)),
-    projectHistory: sortExperiences(parseProjectHistory(projectHistory)),
-    skillGroups: parseSkillGroups(skillGroups),
+    workHistory: sortExperiences(parseWorkHistory(workHistory, usedIds)),
+    educationHistory: sortExperiences(
+      parseEducationHistory(educationHistory, usedIds)
+    ),
+    projectHistory: sortExperiences(
+      parseProjectHistory(projectHistory, usedIds)
+    ),
+    skillGroups: parseSkillGroups(skillGroups, usedIds),
     sectionOrder: parseSectionOrder(sectionOrder),
   };
 
@@ -56,11 +62,13 @@ function parseResumePersonalDetails(
   };
 }
 
-function parseWorkHistory(data: unknown): WorkExperience[] {
+function parseWorkHistory(
+  data: unknown,
+  usedIds: Set<string>
+): WorkExperience[] {
   if (!Array.isArray(data)) return [];
 
   const array = data as unknown[];
-  const usedIds = new Set<string>();
 
   return array
     .map((x) => {
@@ -81,7 +89,7 @@ function parseWorkHistory(data: unknown): WorkExperience[] {
         jobTitle: jobTitle ?? "",
         startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
         endDate: parseMonthYear(endDate),
-        bulletPoints: parseBullets(bulletPoints),
+        bulletPoints: parseBullets(bulletPoints, usedIds),
       };
 
       usedIds.add(workExperience.id);
@@ -91,11 +99,13 @@ function parseWorkHistory(data: unknown): WorkExperience[] {
     .filter(notNullish);
 }
 
-function parseEducationHistory(data: unknown): EducationExperience[] {
+function parseEducationHistory(
+  data: unknown,
+  usedIds: Set<string>
+): EducationExperience[] {
   if (!Array.isArray(data)) return [];
 
   const array = data as unknown[];
-  const usedIds = new Set<string>();
 
   return array
     .map((x) => {
@@ -116,7 +126,7 @@ function parseEducationHistory(data: unknown): EducationExperience[] {
         degree: degree ?? "",
         startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
         endDate: parseMonthYear(endDate) ?? { month: 1, year: 2000 },
-        bulletPoints: parseBullets(bulletPoints),
+        bulletPoints: parseBullets(bulletPoints, usedIds),
       };
 
       usedIds.add(educationExperience.id);
@@ -126,11 +136,13 @@ function parseEducationHistory(data: unknown): EducationExperience[] {
     .filter(notNullish);
 }
 
-function parseProjectHistory(data: unknown): ProjectExperience[] {
+function parseProjectHistory(
+  data: unknown,
+  usedIds: Set<string>
+): ProjectExperience[] {
   if (!Array.isArray(data)) return [];
 
   const array = data as unknown[];
-  const usedIds = new Set<string>();
 
   return array
     .map((x) => {
@@ -149,7 +161,7 @@ function parseProjectHistory(data: unknown): ProjectExperience[] {
         projectWebsiteUrl: projectWebsiteUrl ?? "",
         startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
         endDate: parseMonthYear(endDate) ?? { month: 1, year: 2000 },
-        bulletPoints: parseBullets(bulletPoints),
+        bulletPoints: parseBullets(bulletPoints, usedIds),
       };
 
       usedIds.add(projectExperience.id);
@@ -159,11 +171,10 @@ function parseProjectHistory(data: unknown): ProjectExperience[] {
     .filter(notNullish);
 }
 
-function parseSkillGroups(data: unknown): SkillGroup[] {
+function parseSkillGroups(data: unknown, usedIds: Set<string>): SkillGroup[] {
   if (!Array.isArray(data)) return [];
 
   const array = data as unknown[];
-  const usedIds = new Set<string>();
 
   return array
     .map((x) => {
@@ -176,7 +187,7 @@ function parseSkillGroups(data: unknown): SkillGroup[] {
         id: id && !usedIds.has(id) ? id : generateId(),
         included: included ?? true,
         groupName: groupName ?? "",
-        skills: parseBullets(skills),
+        skills: parseBullets(skills, usedIds),
       };
 
       usedIds.add(skillGroup.id);
@@ -231,11 +242,10 @@ function parseMonthYear(data: unknown): MonthYear | null {
   };
 }
 
-function parseBullets(data: unknown): BulletPoint[] {
+function parseBullets(data: unknown, usedIds: Set<string>): BulletPoint[] {
   if (!Array.isArray(data)) return [];
 
   const array = data as unknown[];
-  const usedIds = new Set<string>();
 
   return array
     .map((x) => {
