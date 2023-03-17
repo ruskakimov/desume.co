@@ -62,7 +62,10 @@ function parseResumePersonalDetails(
 
 function parseBullets(data: unknown): BulletPoint[] {
   if (!Array.isArray(data)) return [];
+
   const array = data as unknown[];
+  const usedIds = new Set<string>();
+
   return array
     .map((x) => {
       const id = extractProperty(x, "id");
@@ -71,12 +74,15 @@ function parseBullets(data: unknown): BulletPoint[] {
 
       if (!isString(text)) return null;
 
-      return {
-        // TODO: Check for collisions
-        id: isString(id) ? id : generateId(),
+      const bullet: BulletPoint = {
+        id: isString(id) && !usedIds.has(id) ? id : generateId(),
         included: isBoolean(included) ? included : true,
         text,
       };
+
+      usedIds.add(bullet.id);
+
+      return bullet;
     })
     .filter(notNullish);
 }
