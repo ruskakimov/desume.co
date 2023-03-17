@@ -6,12 +6,14 @@ import {
 } from "../common/functions/defensive";
 import { sortExperiences } from "../common/functions/experiences";
 import {
+  ALL_RESUME_SECTIONS,
   BulletPoint,
   EducationExperience,
+  isResumeSectionId,
   PersonalDetails,
   ProjectExperience,
   Resume,
-  ResumeSectionId,
+  ResumeSectionItem,
   SkillGroup,
   WorkExperience,
 } from "../common/interfaces/resume";
@@ -20,19 +22,12 @@ import { generateId } from "../common/functions/ids";
 import { MonthYear } from "../common/interfaces/time";
 import { User } from "firebase/auth";
 
-const defaultSectionOrder: ResumeSectionId[] = [
-  "skills",
-  "work",
-  "education",
-  "projects",
-];
-
 export function parseResume(data: unknown, user: User): Resume {
-  // TODO: Complete defensive programming
   const workHistory = extractProperty(data, "personalDetails");
   const educationHistory = extractProperty(data, "educationHistory");
   const projectHistory = extractProperty(data, "projectHistory");
   const skillGroups = extractProperty(data, "skillGroups");
+  const sectionOrder = extractProperty(data, "sectionOrder");
 
   const resume: Resume = {
     personalDetails: parseResumePersonalDetails(data, user),
@@ -40,9 +35,7 @@ export function parseResume(data: unknown, user: User): Resume {
     educationHistory: sortExperiences(parseEducationHistory(educationHistory)),
     projectHistory: sortExperiences(parseProjectHistory(projectHistory)),
     skillGroups: parseSkillGroups(skillGroups),
-    sectionOrder:
-      (data as any)?.sectionOrder ??
-      defaultSectionOrder.map((id) => ({ id, included: true })),
+    sectionOrder: parseSectionOrder(sectionOrder),
   };
 
   return resume;
@@ -191,6 +184,43 @@ function parseSkillGroups(data: unknown): SkillGroup[] {
       return skillGroup;
     })
     .filter(notNullish);
+}
+
+function parseSectionOrder(data: unknown): ResumeSectionItem[] {
+  if (!Array.isArray(data)) return [];
+
+  const array = data as unknown[];
+
+  const parsedItems = array
+    .map((x) => {
+      const id = extractString(x, "id");
+      const included = extractBoolean(x, "included");
+
+      if (!id || !isResumeSectionId(id)) return null;
+      if (id === "personal") return null; // Personal section is pinned.
+
+      const item: ResumeSectionItem = {
+        id,
+        included: included ?? false,
+      };
+
+      return item;
+    })
+    .filter(notNullish);
+
+  // Add missing sections:
+  for (const sectionId of ALL_RESUME_SECTIONS) {
+    if (sectionId === "personal") continue; // Personal section is pinned.
+
+    if (!parsedItems.find((x) => x.id === sectionId)) {
+      parsedItems.push({
+        id: sectionId,
+        included: false,
+      });
+    }
+  }
+
+  return parsedItems;
 }
 
 function parseMonthYear(data: unknown): MonthYear | null {
