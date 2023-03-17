@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { userCancelReason } from "../../common/constants/reject-reasons";
-import { withRemovedAt, withReplacedAt } from "../../common/functions/array";
 import { groupIntoStacks } from "../../common/functions/layout";
 import { monthYearToString } from "../../common/functions/time";
 import useElementSize from "../../common/hooks/useElementSize";
@@ -51,9 +50,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   format,
   pagesRef,
 }) => {
-  const [_, setWorkHistory] = useWorkHistory();
-  const [__, setEducation] = useEducation();
-  const [___, setProjects] = useProjects();
+  const [, setWorkHistory] = useWorkHistory();
+  const [, setEducation] = useEducation();
+  const [, setProjects] = useProjects();
 
   const aspectRatio = format.width / format.height;
 
@@ -107,18 +106,17 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       renderExperienceSectionBlocks(
         "Work experience",
         resume.workHistory,
-        (experience, index, isLast) => (
+        (experience, _, isLast) => (
           <ExperienceItem
             title={experience.companyName}
             subtitle={experience.jobTitle}
             experience={experience}
             onChange={(editedExperience) => {
-              // Cannot use index here. Only included are present. Use an ID.
               setWorkHistory(
-                withReplacedAt(
-                  resume.workHistory,
-                  index,
-                  editedExperience as WorkExperience
+                resume.workHistory.map((x) =>
+                  x.id === editedExperience.id
+                    ? (editedExperience as WorkExperience)
+                    : x
                 )
               );
             }}
@@ -132,17 +130,17 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       renderExperienceSectionBlocks(
         "Education",
         resume.educationHistory,
-        (education, index, isLast) => (
+        (education, _, isLast) => (
           <ExperienceItem
             title={education.schoolName}
             subtitle={education.degree}
             experience={education}
             onChange={(editedEducation) => {
               setEducation(
-                withReplacedAt(
-                  resume.educationHistory,
-                  index,
-                  editedEducation as EducationExperience
+                resume.educationHistory.map((x) =>
+                  x.id === editedEducation.id
+                    ? (editedEducation as EducationExperience)
+                    : x
                 )
               );
             }}
@@ -156,16 +154,16 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
       renderExperienceSectionBlocks(
         "Projects",
         resume.projectHistory,
-        (project, index, isLast) => (
+        (project, _, isLast) => (
           <ExperienceItem
             title={project.projectName}
             experience={project}
             onChange={(editedProject) => {
               setProjects(
-                withReplacedAt(
-                  resume.projectHistory,
-                  index,
-                  editedProject as ProjectExperience
+                resume.projectHistory.map((x) =>
+                  x.id === editedProject.id
+                    ? (editedProject as ProjectExperience)
+                    : x
                 )
               );
             }}
