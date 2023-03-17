@@ -7,6 +7,7 @@ import {
 import { sortExperiences } from "../common/functions/experiences";
 import {
   BulletPoint,
+  EducationExperience,
   PersonalDetails,
   Resume,
   ResumeSectionId,
@@ -27,11 +28,12 @@ const defaultSectionOrder: ResumeSectionId[] = [
 export function parseResume(data: unknown, user: User): Resume {
   // TODO: Complete defensive programming
   const workHistory = extractProperty(data, "personalDetails");
+  const educationHistory = extractProperty(data, "educationHistory");
 
   const resume: Resume = {
     personalDetails: parseResumePersonalDetails(data, user),
     workHistory: sortExperiences(parseWorkHistory(workHistory)),
-    educationHistory: sortExperiences((data as any)?.educationHistory ?? []),
+    educationHistory: sortExperiences(parseEducationHistory(educationHistory)),
     projectHistory: sortExperiences((data as any)?.projectHistory ?? []),
     skillGroups: (data as any)?.skillGroups ?? [],
     sectionOrder:
@@ -88,6 +90,41 @@ function parseWorkHistory(data: unknown): WorkExperience[] {
       usedIds.add(workExperience.id);
 
       return workExperience;
+    })
+    .filter(notNullish);
+}
+
+function parseEducationHistory(data: unknown): EducationExperience[] {
+  if (!Array.isArray(data)) return [];
+
+  const array = data as unknown[];
+  const usedIds = new Set<string>();
+
+  return array
+    .map((x) => {
+      const id = extractString(x, "id");
+      const included = extractBoolean(x, "included");
+      const schoolName = extractString(x, "schoolName");
+      const schoolWebsiteUrl = extractString(x, "schoolWebsiteUrl");
+      const degree = extractString(x, "degree");
+      const startDate = extractProperty(x, "startDate");
+      const endDate = extractProperty(x, "endDate");
+      const bulletPoints = extractProperty(x, "bulletPoints");
+
+      const educationExperience: EducationExperience = {
+        id: id && !usedIds.has(id) ? id : generateId(),
+        included: included ?? true,
+        schoolName: schoolName ?? "",
+        schoolWebsiteUrl: schoolWebsiteUrl ?? "",
+        degree: degree ?? "",
+        startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
+        endDate: parseMonthYear(endDate) ?? { month: 1, year: 2000 },
+        bulletPoints: parseBullets(bulletPoints),
+      };
+
+      usedIds.add(educationExperience.id);
+
+      return educationExperience;
     })
     .filter(notNullish);
 }
