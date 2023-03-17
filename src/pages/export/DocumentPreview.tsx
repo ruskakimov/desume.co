@@ -113,6 +113,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             subtitle={experience.jobTitle}
             experience={experience}
             onChange={(editedExperience) => {
+              // Cannot use index here. Only included are present. Use an ID.
               setWorkHistory(
                 withReplacedAt(
                   resume.workHistory,
