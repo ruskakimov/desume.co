@@ -1,47 +1,77 @@
-import { useEffect, useState } from "react";
-import { fixGrammar, FixGrammarResponseData } from "../../api/review-functions";
+import {
+  doc,
+  DocumentData,
+  FirestoreDataConverter,
+  QueryDocumentSnapshot,
+} from "firebase/firestore";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { firestore } from "../../api/firebase-setup";
+import { useUserContext } from "../../App";
 import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
+import ErrorBox from "../../common/components/ErrorBox";
 import SecondaryButton from "../../common/components/SecondaryButton";
 import { buildRichDiff } from "../../common/functions/build-rich-diff";
-import { getResumeStrings } from "../../common/functions/resume-utils";
 import MetricCards from "./MetricCards";
+
+interface Review {
+  corrections: { original: string; corrected: string }[];
+  correct: string[];
+}
+
+const converter: FirestoreDataConverter<Review> = {
+  toFirestore(data: Review): DocumentData {
+    return data;
+  },
+  fromFirestore(snapshot: QueryDocumentSnapshot): Review {
+    const data = snapshot.data();
+    return data as Review;
+  },
+};
 
 const ReviewPage: React.FC = () => {
   const [resume] = useContextResume();
-  const [grammar, setGrammar] = useState<FixGrammarResponseData | null>(null);
-
-  useEffect(() => {
-    if (resume === null) return;
-
-    fixGrammar({
-      strings: getResumeStrings(resume),
-    })
-      .then((res) => {
-        setGrammar(res.data);
-        console.log(JSON.stringify(res.data));
-      })
-      .catch(console.error);
-  }, [resume]);
 
   return (
     <div className="space-y-5">
       <MetricCards resume={resume} />
+      <WritingStyleSection />
+    </div>
+  );
+};
 
-      <Card sidePadding={false}>
-        <div>
-          <h3 className="mb-4 px-6 flex items-center gap-3">
-            <span className="text-xl font-semibold">Writing style</span>
-            <span className="py-1 px-3 rounded-full  text-white text-sm font-semibold bg-sky-500">
-              {!!grammar?.corrections.length
-                ? `${grammar?.corrections.length} corrections`
-                : `All good`}
-            </span>
-          </h3>
+const WritingStyleSection: React.FC = () => {
+  const user = useUserContext();
+  const [review, isLoading, error] = useDocumentData<Review>(
+    doc(firestore, "reviews", user.uid).withConverter(converter)
+  );
 
+  if (isLoading) {
+    return (
+      <div className="h-40 shimmer bg-gray-200 rounded-md animate-pulse" />
+    );
+  }
+
+  return (
+    <Card sidePadding={false}>
+      <div>
+        <h3 className="mb-4 px-6 flex items-center gap-3">
+          <span className="text-xl font-semibold">Writing style</span>
+          <span className="py-1 px-3 rounded-full  text-white text-sm font-semibold bg-sky-500">
+            {!!review?.corrections.length
+              ? `${review?.corrections.length} corrections`
+              : `All good`}
+          </span>
+        </h3>
+
+        {error ? (
+          <div className="px-6">
+            <ErrorBox title="Failed to load data." body={error.message} />
+          </div>
+        ) : (
           <div className="space-y-6">
-            {grammar?.corrections.map(({ wrong, fixed }) => {
-              const [wrongRich, fixedRich] = buildRichDiff(wrong, fixed);
+            {review?.corrections.map(({ original, corrected }) => {
+              const [wrongRich, fixedRich] = buildRichDiff(original, corrected);
 
               return (
                 <div className="flex py-8 px-6 bg-neutral-50 items-center gap-6">
@@ -55,9 +85,9 @@ const ReviewPage: React.FC = () => {
               );
             })}
           </div>
-        </div>
-      </Card>
-    </div>
+        )}
+      </div>
+    </Card>
   );
 };
 
