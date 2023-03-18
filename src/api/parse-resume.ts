@@ -160,7 +160,7 @@ function parseProjectHistory(
         projectName: projectName ?? "",
         projectWebsiteUrl: projectWebsiteUrl ?? "",
         startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
-        endDate: parseMonthYear(endDate) ?? { month: 1, year: 2000 },
+        endDate: parseMonthYear(endDate),
         bulletPoints: parseBullets(bulletPoints, usedIds),
       };
 
