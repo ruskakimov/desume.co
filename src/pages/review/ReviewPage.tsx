@@ -33,7 +33,7 @@ const ReviewPage: React.FC = () => {
   const [resume] = useContextResume();
 
   return (
-    <div className="space-y-5">
+    <div className="pb-8 space-y-5">
       <MetricCards resume={resume} />
       <WritingStyleSection />
     </div>
