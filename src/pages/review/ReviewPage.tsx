@@ -74,12 +74,12 @@ const WritingStyleSection: React.FC = () => {
               const [wrongRich, fixedRich] = buildRichDiff(original, corrected);
 
               return (
-                <div className="flex py-8 px-6 bg-neutral-50 items-center gap-6">
+                <div className="flex mx-6 py-5 px-6 rounded-md bg-sky-50 items-center gap-6">
                   <SecondaryButton>Apply</SecondaryButton>
 
                   <div className="flex-grow flex flex-col gap-2 text-left">
-                    <div className="text-gray-400">{wrongRich}</div>
                     <div className="font-medium">{fixedRich}</div>
+                    <div className="text-gray-400">{wrongRich}</div>
                   </div>
                 </div>
               );
