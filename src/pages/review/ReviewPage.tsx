@@ -1,3 +1,4 @@
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import {
   doc,
   DocumentData,
@@ -52,40 +53,55 @@ const WritingStyleSection: React.FC = () => {
     );
   }
 
+  const buildContent = () => {
+    if (error) {
+      return (
+        <div className="px-6">
+          <ErrorBox title="Failed to load data." body={error.message} />
+        </div>
+      );
+    }
+
+    if (!review || review.corrections.length === 0) return null;
+
+    return (
+      <div className="space-y-6">
+        {review?.corrections.map(({ original, corrected }) => {
+          const [wrongRich, fixedRich] = buildRichDiff(original, corrected);
+
+          return (
+            <div className="mt-4 flex py-5 px-6 bg-gray-50 items-center gap-6">
+              <SecondaryButton>Apply</SecondaryButton>
+
+              <div className="flex-grow flex flex-col gap-2 text-left">
+                <div className="font-medium">{fixedRich}</div>
+                <div className="text-gray-400">{wrongRich}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <Card sidePadding={false}>
       <div>
-        <h3 className="mb-4 px-6 flex items-center gap-3">
+        <h3 className="px-6 flex items-center gap-3">
           <span className="text-xl font-semibold">Writing style</span>
           {review && review.corrections.length > 0 ? (
             <span className="py-1 px-3 rounded-full text-white text-sm font-semibold bg-sky-500">
               {review.corrections.length} improvements
             </span>
-          ) : null}
+          ) : (
+            <CheckCircleIcon
+              className="h-7 w-7 text-emerald-500"
+              aria-hidden="true"
+            />
+          )}
         </h3>
 
-        {error ? (
-          <div className="px-6">
-            <ErrorBox title="Failed to load data." body={error.message} />
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {review?.corrections.map(({ original, corrected }) => {
-              const [wrongRich, fixedRich] = buildRichDiff(original, corrected);
-
-              return (
-                <div className="flex py-5 px-6 bg-gray-50 items-center gap-6">
-                  <SecondaryButton>Apply</SecondaryButton>
-
-                  <div className="flex-grow flex flex-col gap-2 text-left">
-                    <div className="font-medium">{fixedRich}</div>
-                    <div className="text-gray-400">{wrongRich}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {buildContent()}
       </div>
     </Card>
   );
