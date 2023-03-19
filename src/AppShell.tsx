@@ -68,7 +68,7 @@ export default function AppShell() {
                       >
                         {item.name}
                         {item.count ? (
-                          <span className="ml-2 hidden rounded-full py-0.5 px-2.5 text-xs font-medium md:inline-block bg-sky-500 text-white">
+                          <span className="ml-2 hidden rounded-full py-0.5 px-2.5 text-xs font-semibold md:inline-block bg-sky-500 text-white">
                             {item.count}
                           </span>
                         ) : null}
