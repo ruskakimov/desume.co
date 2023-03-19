@@ -59,7 +59,7 @@ const WritingStyleSection: React.FC = () => {
           <span className="text-xl font-semibold">Writing style</span>
           {review && review.corrections.length > 0 ? (
             <span className="py-1 px-3 rounded-full text-white text-sm font-semibold bg-sky-500">
-              {review.corrections.length} corrections
+              {review.corrections.length} improvements
             </span>
           ) : null}
         </h3>
