@@ -13,10 +13,16 @@ import Card from "../../common/components/Card";
 import ErrorBox from "../../common/components/ErrorBox";
 import SecondaryButton from "../../common/components/SecondaryButton";
 import { buildRichDiff } from "../../common/functions/build-rich-diff";
+import { applyCorrection } from "../../common/functions/resume-utils";
 import MetricCards from "./MetricCards";
 
+export interface Correction {
+  original: string;
+  corrected: string;
+}
+
 interface Review {
-  corrections: { original: string; corrected: string }[];
+  corrections: Correction[];
   correct: string[];
 }
 
@@ -31,17 +37,25 @@ const converter: FirestoreDataConverter<Review> = {
 };
 
 const ReviewPage: React.FC = () => {
-  const [resume] = useContextResume();
+  const [resume, setResume] = useContextResume();
 
   return (
     <div className="pb-8 space-y-5">
       <MetricCards resume={resume} />
-      <WritingStyleSection />
+      <WritingStyleSection
+        onApply={(correction) => {
+          if (resume) {
+            setResume(applyCorrection(resume, correction));
+          }
+        }}
+      />
     </div>
   );
 };
 
-const WritingStyleSection: React.FC = () => {
+const WritingStyleSection: React.FC<{
+  onApply: (correction: Correction) => void;
+}> = (props) => {
   const user = useUserContext();
   const [review, isLoading, error] = useDocumentData<Review>(
     doc(firestore, "reviews", user.uid).withConverter(converter)
@@ -66,12 +80,17 @@ const WritingStyleSection: React.FC = () => {
 
     return (
       <div className="space-y-6">
-        {review?.corrections.map(({ original, corrected }) => {
-          const [wrongRich, fixedRich] = buildRichDiff(original, corrected);
+        {review?.corrections.map((correction) => {
+          const [wrongRich, fixedRich] = buildRichDiff(
+            correction.original,
+            correction.corrected
+          );
 
           return (
             <div className="mt-4 flex py-5 px-6 bg-gray-50 items-center gap-6">
-              <SecondaryButton>Apply</SecondaryButton>
+              <SecondaryButton onClick={() => props.onApply(correction)}>
+                Apply
+              </SecondaryButton>
 
               <div className="flex-grow flex flex-col gap-2 text-left">
                 <div className="font-medium">{fixedRich}</div>

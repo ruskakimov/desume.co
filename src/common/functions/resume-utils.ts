@@ -1,3 +1,4 @@
+import { Correction } from "../../pages/review/ReviewPage";
 import { Experience, Resume, ResumeSectionId } from "../interfaces/resume";
 
 export function calcYearsOfExp(resume: Resume): number {
@@ -138,4 +139,27 @@ function resumeContainsSection(
       (section) => section.id === sectionId && section.included
     ) !== undefined
   );
+}
+
+export function applyCorrection(
+  resume: Resume,
+  correction: Correction
+): Resume {
+  function updateExperience<T extends Experience>(exp: T): T {
+    return {
+      ...exp,
+      bulletPoints: exp.bulletPoints.map((b) =>
+        b.text === correction.original
+          ? { ...b, text: correction.corrected }
+          : b
+      ),
+    };
+  }
+
+  return {
+    ...resume,
+    workHistory: resume.workHistory.map(updateExperience),
+    educationHistory: resume.educationHistory.map(updateExperience),
+    projectHistory: resume.projectHistory.map(updateExperience),
+  };
 }
