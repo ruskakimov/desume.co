@@ -5,6 +5,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { firebaseAuth } from "./api/firebase-setup";
 import AppShell from "./AppShell";
 import logo from "./assets/images/logo.svg";
+import { ReviewProvider } from "./pages/review/review-context";
 
 export interface AppUser {
   uid: string;
@@ -63,7 +64,9 @@ function App() {
 
   return (
     <AppUserContext.Provider value={appUser}>
-      <AppShell />
+      <ReviewProvider>
+        <AppShell />
+      </ReviewProvider>
     </AppUserContext.Provider>
   );
 }

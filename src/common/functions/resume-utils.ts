@@ -1,4 +1,4 @@
-import { Correction } from "../../pages/review/ReviewPage";
+import { Correction } from "../../pages/review/review-context";
 import { Experience, Resume, ResumeSectionId } from "../interfaces/resume";
 
 export function calcYearsOfExp(resume: Resume): number {

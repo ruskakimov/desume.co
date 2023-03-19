@@ -1,13 +1,4 @@
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import {
-  doc,
-  DocumentData,
-  FirestoreDataConverter,
-  QueryDocumentSnapshot,
-} from "firebase/firestore";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { firestore } from "../../api/firebase-setup";
-import { useUserContext } from "../../App";
 import { useContextResume } from "../../AppShell";
 import Card from "../../common/components/Card";
 import ErrorBox from "../../common/components/ErrorBox";
@@ -15,26 +6,7 @@ import SecondaryButton from "../../common/components/SecondaryButton";
 import { buildRichDiff } from "../../common/functions/build-rich-diff";
 import { applyCorrection } from "../../common/functions/resume-utils";
 import MetricCards from "./MetricCards";
-
-export interface Correction {
-  original: string;
-  corrected: string;
-}
-
-interface Review {
-  corrections: Correction[];
-  correct: string[];
-}
-
-const converter: FirestoreDataConverter<Review> = {
-  toFirestore(data: Review): DocumentData {
-    return data;
-  },
-  fromFirestore(snapshot: QueryDocumentSnapshot): Review {
-    const data = snapshot.data();
-    return data as Review;
-  },
-};
+import { Correction, useReview } from "./review-context";
 
 const ReviewPage: React.FC = () => {
   const [resume, setResume] = useContextResume();
@@ -56,10 +28,7 @@ const ReviewPage: React.FC = () => {
 const WritingStyleSection: React.FC<{
   onApply: (correction: Correction) => void;
 }> = (props) => {
-  const user = useUserContext();
-  const [review, isLoading, error] = useDocumentData<Review>(
-    doc(firestore, "reviews", user.uid).withConverter(converter)
-  );
+  const { review, isLoading, error } = useReview();
 
   if (isLoading) {
     return (
@@ -71,7 +40,7 @@ const WritingStyleSection: React.FC<{
     if (error) {
       return (
         <div className="px-6">
-          <ErrorBox title="Failed to load data." body={error.message} />
+          <ErrorBox title="Failed to load data." body={error} />
         </div>
       );
     }
