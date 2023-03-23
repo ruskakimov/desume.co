@@ -25,7 +25,7 @@ import { User } from "firebase/auth";
 export function parseResume(data: unknown, user: User): Resume {
   const usedIds = new Set<string>();
 
-  const workHistory = extractProperty(data, "personalDetails");
+  const workHistory = extractProperty(data, "workHistory");
   const educationHistory = extractProperty(data, "educationHistory");
   const projectHistory = extractProperty(data, "projectHistory");
   const skillGroups = extractProperty(data, "skillGroups");
@@ -160,7 +160,7 @@ function parseProjectHistory(
         projectName: projectName ?? "",
         projectWebsiteUrl: projectWebsiteUrl ?? "",
         startDate: parseMonthYear(startDate) ?? { month: 1, year: 2000 },
-        endDate: parseMonthYear(endDate) ?? { month: 1, year: 2000 },
+        endDate: parseMonthYear(endDate),
         bulletPoints: parseBullets(bulletPoints, usedIds),
       };
 

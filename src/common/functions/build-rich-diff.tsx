@@ -12,7 +12,7 @@ export function buildRichDiff(
         if (chunk.added) return null;
         if (chunk.removed)
           return (
-            <span key={i} className="bg-red-200 rounded-sm">
+            <span key={i} className="bg-sky-100 rounded-sm">
               {chunk.value}
             </span>
           );
@@ -24,7 +24,7 @@ export function buildRichDiff(
         if (chunk.removed) return null;
         if (chunk.added)
           return (
-            <span key={i} className="bg-green-200 rounded-sm">
+            <span key={i} className="bg-sky-200 rounded-sm">
               {chunk.value}
             </span>
           );

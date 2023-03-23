@@ -1,20 +1,27 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-hot-toast";
 import { Navigate, useLocation } from "react-router-dom";
 import { firebaseAuth } from "./api/firebase-setup";
 import AppShell from "./AppShell";
 import logo from "./assets/images/logo.svg";
+import { ReviewProvider } from "./pages/review/review-context";
 
 export interface AppUser {
+  uid: string;
   isProMember: boolean;
 }
 
 const defaultAppUser: AppUser = {
+  uid: "",
   isProMember: false,
 };
 
-export const AppUserContext = createContext<AppUser>(defaultAppUser);
+const AppUserContext = createContext<AppUser>(defaultAppUser);
+
+export function useUserContext(): AppUser {
+  return useContext(AppUserContext);
+}
 
 function App() {
   const [user, loadingAuth] = useAuthState(firebaseAuth);
@@ -27,12 +34,12 @@ function App() {
         .getIdTokenResult()
         .then((idTokenResult) => {
           const isProMember = idTokenResult.claims.pro_member || false;
-          setAppUser({ isProMember });
+          setAppUser({ isProMember, uid: user.uid });
         })
         .catch((e) => {
           console.error("Error when retrieving custom claims:", e);
           toast.error("Something went wrong while verifying your Pro status.");
-          setAppUser(defaultAppUser);
+          setAppUser({ isProMember: false, uid: user.uid });
         });
     } else {
       setAppUser(null);
@@ -57,7 +64,9 @@ function App() {
 
   return (
     <AppUserContext.Provider value={appUser}>
-      <AppShell />
+      <ReviewProvider>
+        <AppShell />
+      </ReviewProvider>
     </AppUserContext.Provider>
   );
 }

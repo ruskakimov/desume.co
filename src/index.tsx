@@ -12,6 +12,7 @@ import {
 import LoginPage from "./pages/login/LoginPage";
 import ContentPage from "./pages/content/ContentPage";
 import ExportPage from "./pages/export/ExportPage";
+import ReviewPage from "./pages/review/ReviewPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "edit",
         element: <ContentPage />,
+      },
+      {
+        path: "review",
+        element: <ReviewPage />,
       },
       {
         path: "export",

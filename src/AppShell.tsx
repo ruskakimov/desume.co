@@ -11,15 +11,24 @@ import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./api/firebase-setup";
 import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 import useResume from "./api/useResume";
+// import { useReview } from "./pages/review/review-context";
 
-const navigation = [
-  { name: "Edit", to: "/edit" },
-  { name: "Export", to: "/export" },
-];
+interface NavItem {
+  name: string;
+  to: string;
+  count: number;
+}
 
 export default function AppShell() {
   const [user] = useAuthState(firebaseAuth);
   const resumeContext = useResume(user ?? null);
+  // const { review } = useReview();
+
+  const navigation: NavItem[] = [
+    { name: "Edit", to: "/edit", count: 0 },
+    // { name: "Review", to: "/review", count: review?.corrections.length ?? 0 },
+    { name: "Export", to: "/export", count: 0 },
+  ];
 
   const [signOut] = useSignOut(firebaseAuth);
 
@@ -58,6 +67,11 @@ export default function AppShell() {
                         }
                       >
                         {item.name}
+                        {item.count ? (
+                          <span className="ml-2 hidden rounded-full py-0.5 px-2.5 text-xs font-semibold md:inline-block bg-sky-500 text-white">
+                            {item.count}
+                          </span>
+                        ) : null}
                       </NavLink>
                     ))}
                   </div>
