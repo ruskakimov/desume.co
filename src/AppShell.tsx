@@ -11,7 +11,6 @@ import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { firebaseAuth } from "./api/firebase-setup";
 import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 import useResume from "./api/useResume";
-// import { useReview } from "./pages/review/review-context";
 
 interface NavItem {
   name: string;
@@ -22,11 +21,9 @@ interface NavItem {
 export default function AppShell() {
   const [user] = useAuthState(firebaseAuth);
   const resumeContext = useResume(user ?? null);
-  // const { review } = useReview();
 
   const navigation: NavItem[] = [
     { name: "Edit", to: "/edit", count: 0 },
-    // { name: "Review", to: "/review", count: review?.corrections.length ?? 0 },
     { name: "Export", to: "/export", count: 0 },
   ];
 
