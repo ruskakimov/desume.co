@@ -39,14 +39,14 @@ export default function AppShell() {
                 <div className="flex">
                   <div className="flex flex-shrink-0 items-center">
                     <img
-                      className="block h-8 w-auto lg:hidden"
+                      className="block h-5 w-auto lg:hidden"
                       src={logo}
-                      alt="PDFEGG"
+                      alt=""
                     />
                     <img
-                      className="hidden h-8 w-auto lg:block"
+                      className="hidden h-5 w-auto lg:block"
                       src={logo}
-                      alt="PDFEGG"
+                      alt=""
                     />
                   </div>
                   <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">

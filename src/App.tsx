@@ -57,7 +57,7 @@ function App() {
   if (loadingAuth || appUser === null) {
     return (
       <div className="absolute inset-0 flex justify-center items-center">
-        <img className="mx-auto h-12 w-auto" src={logo} alt="PDFEGG" />
+        <img className="mx-auto h-12 w-auto" src={logo} alt="" />
       </div>
     );
   }
