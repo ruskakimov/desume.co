@@ -198,9 +198,7 @@ function parseSkillGroups(data: unknown, usedIds: Set<string>): SkillGroup[] {
 }
 
 function parseSectionOrder(data: unknown): ResumeSectionItem[] {
-  if (!Array.isArray(data)) return [];
-
-  const array = data as unknown[];
+  const array = Array.isArray(data) ? (data as unknown[]) : [];
 
   const parsedItems = array
     .map((x) => {
@@ -221,12 +219,12 @@ function parseSectionOrder(data: unknown): ResumeSectionItem[] {
 
   // Add missing sections:
   for (const sectionId of ALL_RESUME_SECTIONS) {
-    if (sectionId === "personal") continue; // Personal section is pinned.
+    if (sectionId === "personal") continue; // Personal section is pinned, not part of the section order list.
 
     if (!parsedItems.find((x) => x.id === sectionId)) {
       parsedItems.push({
         id: sectionId,
-        included: false,
+        included: true,
       });
     }
   }
