@@ -7,11 +7,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-@supports (font-variation-settings: normal) {
-  :root {
-    font-family: "Inter var", sans-serif;
-  }
-}
 
 @font-face {
   font-family: "Charter";
