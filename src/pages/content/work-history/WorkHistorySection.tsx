@@ -103,7 +103,7 @@ const WorkHistorySection: React.FC = () => {
     <>
       <div className="h-10 flex justify-between items-center">
         <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Work history
+          Work experience
         </h3>
 
         {buildTopAddButton()}
